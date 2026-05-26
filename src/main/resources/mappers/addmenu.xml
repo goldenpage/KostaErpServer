@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oopsw.kostaerpserver.repository.AddMenuDAO">
+
+    <insert id="addMenu" parameterType="com.oopsw.kostaerpserver.vo.Menu">
+        INSERT INTO MENUS(menuName, menuPrice, menuCategory_Id)
+        VALUES(#{menuName}, #{menuPrice}, #{menuCategoryId})
+    </insert>
+
+    <select id="getNewMenuId" parameterType="com.oopsw.kostaerpserver.vo.Menu" resultType="String">
+        SELECT menu_Id FROM MENUS
+        WHERE menuName = #{menuName} AND menuCategory_Id = #{menuCategoryId}
+        ORDER BY menu_Id DESC
+            LIMIT 1
+    </select>
+
+    <select id="checkMenuCategoryExists" parameterType="com.oopsw.kostaerpserver.vo.MenuCategory" resultType="int">
+        SELECT COUNT(*) FROM MENUC
+        WHERE menuCategory = #{menuCategory} AND bId = #{bId}
+    </select>
+
+    <insert id="addMenuCategory" parameterType="com.oopsw.kostaerpserver.vo.MenuCategory">
+        INSERT INTO MENUC(menuCategory, bId) VALUES(#{menuCategory}, #{bId})
+    </insert>
+
+    <delete id="deleteMenuCategory" parameterType="String">
+        DELETE FROM MENUC WHERE menuCategory = #{menuCategory}
+    </delete>
+
+    <insert id="addUsedMaterial" parameterType="com.oopsw.kostaerpserver.vo.Used">
+        INSERT INTO USED(usedCount, foodMaterial_Id, menu_Id)
+        VALUES(#{usedCount}, #{foodMaterialId}, #{menuId})
+    </insert>
+
+    <delete id="deleteUsedMaterial" parameterType="String">
+        DELETE FROM USED WHERE usedMaterial_Id = #{usedMaterialId}
+    </delete>
+
+    <select id="getMenuList" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT m.menu_Id AS menuId, m.menuName, mc.menuCategory, m.menuPrice
+        FROM MENUS m
+                 JOIN MENUC mc ON m.menuCategory_Id = mc.menuCategory_Id
+        WHERE mc.bId = #{bId}
+        ORDER BY m.menuName ASC
+    </select>
+
+    <select id="getMenuDetail" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT m.menu_Id AS menuId, m.menuName, m.menuPrice,
+               f.foodMaterialName, u.usedCount,
+               f.foodMaterialPrice, f.foodMaterialCountAll,
+               ROUND((u.usedCount / f.foodMaterialCountAll) * f.foodMaterialPrice, 0) AS usedPrice
+        FROM MENUS m
+                 JOIN USED u ON m.menu_Id = u.menu_Id
+                 JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+        WHERE m.menu_Id = #{menuId}
+        ORDER BY f.foodMaterialName ASC
+    </select>
+
+    <update id="updateFoodMaterialAfterSale" parameterType="map">
+        UPDATE FOODM f
+        SET f.foodMaterialCountAll = f.foodMaterialCountAll - (
+            SELECT SUM(u.usedCount) * #{saleCount}
+            FROM USED u
+            WHERE u.foodMaterial_Id = f.foodMaterial_Id
+              AND u.menu_Id = #{menuId}
+        )
+        WHERE f.bId = #{bId}
+          AND EXISTS (
+            SELECT 1 FROM USED u
+            WHERE u.foodMaterial_Id = f.foodMaterial_Id
+              AND u.menu_Id = #{menuId}
+        )
+          AND NOT EXISTS (
+            SELECT 1
+            FROM FOODM f2
+                     JOIN (
+                SELECT foodMaterial_Id, SUM(usedCount) * #{saleCount} AS needCount
+                FROM USED
+                WHERE menu_Id = #{menuId}
+                GROUP BY foodMaterial_Id
+            ) need ON f2.foodMaterial_Id = need.foodMaterial_Id
+            WHERE f2.bId = #{bId}
+              AND f2.foodMaterialCountAll &lt; need.needCount
+        )
+    </update>
+
+    <select id="getMenuCategoryList" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.MenuCategory">
+        SELECT menuCategory_Id AS menuCategoryId, menuCategory FROM MENUC WHERE bId = #{bId}
+    </select>
+
+    <select id="hasMenuByCategory" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM MENUS m
+                                 JOIN MENUC mc ON m.menuCategory_Id = mc.menuCategory_Id
+        WHERE mc.menuCategory = #{menuCategory}
+    </select>
+
+    <select id="hasMenuCheck" parameterType="String" resultType="String">
+        SELECT menuName FROM MENUS WHERE menuName = #{menuName}
+    </select>
+
+    <select id="getCategoryId" parameterType="String" resultType="String">
+        SELECT menuCategory_Id FROM MENUC WHERE menuCategory = #{menuCategory}
+    </select>
+
+</mapper>
