@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oopsw.kostaerpserver.repository.MenuDAO">
+
+    <select id="getMenuList" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT
+            m.menu_Id AS menuId,
+            m.menuName AS menuName,
+            m.menuPrice AS menuPrice,
+            c.menuCategory AS menuCategory
+        FROM MENUS m
+                 JOIN MENUC c ON m.menuCategory_Id = c.menuCategory_Id
+        WHERE c.bId = #{bId}
+        ORDER BY m.menu_Id
+    </select>
+
+    <select id="getMenuDetail" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT
+            m.menu_Id AS menuId,
+            m.menuName AS menuName,
+            m.menuPrice AS menuPrice,
+            f.foodMaterial_Id AS foodMaterialId,
+            f.foodMaterialName AS foodMaterialName,
+            u.usedCount AS usedCount,
+            f.foodMaterialPrice AS foodMaterialPrice,
+            f.foodMaterialCountAll AS foodMaterialCountAll,
+            (u.usedCount * f.foodMaterialPrice) AS usedPrice
+        FROM MENUS m
+                 JOIN USED u ON m.menu_Id = u.menu_Id
+                 JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+        WHERE m.menu_Id = #{menuId}
+        ORDER BY f.foodMaterialName ASC
+    </select>
+
+    <select id="getLackMaterialCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                 SELECT
+                     u.foodMaterial_Id,
+                     SUM(u.usedCount) * #{saleCount} AS requiredCount,
+                     f.foodMaterialCountAll
+                 FROM USED u
+                          JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+                 WHERE u.menu_Id = #{menuId}
+                 GROUP BY u.foodMaterial_Id, f.foodMaterialCountAll
+                 HAVING f.foodMaterialCountAll &lt; requiredCount
+             ) lack
+    </select>
+
+    <update id="updateFoodMaterialAfterSale">
+        UPDATE FOODM f
+            JOIN (
+            SELECT
+            foodMaterial_Id,
+            SUM(usedCount) * #{saleCount} AS requiredCount
+            FROM USED
+            WHERE menu_Id = #{menuId}
+            GROUP BY foodMaterial_Id
+            ) u ON f.foodMaterial_Id = u.foodMaterial_Id
+            SET f.foodMaterialCountAll = f.foodMaterialCountAll - u.requiredCount
+        WHERE f.bId = #{bId}
+          AND f.foodMaterialCountAll >= u.requiredCount
+    </update>
+
+</mapper>
