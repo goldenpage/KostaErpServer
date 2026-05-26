@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO">
+
+    <select id="getFoodMaterialCount" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM FOODM WHERE bId = #{bId}
+    </select>
+
+    <insert id="addFoodMaterial" parameterType="com.oopsw.kostaerpserver.vo.FoodMaterialVO">
+        INSERT INTO FOODM(foodMaterialName, foodCategory_Id, foodMaterialCount,
+                          foodMaterialCountAll, foodMaterialPrice, foodMaterialType, vender,
+                          incomeDate, expirationDate, bId)
+        VALUES(#{foodMaterialName}, #{foodCategory}, #{foodMaterialCount},
+               #{foodMaterialCountAll}, #{foodMaterialPrice}, #{foodMaterialType},
+               #{vender}, #{incomeDate}, #{expirationDate}, #{bId})
+    </insert>
+
+    <select id="checkFoodCategoryExists" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM FOODC WHERE foodCategory = #{foodCategory}
+    </select>
+
+    <insert id="addFoodCategory" parameterType="String">
+        INSERT INTO FOODC(foodCategory) VALUES(#{foodCategory})
+    </insert>
+
+    <delete id="deleteFoodMaterialByCategory" parameterType="String">
+        DELETE FROM FOODM
+        WHERE foodCategory_Id IN (
+            SELECT foodCategory_Id FROM FOODC WHERE foodCategory = #{foodCategory}
+        )
+    </delete>
+
+    <delete id="deleteFoodCategory" parameterType="String">
+        DELETE FROM FOODC WHERE foodCategory = #{foodCategory}
+    </delete>
+
+    <select id="getFoodMaterialByName" parameterType="map" resultType="com.oopsw.kostaerpserver.vo.FoodMaterialVO">
+        SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
+               c.foodCategory, f.vender, f.foodMaterialType
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.foodMaterialName LIKE CONCAT('%', #{foodMaterialName}, '%')
+          AND f.bId = #{bId}
+    </select>
+
+    <select id="getFoodMaterialList" parameterType="map" resultType="com.oopsw.kostaerpserver.vo.FoodMaterialVO">
+        SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
+               c.foodCategory, f.foodMaterialCount, f.foodMaterialCountAll,
+               f.foodMaterialPrice, f.vender, f.incomeDate, f.expirationDate, f.foodMaterialType
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+        ORDER BY ${orderBy}
+            LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="getFoodMaterialDetail" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.FoodMaterialVO">
+        SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
+               c.foodCategory, f.foodMaterialCount, f.foodMaterialCountAll,
+               f.foodMaterialPrice, f.foodMaterialType, f.vender,
+               f.incomeDate, f.expirationDate, f.bId
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.foodMaterial_Id = #{foodMaterialId}
+    </select>
+
+    <delete id="deleteUsedByFoodMaterial" parameterType="String">
+        DELETE FROM USED WHERE foodMaterial_Id = #{foodMaterialId}
+    </delete>
+
+    <delete id="deleteDisposalsByFoodMaterial" parameterType="String">
+        DELETE FROM DISPOSALS WHERE foodMaterial_Id = #{foodMaterialId}
+    </delete>
+
+    <delete id="deleteFoodMaterial">
+        DELETE FROM FOODM
+        WHERE foodMaterial_Id = #{foodMaterialId}
+          AND bId = #{bId}
+    </delete>
+
+    <select id="getFoodMaterialTotalAmount" parameterType="map" resultType="int">
+        SELECT IFNULL(SUM(foodMaterialPrice), 0)
+        FROM FOODM
+        WHERE bId = #{bId}
+          AND incomeDate >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+          AND incomeDate &lt; STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+    </select>
+
+    <select id="getFoodMaterialSpendingRank" parameterType="map" resultType="com.oopsw.kostaerpserver.vo.FoodMaterialVO">
+        SELECT
+            RANK() OVER (ORDER BY foodMaterialPrice * foodMaterialCount DESC) AS ranking,
+                foodMaterial_Id AS foodMaterialId,
+            foodMaterialName,
+            foodMaterialPrice,
+            foodMaterialCount,
+            foodMaterialPrice * foodMaterialCount AS totalExpense,
+            incomeDate,
+            bId
+        FROM FOODM
+        WHERE bId = #{bId}
+          AND incomeDate >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+          AND incomeDate &lt; STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+        ORDER BY totalExpense DESC
+    </select>
+
+    <select id="getFoodCategoryList" resultType="com.oopsw.kostaerpserver.vo.FoodCategoryVO">
+        SELECT foodCategory_Id AS foodCategoryId, foodCategory FROM FOODC
+    </select>
+
+    <select id="hasFoodMaterialByCategory" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE c.foodCategory = #{foodCategory}
+    </select>
+
+    <select id="getFoodMaterialListAll" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.FoodMaterialVO">
+        SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName, c.foodCategory
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+        ORDER BY f.foodMaterialName ASC
+    </select>
+
+    <select id="getCategoryId" parameterType="String" resultType="String">
+        SELECT foodCategory_Id FROM FOODC WHERE foodCategory = #{foodCategory}
+    </select>
+
+</mapper>
