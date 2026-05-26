@@ -6,7 +6,7 @@ spring:
     name: KostaErpServer
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
