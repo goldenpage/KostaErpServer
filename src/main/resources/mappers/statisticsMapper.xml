@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="statisticsMapper">
+  <select id="getMonthlyFoodMaterialExpenseRank" parameterType="map" resultType="map">
+    SELECT
+    RANK() OVER (
+    ORDER BY f.foodMaterialPrice * f.foodMaterialCount DESC
+    ) AS ranking,
+    f.foodMaterial_Id AS foodMaterialId,
+    f.foodMaterialName AS foodMaterialName,
+    f.foodMaterialPrice AS foodMaterialPrice,
+    f.foodMaterialCount AS foodMaterialCount,
+    f.foodMaterialPrice * f.foodMaterialCount AS totalExpense,
+    f.incomeDate AS incomeDate
+    FROM FOODM f
+    WHERE f.bId = #{bId}
+    AND f.incomeDate >= #{startDate}
+    AND f.incomeDate &lt; #{endDate}
+    ORDER BY totalExpense DESC
+  </select>
+
+  <select id="getTotalExpense" parameterType="map" resultType="long">
+    SELECT
+    COALESCE(SUM(f.foodMaterialPrice * f.foodMaterialCount), 0)
+    FROM FOODM f
+    WHERE f.bId = #{bId}
+    AND f.incomeDate >= #{startDate}
+    AND f.incomeDate &lt; #{endDate}
+  </select>
+
+  <select id="getSalesHistory" parameterType="map" resultType="map">
+    SELECT
+    s.sale_Id AS saleId,
+    s.saleMenuCount AS saleMenuCount,
+    s.menu_Id AS menuId,
+    m.menuName AS menuName,
+    m.menuPrice AS menuPrice,
+    s.revenue_Id AS revenueId,
+    r.revenueDate AS revenueDate,
+    s.saleMenuCount * m.menuPrice AS saleTotalPrice
+    FROM SALES s
+    JOIN MENUS m
+    ON s.menu_Id = m.menu_Id
+    JOIN MENUC mc
+    ON m.menuCategory_Id = mc.menuCategory_Id
+    JOIN REVENUE r
+    ON s.revenue_Id = r.revenue_Id
+    WHERE mc.bId = #{bId}
+    AND r.revenueDate >= #{startDate}
+    AND r.revenueDate &lt; #{endDate}
+    ORDER BY r.revenueDate DESC, s.sale_Id DESC
+  </select>
+
+  <select id="getTotalSales" parameterType="map" resultType="long">
+    SELECT
+    COALESCE(SUM(s.saleMenuCount * m.menuPrice), 0)
+    FROM SALES s
+    JOIN MENUS m
+    ON s.menu_Id = m.menu_Id
+    JOIN MENUC mc
+    ON m.menuCategory_Id = mc.menuCategory_Id
+    JOIN REVENUE r
+    ON s.revenue_Id = r.revenue_Id
+    WHERE mc.bId = #{bId}
+    AND r.revenueDate >= #{startDate}
+    AND r.revenueDate &lt; #{endDate}
+  </select>
+
+  <select id="getMenuSalesRank" parameterType="map" resultType="map">
+    SELECT
+    RANK() OVER (
+    ORDER BY SUM(s.saleMenuCount) DESC
+    ) AS ranking,
+    m.menu_Id AS menuId,
+    m.menuName AS menuName,
+    m.menuPrice AS menuPrice,
+    SUM(s.saleMenuCount) AS totalSaleCount,
+    SUM(s.saleMenuCount * m.menuPrice) AS totalSalePrice
+    FROM SALES s
+    JOIN MENUS m
+    ON s.menu_Id = m.menu_Id
+    JOIN MENUC mc
+    ON m.menuCategory_Id = mc.menuCategory_Id
+    JOIN REVENUE r
+    ON s.revenue_Id = r.revenue_Id
+    WHERE mc.bId = #{bId}
+    AND r.revenueDate >= #{startDate}
+    AND r.revenueDate &lt; #{endDate}
+    GROUP BY
+    m.menu_Id,
+    m.menuName,
+    m.menuPrice
+    ORDER BY totalSaleCount DESC
+  </select>
+
+  <select id="getDisposalRate" parameterType="map" resultType="double">
+    SELECT
+    COALESCE(
+    ROUND(
+    SUM(d.disposalCount) * 100 / NULLIF(SUM(f.foodMaterialCount), 0),
+    2
+    ),
+    0
+    ) AS disposalRate
+    FROM DISPOSALS d
+    JOIN FOODM f
+    ON d.foodMaterial_Id = f.foodMaterial_Id
+    WHERE f.bId = #{bId}
+    AND d.disposalDate >= #{startDate}
+    AND d.disposalDate &lt; #{endDate}
+  </select>
+
+  <select id="getTotalDisposalPrice" parameterType="map" resultType="long">
+    SELECT
+    COALESCE(SUM(d.disposalPrice), 0)
+    FROM DISPOSALS d
+    JOIN FOODM f
+    ON d.foodMaterial_Id = f.foodMaterial_Id
+    WHERE f.bId = #{bId}
+    AND d.disposalDate >= #{startDate}
+    AND d.disposalDate &lt; #{endDate}
+  </select>
+
+  <select id="getTopDisposalMaterials" parameterType="map" resultType="map">
+    SELECT
+    f.foodMaterial_Id AS foodMaterialId,
+    f.foodMaterialName AS foodMaterialName,
+    SUM(d.disposalPrice) AS totalDisposalPrice,
+    COUNT(d.disposal_Id) AS disposalCount
+    FROM DISPOSALS d
+    JOIN FOODM f
+    ON d.foodMaterial_Id = f.foodMaterial_Id
+    WHERE f.bId = #{bId}
+    AND d.disposalDate >= #{startDate}
+    AND d.disposalDate &lt; #{endDate}
+    GROUP BY
+    f.foodMaterial_Id,
+    f.foodMaterialName
+    ORDER BY totalDisposalPrice DESC
+    LIMIT 3
+  </select>
+
+  <select id="getDisposalReasonRatio" parameterType="map" resultType="map">
+    SELECT
+    r.reason_Id AS reasonId,
+    r.reason AS reason,
+    COUNT(d.disposal_Id) AS reasonCount,
+    ROUND(
+    COUNT(d.disposal_Id) * 100 / SUM(COUNT(d.disposal_Id)) OVER (),
+    2
+    ) AS reasonRatio
+    FROM DISPOSALS d
+    JOIN REASON r
+    ON d.reason_Id = r.reason_Id
+    JOIN FOODM f
+    ON d.foodMaterial_Id = f.foodMaterial_Id
+    WHERE f.bId = #{bId}
+    AND d.disposalDate >= #{startDate}
+    AND d.disposalDate &lt; #{endDate}
+    GROUP BY
+    r.reason_Id,
+    r.reason
+    ORDER BY reasonRatio DESC
+  </select>
+
+  <select id="getDailyDisposalChart" parameterType="map" resultType="map">
+    SELECT
+    DATE(d.disposalDate) AS disposalDay,
+    f.foodMaterialType AS foodMaterialType,
+    COUNT(d.disposal_Id) AS disposalCount,
+    COALESCE(SUM(d.disposalPrice), 0) AS totalDisposalPrice
+    FROM DISPOSALS d
+    JOIN FOODM f
+    ON d.foodMaterial_Id = f.foodMaterial_Id
+    WHERE f.bId = #{bId}
+    AND d.disposalDate >= #{startDate}
+    AND d.disposalDate &lt; #{endDate}
+    GROUP BY
+    DATE(d.disposalDate),
+    f.foodMaterialType
+    ORDER BY
+    disposalDay,
+    f.foodMaterialType
+  </select>
+
+</mapper>
