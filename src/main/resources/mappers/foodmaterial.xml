@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oopsw.kostaerpserver.repository.FoodMaterialDAO">
+
+    <select id="getFoodMaterialCount" resultType="int">
+        SELECT COUNT(*)
+        FROM FOODM
+        WHERE bId = #{bId}
+    </select>
+
+    <select id="getFoodMaterialList" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+        SELECT
+        f.foodMaterial_Id AS foodMaterialId,
+        f.foodMaterialName AS foodMaterialName,
+        c.foodCategory AS foodCategory,
+        f.foodMaterialCount AS foodMaterialCount,
+        f.foodMaterialCountAll AS foodMaterialCountAll,
+        f.foodMaterialPrice AS foodMaterialPrice,
+        f.foodMaterialType AS foodMaterialType,
+        f.vender AS vender,
+        f.incomeDate AS incomeDate,
+        f.expirationDate AS expirationDate,
+        f.bId AS bId
+        FROM FOODM f
+        JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+
+        <choose>
+            <when test="sortType == 'idAsc'">
+                ORDER BY f.foodMaterial_Id ASC
+            </when>
+            <when test="sortType == 'expAsc'">
+                ORDER BY f.expirationDate ASC
+            </when>
+            <when test="sortType == 'expDesc'">
+                ORDER BY f.expirationDate DESC
+            </when>
+            <otherwise>
+                ORDER BY f.foodMaterial_Id DESC
+            </otherwise>
+        </choose>
+
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getFoodMaterialByName" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+        SELECT
+            f.foodMaterial_Id AS foodMaterialId,
+            f.foodMaterialName AS foodMaterialName,
+            c.foodCategory AS foodCategory,
+            f.vender AS vender,
+            f.foodMaterialType AS foodMaterialType,
+            f.bId AS bId
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+          AND f.foodMaterialName LIKE CONCAT('%', #{foodMaterialName}, '%')
+    </select>
+
+    <delete id="deleteUsedByFoodMaterial">
+        DELETE FROM USED
+        WHERE foodMaterial_Id = #{foodMaterialId}
+    </delete>
+
+    <delete id="deleteDisposalsByFoodMaterial">
+        DELETE FROM DISPOSALS
+        WHERE foodMaterial_Id = #{foodMaterialId}
+    </delete>
+
+    <delete id="deleteFoodMaterial">
+        DELETE FROM FOODM
+        WHERE foodMaterial_Id = #{foodMaterialId}
+          AND bId = #{bId}
+    </delete>
+
+</mapper>
