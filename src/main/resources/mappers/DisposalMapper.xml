@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kostaerp.disposal.repository.DisposalDAO">
+<mapper namespace="com.oopsw.kostaerpserver.repository.DisposalDAO">
 
     <select id="getDisposals" resultType="DisposalVO">
-        SELECT d.disposal_Id, f.foodMaterialName, fc.foodCategory, d.disposalCountAll,
+        SELECT d.disposal_Id,d.foodMaterial_Id, f.foodMaterialName, f.foodMaterialType,fc.foodCategory, d.disposalCountAll,
         d.disposalPrice, d.disposalDate, r.reason_Id, r.reason
         FROM DISPOSALS d
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id

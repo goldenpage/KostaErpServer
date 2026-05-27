@@ -17,4 +17,7 @@ logging:
 
 mybatis:
   #  type-aliases-package: com.oopsw.aspringweb.dao
+  type-aliases-package: com.oopsw.kostaerpserver.vo
   mapper-locations: classpath:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

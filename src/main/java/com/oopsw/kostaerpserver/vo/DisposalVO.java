@@ -1,10 +1,16 @@
 package com.oopsw.kostaerpserver.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Data
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class DisposalVO {
     private String disposalId;
     private int disposalCountAll;
