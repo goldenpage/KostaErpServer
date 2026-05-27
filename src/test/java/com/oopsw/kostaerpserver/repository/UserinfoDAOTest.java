@@ -24,26 +24,26 @@ public class UserinfoDAOTest {
 
     @Test
     void checkMemberByVO() {
-        log.info(userInfoDAO.register());
+        log.info(userInfoDAO.checkMemberByVO());
     }
 
     @Test
     void setPw() {
-        log.info(userInfoDAO.register());
+        log.info(userInfoDAO.setPw());
     }
 
     @Test
     void getPhoneCheck() {
-        log.info(userInfoDAO.register());
+        log.info(userInfoDAO.getPhoneCheck());
     }
 
     @Test
     void getBidCheck() {
-        log.info(userInfoDAO.register());
+        log.info(userInfoDAO.getBidCheck());
     }
 
     @Test
     void checkPwFindUser() {
-        log.info(userInfoDAO.register());
+        log.info(userInfoDAO.checkPwFindUser());
     }
 }
