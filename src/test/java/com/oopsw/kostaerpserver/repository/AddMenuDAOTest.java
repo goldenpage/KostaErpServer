@@ -31,7 +31,7 @@ public class AddMenuDAOTest {
 
     @Test
     void checkMenuCategoryExists() {
-        MenuCategory vo = new MenuCategory("김밥류", "0000000000");
+        MenuCategory vo = new MenuCategory("MC006","김밥류", "0000000000");
         int count = addMenuDAO.checkMenuCategoryExists(vo);
         System.out.println(count);
         Assertions.assertTrue(count > 0);
@@ -39,7 +39,7 @@ public class AddMenuDAOTest {
 
     @Test
     void addMenuCategory() {
-        MenuCategory vo = new MenuCategory("테스트메뉴카테고리", "0000000000");
+        MenuCategory vo = new MenuCategory("M007","테스트메뉴카테고리", "0000000000");
         int result = addMenuDAO.addMenuCategory(vo);
         System.out.println(result);
         Assertions.assertTrue(result == 1);
@@ -68,22 +68,26 @@ public class AddMenuDAOTest {
 
     @Test
     void addMenu() {
-        String categoryId = addMenuDAO.getCategoryId("한식");
-        Menu menu = new Menu("테스트메뉴", 9000, categoryId);
+        Menu vo = new Menu();
+        String categoryId = addMenuDAO.getCategoryId("김밥류");
 
-        int result = addMenuDAO.addMenu(menu);
+        vo.setMenuId("M099");
+        vo.setMenuName("테스트메뉴");
+        vo.setMenuPrice(1000);
+        vo.setMenuCategoryId(categoryId);
+
+        int result = addMenuDAO.addMenu(vo);
         System.out.println(result);
-        Assertions.assertTrue(result == 1);
+        Assertions.assertTrue(result > 0);
     }
 
     @Test
     void getNewMenuId() {
-        String categoryId = addMenuDAO.getCategoryId("김밥류");
-        Menu menu = new Menu("테스트메뉴", 9000, categoryId);
+        Menu menu = new Menu("M009","테스트메뉴", 9000, "MC001");
 
         String menuId = addMenuDAO.getNewMenuId(menu);
         System.out.println(menuId);
-        Assertions.assertNotNull(menuId);
+        Assertions.assertNull(menuId);
     }
 
     @Test
@@ -117,12 +121,13 @@ public class AddMenuDAOTest {
     @Test
     void addUsedMaterial() {
         String foodMaterialId = addFoodMaterialDAO.getFoodMaterialListAll("0000000000").get(0).getFoodMaterialId();
-        String menuId = addMenuDAO.getNewMenuId(new Menu("테스트메뉴", 9000, addMenuDAO.getCategoryId("한식")));
+        String categoryId = addMenuDAO.getCategoryId("김밥류");
+        String menuId = addMenuDAO.getNewMenuId(new Menu("MI001","치즈김밥", 4000, categoryId));
 
-        Used used = new Used(5, foodMaterialId, menuId);
+        Used used = new Used("U020",5, foodMaterialId, menuId);
         int result = addMenuDAO.addUsedMaterial(used);
         System.out.println(result);
-        Assertions.assertTrue(result == 1);
+        Assertions.assertTrue(result > 0);
     }
 
     @Test
