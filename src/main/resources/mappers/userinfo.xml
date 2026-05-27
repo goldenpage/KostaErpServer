@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oopsw.kostaerpserver.repository.UserInfoDAO">
+  <insert id="register" parameterType="map">
+    INSERT INTO USERINFO (
+    bid,
+    name,
+    phone,
+    email,
+    storeName,
+    storeType,
+    storeCategory,
+    pw,
+    signDate,
+    agreementDate,
+    marketingDate
+    )
+    VALUES (
+    #{bId},
+    #{name},
+    #{phone},
+    #{email},
+    #{storeName},
+    #{storeType},
+    #{storeCategory},
+    #{pw},
+    SYSDATE,
+    SYSDATE,
+    <choose>
+      <when test="marketingDate != null and marketingDate != ''">
+        SYSDATE
+      </when>
+      <otherwise>
+        NULL
+      </otherwise>
+    </choose>
+    )
+  </insert>
+
+  <select id="checkMemberByVO" resultType="com.oopsw.kostaerpserver.repository.UserInfoDAO">
+    SELECT bId, name, storeName, storeType, pw FROM USERINFO
+    WHERE bId = #{bId} AND name = #{name} AND pw = #{pw}
+  </select>
+
+  <update id="setPw" parameterType="com.oopsw.kostaerpserver.repository.UserInfoDAO">
+    UPDATE USERINFO SET pw = #{pw} WHERE bId = #{bId} AND NAME = #{name} AND PHONE = #{phone}
+  </update>
+
+  <select id="login" resultType="hashmap" parameterType="map">
+    SELECT bId, name FROM USERINFO
+    WHERE bId = #{bId} AND pw = #{pw}
+  </select>
+
+
+  <select id = "getPhoneCheck" resultType="int">
+    SELECT bId, name, phone FROM USERINFO
+    WHERE phone = #{phone}
+  </select>
+
+  <select id="getBidCheck" resultType="int">
+    SELECT bId FROM USERINFO WHERE bId = #{bId}
+  </select>
+
+  <select id="checkPwFindUser" resultType="int">
+    SELECT bId FROM USERINFO WHERE bId = #{bId} AND name = #{name} AND phone = #{phone}
+  </select>
+
+</mapper>

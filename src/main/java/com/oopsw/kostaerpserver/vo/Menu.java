@@ -1,16 +1,17 @@
 package com.oopsw.kostaerpserver.vo;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
 public class Menu {
     private String menuId;
     private String menuName;
     private int menuPrice;
-    private String menuCategoryId;
+    private String menuCategory;
+    private String foodMaterialId;
+    private String foodMaterialName;
+    private int usedCount;
+    private int foodMaterialPrice;
+    private int foodMaterialCountAll;
+    private int usedPrice;
 }
