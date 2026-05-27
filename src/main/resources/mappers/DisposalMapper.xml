@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oopsw.kostaerpserver.repository.DisposalDAO">
+
+    <select id="getDisposals" resultType="DisposalVO">
+        SELECT d.disposal_Id,d.foodMaterial_Id, f.foodMaterialName, f.foodMaterialType,fc.foodCategory, d.disposalCountAll,
+        d.disposalPrice, d.disposalDate, r.reason_Id, r.reason
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        ORDER BY d.disposal_Id DESC
+    </select>
+
+    <select id="getFoodMaterialNames" resultType="string">
+        SELECT f.foodMaterialName
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+    </select>
+
+    <select id="getCategories" resultType="string">
+        SELECT fc.foodCategory
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+    </select>
+
+    <select id="getDisposalsFilteredPaging" resultType="DisposalVO">
+        SELECT d.disposal_Id AS disposalId, f.foodMaterialName, fc.foodCategory, f.foodMaterialType,
+        d.disposalCountAll, d.disposalPrice, d.disposalDate, r.reason
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        WHERE f.bId = #{bId}
+        ORDER BY d.disposal_Id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="getDisposalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        WHERE f.bId = #{bId}
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        WHERE f.bId = #{bId}
+    </select>
+
+    <select id="getReasons" resultType="string">
+        SELECT reason FROM REASON
+    </select>
+
+    <select id="getDisposalsByCategoryAndBId" resultType="DisposalVO">
+        SELECT d.disposal_Id, f.foodMaterialName, fc.foodCategory, f.foodMaterialType,
+        d.disposalCountAll, d.disposalPrice, d.disposalDate, r.reason
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        WHERE fc.foodCategory = #{category}
+        AND f.bId = #{bId}
+    </select>
+
+    <select id="getDisposalsPaging" resultType="DisposalVO">
+        SELECT d.*, f.foodMaterialName, fc.foodCategory, r.reason
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        WHERE f.bId = #{bId}
+        ORDER BY d.disposal_Id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <update id="updateReason">
+        UPDATE DISPOSALS
+        SET reason_Id = #{reasonId}
+        WHERE disposal_Id = #{disposalId}
+    </update>
+
+    <select id="getExpiredDisposalIds" resultType="string">
+        SELECT d.disposal_Id
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND f.expirationDate &lt; CURDATE()
+    </select>
+
+    <select id="getDisposalRate" resultType="double">
+        SELECT IFNULL(ROUND(
+        SUM(d.disposalCountAll) * 100 /
+        NULLIF(SUM(f.foodMaterialCountAll), 0), 2
+        ), 0) AS disposalRate
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND d.disposalDate &gt;= #{startDate}
+        AND d.disposalDate &lt; #{endDate}
+    </select>
+
+    <select id="getTotalDisposalPrice" resultType="int">
+        SELECT IFNULL(SUM(d.disposalPrice), 0) AS totalDisposalPrice
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND d.disposalDate BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="getTop3DisposalItems" resultType="DisposalVO">
+        SELECT f.foodMaterial_Id, f.foodMaterialName,
+        SUM(d.disposalPrice) AS totalDisposalPrice,
+        SUM(d.disposalCountAll) AS disposalCount
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND d.disposalDate BETWEEN #{startDate} AND #{endDate}
+        GROUP BY f.foodMaterial_Id, f.foodMaterialName
+        ORDER BY totalDisposalPrice DESC
+        LIMIT 3
+    </select>
+
+    <select id="getDisposalReasonRatio" resultType="DisposalVO">
+        SELECT r.reason_Id, r.reason,
+        COUNT(*) AS disposalCount,
+        (COUNT(*) * 100.0 / SUM(COUNT(*)) OVER()) AS reasonRatio
+        FROM DISPOSALS d
+        JOIN REASON r ON d.reason_Id = r.reason_Id
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND d.disposalDate BETWEEN #{startDate} AND #{endDate}
+        GROUP BY r.reason_Id, r.reason
+    </select>
+
+    <select id="selectDailyDisposalAmount" resultType="DisposalVO">
+        SELECT d.disposalDate AS disposalDay,
+        SUM(d.disposalCountAll) AS disposalCount,
+        SUM(d.disposalPrice) AS totalDisposalPrice
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND d.disposalDate BETWEEN #{startDate} AND #{endDate}
+        GROUP BY d.disposalDate
+        ORDER BY d.disposalDate
+    </select>
+
+    <select id="selectDailyDisposalByType" resultType="DisposalVO">
+        SELECT d.disposalDate AS disposalDay, f.foodMaterialType,
+        SUM(d.disposalCountAll) AS disposalCount,
+        SUM(d.disposalPrice) AS totalDisposalPrice
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND d.disposalDate BETWEEN #{startDate} AND #{endDate}
+        GROUP BY d.disposalDate, f.foodMaterialType
+        ORDER BY d.disposalDate
+    </select>
+</mapper>
