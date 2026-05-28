@@ -4,10 +4,12 @@ import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.Menu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @SpringBootTest
 @Transactional
+@Slf4j
+@ActiveProfiles("test")
 public class AddMenuDAOTest {
     @Autowired
     AddMenuDAO addMenuDAO;

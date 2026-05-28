@@ -3,10 +3,12 @@ package com.oopsw.kostaerpserver.repository;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 //import java.util.Date;
@@ -17,6 +19,8 @@ import java.sql.Date;
 
 @SpringBootTest
 @Transactional
+@Slf4j
+@ActiveProfiles("test")
 public class AddFoodMaterialDAOTest {
     @Autowired
     AddFoodMaterialDAO addFoodMaterialDAO;
