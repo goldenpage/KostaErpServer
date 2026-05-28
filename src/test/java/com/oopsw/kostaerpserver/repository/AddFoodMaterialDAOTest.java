@@ -83,7 +83,7 @@ public class AddFoodMaterialDAOTest {
         vo.setVender("테스트업체");
         vo.setIncomeDate(Date.valueOf("2026-01-01"));
         vo.setExpirationDate(Date.valueOf("2026-12-31"));
-        vo.setbId("0000000000");
+        vo.setBId("0000000000");
 
         int result = addFoodMaterialDAO.addFoodMaterial(vo);
         System.out.println(result);
