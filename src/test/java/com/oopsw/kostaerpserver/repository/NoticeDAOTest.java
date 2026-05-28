@@ -82,7 +82,7 @@ public class NoticeDAOTest {
         List<NoticeVO> list = noticeDAO.getNoticeList(bId);
         NoticeVO ndata = null;
         for(NoticeVO notice : list) {
-            if(notice.getNoticeId().equals(noticeId)) {
+            if(noticeId.equals(notice.getNoticeId())) {
                 ndata = notice;
                 break;
             }
