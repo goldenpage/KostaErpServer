@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.NoticeDAO;
-import com.oopsw.kostaerpserver.vo.NoticeVO;
+import com.oopsw.kostaerpserver.vo.Notice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ public class NoticeService {
         return noticeDAO.insertNotice(disposalId) == 1;
     }
 
-    public List<NoticeVO> getNoticeList(String bId) {
+    public List<Notice> getNoticeList(String bId) {
         return noticeDAO.getNoticeList(bId);
     }
 

@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.oopsw.kostaerpserver.repository.NoticeDAO;
-import com.oopsw.kostaerpserver.vo.NoticeVO;
+import com.oopsw.kostaerpserver.vo.Notice;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -51,10 +51,10 @@ public class NoticeServiceTest {
     @Test
     //알림 목록 조회 서비스 테스트
     void getNoticeList() {
-        List<NoticeVO> notices = List.of(new NoticeVO());
+        List<Notice> notices = List.of(new Notice());
         when(noticeDAO.getNoticeList(B_ID)).thenReturn(notices);
 
-        List<NoticeVO> result = noticeService.getNoticeList(B_ID);
+        List<Notice> result = noticeService.getNoticeList(B_ID);
 
         assertThat(result).isSameAs(notices);
         verify(noticeDAO).getNoticeList(B_ID);
