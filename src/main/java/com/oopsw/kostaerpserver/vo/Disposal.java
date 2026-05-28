@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class DisposalVO {
+public class Disposal {
     private String disposalId;
     private int disposalCountAll;
     private int disposalPrice;

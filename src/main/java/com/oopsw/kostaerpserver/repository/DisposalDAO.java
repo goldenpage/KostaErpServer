@@ -6,18 +6,18 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.oopsw.kostaerpserver.vo.DisposalVO;
+import com.oopsw.kostaerpserver.vo.Disposal;
 
 @Mapper
 public interface DisposalDAO {
 
-    List<DisposalVO> getDisposals();
+    List<Disposal> getDisposals();
 
     List<String> getFoodMaterialNames();
 
     List<String> getCategories();
 
-    List<DisposalVO> getDisposalsFilteredPaging(
+    List<Disposal> getDisposalsFilteredPaging(
             @Param("bId") String bId,
             @Param("offset") int offset,
             @Param("size") int size);
@@ -28,11 +28,11 @@ public interface DisposalDAO {
 
     List<String> getReasons();
 
-    List<DisposalVO> getDisposalsByCategoryAndBId(
+    List<Disposal> getDisposalsByCategoryAndBId(
             @Param("category") String category,
             @Param("bId") String bId);
 
-    List<DisposalVO> getDisposalsPaging(
+    List<Disposal> getDisposalsPaging(
             @Param("bId") String bId,
             @Param("offset") int offset,
             @Param("size") int size);
@@ -53,22 +53,22 @@ public interface DisposalDAO {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
-    List<DisposalVO> getTop3DisposalItems(
+    List<Disposal> getTop3DisposalItems(
             @Param("bId") String bId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
-    List<DisposalVO> getDisposalReasonRatio(
+    List<Disposal> getDisposalReasonRatio(
             @Param("bId") String bId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
-    List<DisposalVO> selectDailyDisposalAmount(
+    List<Disposal> selectDailyDisposalAmount(
             @Param("bId") String bId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
-    List<DisposalVO> selectDailyDisposalByType(
+    List<Disposal> selectDailyDisposalByType(
             @Param("bId") String bId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);

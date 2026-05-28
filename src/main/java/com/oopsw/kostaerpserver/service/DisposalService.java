@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
-import com.oopsw.kostaerpserver.vo.DisposalVO;
+import com.oopsw.kostaerpserver.vo.Disposal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ public class DisposalService {
         this.disposalDAO = disposalDAO;
     }
 
-    public List<DisposalVO> getDisposals(){
+    public List<Disposal> getDisposals(){
         return disposalDAO.getDisposals();
     }
 
@@ -28,7 +28,7 @@ public class DisposalService {
         return disposalDAO.getCategories();
     }
 
-    public List<DisposalVO> getDisposalsFilteredPaging(String bId, int page, int size){
+    public List<Disposal> getDisposalsFilteredPaging(String bId, int page, int size){
         return disposalDAO.getDisposalsFilteredPaging(bId, toOffset(page, size), size);
     }
 
@@ -44,11 +44,11 @@ public class DisposalService {
         return disposalDAO.getReasons();
     }
 
-    public List<DisposalVO> getDisposalsByCategoryAndBId(String category, String bId){
+    public List<Disposal> getDisposalsByCategoryAndBId(String category, String bId){
         return disposalDAO.getDisposalsByCategoryAndBId(category, bId);
     }
 
-    public List<DisposalVO> getDisposalsPaging(String bId, int page, int size){
+    public List<Disposal> getDisposalsPaging(String bId, int page, int size){
         return disposalDAO.getDisposalsPaging(bId, toOffset(page, size), size);
     }
 
@@ -69,19 +69,19 @@ public class DisposalService {
         return disposalDAO.getTotalDisposalPrice(bId, startDate, endDate);
     }
 
-    public List<DisposalVO> getTop3DisposalItems(String bId, LocalDate startDate, LocalDate endDate){
+    public List<Disposal> getTop3DisposalItems(String bId, LocalDate startDate, LocalDate endDate){
         return disposalDAO.getTop3DisposalItems(bId, startDate, endDate);
     }
 
-    public List<DisposalVO> getDisposalReasonRatio(String bId, LocalDate startDate, LocalDate endDate){
+    public List<Disposal> getDisposalReasonRatio(String bId, LocalDate startDate, LocalDate endDate){
         return disposalDAO.getDisposalReasonRatio(bId, startDate, endDate);
     }
 
-    public List<DisposalVO> selectDailyDisposalAmount(String bId, LocalDate startDate, LocalDate endDate){
+    public List<Disposal> selectDailyDisposalAmount(String bId, LocalDate startDate, LocalDate endDate){
         return disposalDAO.selectDailyDisposalAmount(bId, startDate, endDate);
     }
 
-    public List<DisposalVO> selectDailyDisposalByType(String bId, LocalDate startDate, LocalDate endDate){
+    public List<Disposal> selectDailyDisposalByType(String bId, LocalDate startDate, LocalDate endDate){
         return disposalDAO.selectDailyDisposalByType(bId, startDate, endDate);
     }
 

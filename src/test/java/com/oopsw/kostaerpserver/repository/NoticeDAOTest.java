@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
-import com.oopsw.kostaerpserver.vo.NoticeVO;
+import com.oopsw.kostaerpserver.vo.Notice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ public class NoticeDAOTest {
     @Test
     //특정 사업장의 알림 목록 조회 테스트
     void getNoticeList() {
-        List<NoticeVO> result = noticeDAO.getNoticeList(B_ID);
+        List<Notice> result = noticeDAO.getNoticeList(B_ID);
         assertThat(result).isNotNull();
     }
 
@@ -79,9 +79,9 @@ public class NoticeDAOTest {
         String bId = "0000000000";
         int result = noticeDAO.updateReadYn(noticeId);
         assertThat(result).isEqualTo(1);
-        List<NoticeVO> list = noticeDAO.getNoticeList(bId);
-        NoticeVO ndata = null;
-        for(NoticeVO notice : list) {
+        List<Notice> list = noticeDAO.getNoticeList(bId);
+        Notice ndata = null;
+        for(Notice notice : list) {
             if(noticeId.equals(notice.getNoticeId())) {
                 ndata = notice;
                 break;

@@ -8,7 +8,7 @@
         VALUES (#{disposalId}, CURDATE(), 'N')
     </insert>
 
-    <select id="getNoticeList" resultType="NoticeVO">
+    <select id="getNoticeList" resultType="com.oopsw.kostaerpserver.vo.Notice">
         SELECT f.foodMaterialName,
         fc.foodCategory,
         IFNULL(d.disposalCountAll, 0) AS disposalCountAll,
