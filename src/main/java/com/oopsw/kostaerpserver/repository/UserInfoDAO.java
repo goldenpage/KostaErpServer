@@ -1,22 +1,23 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.vo.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserInfoDAO {
 
-    public String login();
+    User login(User user);
 
-    public String register();
+    int register(User user);
 
-    public boolean checkMemberByVO();
+    User checkMemberByVO(User user);
 
-    public boolean setPw();
+    int setPw(User user);
 
-    public boolean getPhoneCheck();
+    int getPhoneCheck(@Param("phone") String phone);
 
-    public boolean getBidCheck();
+    int getBidCheck(@Param("bId") String bId);
 
-    public boolean checkPwFindUser();
-
+    int checkPwFindUser(User user);
 }
