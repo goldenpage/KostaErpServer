@@ -10,39 +10,84 @@
         WHERE bId = #{bId}
     </select>
 
-    <select id="getFoodMaterialList" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+    <select id="getFoodMaterialListIdDesc" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
         SELECT
-        f.foodMaterial_Id AS foodMaterialId,
-        f.foodMaterialName AS foodMaterialName,
-        c.foodCategory AS foodCategory,
-        f.foodMaterialCount AS foodMaterialCount,
-        f.foodMaterialCountAll AS foodMaterialCountAll,
-        f.foodMaterialPrice AS foodMaterialPrice,
-        f.foodMaterialType AS foodMaterialType,
-        f.vender AS vender,
-        f.incomeDate AS incomeDate,
-        f.expirationDate AS expirationDate,
-        f.bId AS bId
+            f.foodMaterial_Id AS foodMaterialId,
+            f.foodMaterialName AS foodMaterialName,
+            c.foodCategory AS foodCategory,
+            f.foodMaterialCount AS foodMaterialCount,
+            f.foodMaterialCountAll AS foodMaterialCountAll,
+            f.foodMaterialPrice AS foodMaterialPrice,
+            f.foodMaterialType AS foodMaterialType,
+            f.vender AS vender,
+            f.incomeDate AS incomeDate,
+            f.expirationDate AS expirationDate,
+            f.bId AS bId
         FROM FOODM f
-        JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
         WHERE f.bId = #{bId}
+        ORDER BY f.foodMaterial_Id DESC
+            LIMIT #{pageSize} OFFSET #{offset}
+    </select>
 
-        <choose>
-            <when test="sortType == 'idAsc'">
-                ORDER BY f.foodMaterial_Id ASC
-            </when>
-            <when test="sortType == 'expAsc'">
-                ORDER BY f.expirationDate ASC
-            </when>
-            <when test="sortType == 'expDesc'">
-                ORDER BY f.expirationDate DESC
-            </when>
-            <otherwise>
-                ORDER BY f.foodMaterial_Id DESC
-            </otherwise>
-        </choose>
+    <select id="getFoodMaterialListIdAsc" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+        SELECT
+            f.foodMaterial_Id AS foodMaterialId,
+            f.foodMaterialName AS foodMaterialName,
+            c.foodCategory AS foodCategory,
+            f.foodMaterialCount AS foodMaterialCount,
+            f.foodMaterialCountAll AS foodMaterialCountAll,
+            f.foodMaterialPrice AS foodMaterialPrice,
+            f.foodMaterialType AS foodMaterialType,
+            f.vender AS vender,
+            f.incomeDate AS incomeDate,
+            f.expirationDate AS expirationDate,
+            f.bId AS bId
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+        ORDER BY f.foodMaterial_Id ASC
+            LIMIT #{pageSize} OFFSET #{offset}
+    </select>
 
-        LIMIT #{pageSize} OFFSET #{offset}
+    <select id="getFoodMaterialListExpAsc" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+        SELECT
+            f.foodMaterial_Id AS foodMaterialId,
+            f.foodMaterialName AS foodMaterialName,
+            c.foodCategory AS foodCategory,
+            f.foodMaterialCount AS foodMaterialCount,
+            f.foodMaterialCountAll AS foodMaterialCountAll,
+            f.foodMaterialPrice AS foodMaterialPrice,
+            f.foodMaterialType AS foodMaterialType,
+            f.vender AS vender,
+            f.incomeDate AS incomeDate,
+            f.expirationDate AS expirationDate,
+            f.bId AS bId
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+        ORDER BY f.expirationDate ASC
+            LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getFoodMaterialListExpDesc" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+        SELECT
+            f.foodMaterial_Id AS foodMaterialId,
+            f.foodMaterialName AS foodMaterialName,
+            c.foodCategory AS foodCategory,
+            f.foodMaterialCount AS foodMaterialCount,
+            f.foodMaterialCountAll AS foodMaterialCountAll,
+            f.foodMaterialPrice AS foodMaterialPrice,
+            f.foodMaterialType AS foodMaterialType,
+            f.vender AS vender,
+            f.incomeDate AS incomeDate,
+            f.expirationDate AS expirationDate,
+            f.bId AS bId
+        FROM FOODM f
+                 JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+        ORDER BY f.expirationDate DESC
+            LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
     <select id="getFoodMaterialByName" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
@@ -50,8 +95,13 @@
             f.foodMaterial_Id AS foodMaterialId,
             f.foodMaterialName AS foodMaterialName,
             c.foodCategory AS foodCategory,
-            f.vender AS vender,
+            f.foodMaterialCount AS foodMaterialCount,
+            f.foodMaterialCountAll AS foodMaterialCountAll,
+            f.foodMaterialPrice AS foodMaterialPrice,
             f.foodMaterialType AS foodMaterialType,
+            f.vender AS vender,
+            f.incomeDate AS incomeDate,
+            f.expirationDate AS expirationDate,
             f.bId AS bId
         FROM FOODM f
                  JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id

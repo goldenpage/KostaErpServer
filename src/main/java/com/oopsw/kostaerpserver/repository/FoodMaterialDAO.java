@@ -1,16 +1,39 @@
 package com.oopsw.kostaerpserver.repository;
 
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
+
 @Mapper
 public interface FoodMaterialDAO {
+
     int getFoodMaterialCount(@Param("bId") String bId);
-    List<FoodMaterial> getFoodMaterialList(@Param("bId") String bId,
-                                             @Param("sortType") String sortType,
-                                             @Param("pageSize") int pageSize,
-                                             @Param("offset") int offset);
+
+    List<FoodMaterial> getFoodMaterialListIdDesc(
+            @Param("bId") String bId,
+            @Param("pageSize") int pageSize,
+            @Param("offset") int offset
+    );
+
+    List<FoodMaterial> getFoodMaterialListIdAsc(
+            @Param("bId") String bId,
+            @Param("pageSize") int pageSize,
+            @Param("offset") int offset
+    );
+
+    List<FoodMaterial> getFoodMaterialListExpAsc(
+            @Param("bId") String bId,
+            @Param("pageSize") int pageSize,
+            @Param("offset") int offset
+    );
+
+    List<FoodMaterial> getFoodMaterialListExpDesc(
+            @Param("bId") String bId,
+            @Param("pageSize") int pageSize,
+            @Param("offset") int offset
+    );
 
     List<FoodMaterial> getFoodMaterialByName(
             @Param("bId") String bId,

@@ -3,7 +3,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oopsw.kostaerpserver.repository.DisposalDAO">
 
-    <select id="getDisposals" resultType="DisposalVO">
+    <select id="getDisposals" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT d.disposal_Id,d.foodMaterial_Id, f.foodMaterialName, f.foodMaterialType,fc.foodCategory, d.disposalCountAll,
         d.disposalPrice, d.disposalDate, r.reason_Id, r.reason
         FROM DISPOSALS d
@@ -26,7 +26,7 @@
         JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
     </select>
 
-    <select id="getDisposalsFilteredPaging" resultType="DisposalVO">
+    <select id="getDisposalsFilteredPaging" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT d.disposal_Id AS disposalId, f.foodMaterialName, fc.foodCategory, f.foodMaterialType,
         d.disposalCountAll, d.disposalPrice, d.disposalDate, r.reason
         FROM DISPOSALS d
@@ -60,7 +60,7 @@
         SELECT reason FROM REASON
     </select>
 
-    <select id="getDisposalsByCategoryAndBId" resultType="DisposalVO">
+    <select id="getDisposalsByCategoryAndBId" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT d.disposal_Id, f.foodMaterialName, fc.foodCategory, f.foodMaterialType,
         d.disposalCountAll, d.disposalPrice, d.disposalDate, r.reason
         FROM DISPOSALS d
@@ -71,7 +71,7 @@
         AND f.bId = #{bId}
     </select>
 
-    <select id="getDisposalsPaging" resultType="DisposalVO">
+    <select id="getDisposalsPaging" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT d.*, f.foodMaterialName, fc.foodCategory, r.reason
         FROM DISPOSALS d
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
@@ -116,7 +116,7 @@
         AND d.disposalDate BETWEEN #{startDate} AND #{endDate}
     </select>
 
-    <select id="getTop3DisposalItems" resultType="DisposalVO">
+    <select id="getTop3DisposalItems" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT f.foodMaterial_Id, f.foodMaterialName,
         SUM(d.disposalPrice) AS totalDisposalPrice,
         SUM(d.disposalCountAll) AS disposalCount
@@ -129,7 +129,7 @@
         LIMIT 3
     </select>
 
-    <select id="getDisposalReasonRatio" resultType="DisposalVO">
+    <select id="getDisposalReasonRatio" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT r.reason_Id, r.reason,
         COUNT(*) AS disposalCount,
         (COUNT(*) * 100.0 / SUM(COUNT(*)) OVER()) AS reasonRatio
@@ -141,7 +141,7 @@
         GROUP BY r.reason_Id, r.reason
     </select>
 
-    <select id="selectDailyDisposalAmount" resultType="DisposalVO">
+    <select id="selectDailyDisposalAmount" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT d.disposalDate AS disposalDay,
         SUM(d.disposalCountAll) AS disposalCount,
         SUM(d.disposalPrice) AS totalDisposalPrice
@@ -153,7 +153,7 @@
         ORDER BY d.disposalDate
     </select>
 
-    <select id="selectDailyDisposalByType" resultType="DisposalVO">
+    <select id="selectDailyDisposalByType" resultType="com.oopsw.kostaerpserver.vo.Disposal">
         SELECT d.disposalDate AS disposalDay, f.foodMaterialType,
         SUM(d.disposalCountAll) AS disposalCount,
         SUM(d.disposalPrice) AS totalDisposalPrice
