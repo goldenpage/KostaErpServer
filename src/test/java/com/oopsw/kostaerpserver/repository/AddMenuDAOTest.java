@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.Menu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
@@ -68,7 +69,7 @@ public class AddMenuDAOTest {
 
     @Test
     void addMenu() {
-        Menu vo = new Menu();
+        AddMenu vo = new AddMenu();
         String categoryId = addMenuDAO.getCategoryId("김밥류");
 
         vo.setMenuId("M099");
@@ -83,9 +84,9 @@ public class AddMenuDAOTest {
 
     @Test
     void getNewMenuId() {
-        Menu menu = new Menu("M009","테스트메뉴", 9000, "MC001");
+        AddMenu vo = new AddMenu("M009","테스트메뉴", 9000, "MC001");
 
-        String menuId = addMenuDAO.getNewMenuId(menu);
+        String menuId = addMenuDAO.getNewMenuId(vo);
         System.out.println(menuId);
         Assertions.assertNull(menuId);
     }
@@ -122,7 +123,7 @@ public class AddMenuDAOTest {
     void addUsedMaterial() {
         String foodMaterialId = addFoodMaterialDAO.getFoodMaterialListAll("0000000000").get(0).getFoodMaterialId();
         String categoryId = addMenuDAO.getCategoryId("김밥류");
-        String menuId = addMenuDAO.getNewMenuId(new Menu("MI001","치즈김밥", 4000, categoryId));
+        String menuId = addMenuDAO.getNewMenuId(new AddMenu("MI001","치즈김밥", 4000, categoryId));
 
         Used used = new Used("U020",5, foodMaterialId, menuId);
         int result = addMenuDAO.addUsedMaterial(used);
