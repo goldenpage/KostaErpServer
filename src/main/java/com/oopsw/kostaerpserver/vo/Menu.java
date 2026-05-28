@@ -19,7 +19,4 @@ public class Menu {
     private int foodMaterialPrice;
     private int foodMaterialCountAll;
     private int usedPrice;
-    private String menuCategoryId;
-
-
 }

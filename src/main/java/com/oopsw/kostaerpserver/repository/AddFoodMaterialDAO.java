@@ -21,7 +21,7 @@ public interface AddFoodMaterialDAO {
     int checkFoodCategoryExists(String foodCategory);
 
     // 4. 카테고리 추가
-    int addFoodCategory(String foodCategory);
+    int addFoodCategory(FoodCategory foodCategory);
 
     // 5. 카테고리 삭제
     int deleteFoodCategory(String foodCategory);

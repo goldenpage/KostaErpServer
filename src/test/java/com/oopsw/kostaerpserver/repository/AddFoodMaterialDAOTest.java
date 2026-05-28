@@ -2,6 +2,7 @@ package com.oopsw.kostaerpserver.repository;
 
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
+import com.oopsw.kostaerpserver.vo.MenuCategory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,13 @@ public class AddFoodMaterialDAOTest {
 
     @Test
     void addFoodCategory() {
-        int result = addFoodMaterialDAO.addFoodCategory("테스트카테고리");
-        System.out.println(result);
-        Assertions.assertTrue(result == 1);
+        FoodCategory vo = new FoodCategory();
+
+        vo.setFoodCategoryId("FC005");
+        vo.setFoodCategory("테스트카테고리");
+        int count = addFoodMaterialDAO.addFoodCategory(vo);
+        System.out.println(count);
+        Assertions.assertTrue(count > 0);
     }
 
     @Test
@@ -74,6 +79,7 @@ public class AddFoodMaterialDAOTest {
         String categoryId = addFoodMaterialDAO.getCategoryId("정육");
 
         FoodMaterial vo = new FoodMaterial();
+
         vo.setFoodMaterialName("테스트식자재");
         vo.setFoodCategory(categoryId);
         vo.setFoodMaterialCount(10);
