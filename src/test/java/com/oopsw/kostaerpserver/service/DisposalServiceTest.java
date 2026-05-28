@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
-import com.oopsw.kostaerpserver.vo.DisposalVO;
+import com.oopsw.kostaerpserver.vo.Disposal;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public class DisposalServiceTest {
     private static final String B_ID = "0000000000";
@@ -30,9 +32,9 @@ public class DisposalServiceTest {
     @Test
     //Service가 DAO의 전체 폐기 목록 조회 기능을 정상 호출하는지 테스트
     void getDisposalsTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.getDisposals()).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.getDisposals();
+        List<Disposal> result = disposalService.getDisposals();
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getDisposals();
     }
@@ -60,9 +62,9 @@ public class DisposalServiceTest {
     @Test
     //페이지 번호를 offset으로 변환하는지 테스트
     void getDisposalsFilteredPaging_convertsPageToOffsetTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.getDisposalsFilteredPaging(B_ID, 6, 6)).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.getDisposalsFilteredPaging(B_ID, 2, 6);
+        List<Disposal> result = disposalService.getDisposalsFilteredPaging(B_ID, 2, 6);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getDisposalsFilteredPaging(B_ID, 6, 6);
     }
@@ -71,7 +73,7 @@ public class DisposalServiceTest {
     //page가 1보다 작을 경우 offset을 0으로 처리하는지 테스트
     void getDisposalsFilteredPaging_ZeroOffsetTest() {
         when(disposalDAO.getDisposalsFilteredPaging(B_ID, 0, 6)).thenReturn(List.of());
-        List<DisposalVO> result = disposalService.getDisposalsFilteredPaging(B_ID, 0, 6);
+        List<Disposal> result = disposalService.getDisposalsFilteredPaging(B_ID, 0, 6);
         assertThat(result).isEmpty();
         verify(disposalDAO).getDisposalsFilteredPaging(B_ID, 0, 6);
     }
@@ -107,9 +109,9 @@ public class DisposalServiceTest {
     @Test
     //카테고리 + 사업장 기준 폐기 목록 조회 기능 테스트
     void getDisposalsByCategoryAndBIdTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.getDisposalsByCategoryAndBId("채소", B_ID)).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.getDisposalsByCategoryAndBId("채소", B_ID);
+        List<Disposal> result = disposalService.getDisposalsByCategoryAndBId("채소", B_ID);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getDisposalsByCategoryAndBId("채소", B_ID);
     }
@@ -117,9 +119,9 @@ public class DisposalServiceTest {
     @Test
     //페이지 번호를 offset으로 변환하는 페이징 기능 테스트
     void getDisposalsPaging_convertsPageToOffsetTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.getDisposalsPaging(B_ID, 12, 6)).thenReturn(disposals);
-        List<DisposalVO> result =disposalService.getDisposalsPaging(B_ID, 3, 6);
+        List<Disposal> result =disposalService.getDisposalsPaging(B_ID, 3, 6);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getDisposalsPaging(B_ID, 12, 6);
     }
@@ -173,9 +175,9 @@ public class DisposalServiceTest {
     @Test
     //폐기 금액 상위 3개 품목 조회 기능 테스트
     void getTop3DisposalItemsTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.getTop3DisposalItems(B_ID, START_DATE, END_DATE)).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.getTop3DisposalItems(B_ID, START_DATE, END_DATE);
+        List<Disposal> result = disposalService.getTop3DisposalItems(B_ID, START_DATE, END_DATE);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getTop3DisposalItems(B_ID, START_DATE, END_DATE);
     }
@@ -183,9 +185,9 @@ public class DisposalServiceTest {
     @Test
     //폐기 사유 비율 조회 기능 테스트
     void getDisposalReasonRatioTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.getDisposalReasonRatio(B_ID, START_DATE, END_DATE)).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.getDisposalReasonRatio(B_ID, START_DATE, END_DATE);
+        List<Disposal> result = disposalService.getDisposalReasonRatio(B_ID, START_DATE, END_DATE);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getDisposalReasonRatio(B_ID, START_DATE, END_DATE);
     }
@@ -193,9 +195,9 @@ public class DisposalServiceTest {
     @Test
     //일별 폐기 수량 및 금액 조회 기능 테스트
     void selectDailyDisposalAmountTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.selectDailyDisposalAmount(B_ID, START_DATE, END_DATE)).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.selectDailyDisposalAmount(B_ID, START_DATE, END_DATE);
+        List<Disposal> result = disposalService.selectDailyDisposalAmount(B_ID, START_DATE, END_DATE);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).selectDailyDisposalAmount(B_ID, START_DATE, END_DATE);
     }
@@ -203,9 +205,9 @@ public class DisposalServiceTest {
     @Test
     //식자재 타입별 일별 폐기 통계 조회 기능 테스트
     void selectDailyDisposalByTypeTest() {
-        List<DisposalVO> disposals = List.of(new DisposalVO());
+        List<Disposal> disposals = List.of(new Disposal());
         when(disposalDAO.selectDailyDisposalByType(B_ID, START_DATE, END_DATE)).thenReturn(disposals);
-        List<DisposalVO> result = disposalService.selectDailyDisposalByType(B_ID, START_DATE, END_DATE);
+        List<Disposal> result = disposalService.selectDailyDisposalByType(B_ID, START_DATE, END_DATE);
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).selectDailyDisposalByType(B_ID, START_DATE, END_DATE);
     }
