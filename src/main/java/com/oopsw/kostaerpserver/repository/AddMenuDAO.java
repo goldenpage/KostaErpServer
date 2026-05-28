@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.Menu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
@@ -11,10 +12,10 @@ import java.util.Map;
 @Mapper
 public interface AddMenuDAO {
     // 1. 메뉴 입력
-    int addMenu(Menu menu);
+    int addMenu(AddMenu addmenu);
 
     // 2. 메뉴 ID 조회
-    String getNewMenuId(Menu menu);
+    String getNewMenuId(AddMenu addmenu);
 
     // 3. 메뉴 카테고리 존재 여부 확인
     int checkMenuCategoryExists(MenuCategory menuCategory);
