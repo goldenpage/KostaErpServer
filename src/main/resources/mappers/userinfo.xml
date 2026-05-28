@@ -38,12 +38,12 @@
     )
   </insert>
 
-  <select id="checkMemberByVO" resultType="com.oopsw.kostaerpserver.repository.UserInfoDAO">
+  <select id="checkMemberByVO" resultType="com.oopsw.kostaerpserver.vo.User">
     SELECT bId, name, storeName, storeType, pw FROM USERINFO
     WHERE bId = #{bId} AND name = #{name} AND pw = #{pw}
   </select>
 
-  <update id="setPw" parameterType="com.oopsw.kostaerpserver.repository.UserInfoDAO">
+  <update id="setPw" parameterType="com.oopsw.kostaerpserver.vo.User">
     UPDATE USERINFO SET pw = #{pw} WHERE bId = #{bId} AND NAME = #{name} AND PHONE = #{phone}
   </update>
 
