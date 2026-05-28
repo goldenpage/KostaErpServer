@@ -1,8 +1,13 @@
 package com.oopsw.kostaerpserver.vo;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Menu {
     private String menuId;
     private String menuName;
@@ -14,4 +19,7 @@ public class Menu {
     private int foodMaterialPrice;
     private int foodMaterialCountAll;
     private int usedPrice;
+    private String menuCategoryId;
+
+
 }

@@ -75,7 +75,7 @@ public class NoticeDAOTest {
     @Test
     //알림 읽음 여부 수정 테스트
     void updateReadYn() {
-        String noticeId = "N001";
+        String noticeId = "N007";
         String bId = "0000000000";
         int result = noticeDAO.updateReadYn(noticeId);
         assertThat(result).isEqualTo(1);

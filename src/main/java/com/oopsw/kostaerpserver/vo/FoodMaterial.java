@@ -1,10 +1,14 @@
 package com.oopsw.kostaerpserver.vo;
 
-import lombok.Data;
+import java.util.Date;
 
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FoodMaterial {
     private String foodMaterialId;
     private String foodMaterialName;
@@ -12,9 +16,12 @@ public class FoodMaterial {
     private int foodMaterialCount;
     private int foodMaterialCountAll;
     private int foodMaterialPrice;
-    private String foodMaterialType;
     private String vender;
-    private LocalDate incomeDate;
-    private LocalDate expirationDate;
+    private String foodMaterialType;
+    private Date incomeDate;
+    private Date expirationDate;
     private String bId;
+    private int ranking;
+    private int totalExpense;
+
 }
