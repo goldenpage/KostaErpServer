@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oopsw.kostaerpserver.repository.NoticeDAO">
+
+    <insert id="insertNotice">
+        INSERT INTO DISPOSAL_NOTICE (disposal_id, notice_date, read_yn)
+        VALUES (#{disposalId}, CURDATE(), 'N')
+    </insert>
+
+    <select id="getNoticeList" resultType="NoticeVO">
+        SELECT f.foodMaterialName,
+        fc.foodCategory,
+        IFNULL(d.disposalCountAll, 0) AS disposalCountAll,
+        f.foodMaterialType,
+        f.expirationDate AS expirationDate,
+        d.disposal_Id AS disposalId
+        FROM FOODM f
+        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
+        LEFT JOIN DISPOSALS d ON f.foodMaterial_Id = d.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND f.expirationDate &lt; CURDATE()
+        AND IFNULL(d.disposalCountAll, 0) &gt; 0
+        ORDER BY f.expirationDate DESC
+    </select>
+
+    <delete id="deleteNoticeAll">
+        DELETE FROM DISPOSAL_NOTICE
+    </delete>
+
+    <update id="updateReadYn">
+        UPDATE DISPOSAL_NOTICE
+        SET read_yn = 'Y'
+        WHERE notice_id = #{noticeId}
+    </update>
+
+    <select id="getExpiredIdList" resultType="string">
+        SELECT d.disposal_Id
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND f.expirationDate &lt; CURDATE()
+    </select>
+
+    <select id="getExpiredCount" resultType="int">
+        SELECT COUNT(*) AS cnt
+        FROM FOODM f
+        LEFT JOIN DISPOSALS d ON f.foodMaterial_Id = d.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND f.expirationDate &lt; CURDATE()
+        AND IFNULL(d.disposalCountAll, 0) &gt; 0
+    </select>
+
+    <select id="getSolidTotal" resultType="int">
+        SELECT IFNULL(SUM(d.disposalCountAll), 0) AS total
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND f.foodMaterialType = '고체'
+        AND f.expirationDate &lt; CURDATE()
+    </select>
+
+    <select id="getLiquidTotal" resultType="int">
+        SELECT IFNULL(SUM(d.disposalCountAll), 0) AS total
+        FROM DISPOSALS d
+        JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
+        WHERE f.bId = #{bId}
+        AND f.foodMaterialType = '액체'
+        AND f.expirationDate &lt; CURDATE()
+    </select>
+
+    <select id="getMaxOverDay" resultType="int">
+        SELECT IFNULL(MAX(DATEDIFF(CURDATE(), expirationDate)), 0) AS max_day
+        FROM FOODM
+        WHERE bId = #{bId}
+        AND expirationDate &lt; CURDATE()
+    </select>
+</mapper>
