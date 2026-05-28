@@ -11,9 +11,7 @@ public interface StatisticsDAO {
     List<Map<String, Object>> getMonthlyFoodMaterialExpenseRank(
 
         @Param("bId") String bId,
-
         @Param("startDate") LocalDate startDate,
-
         @Param("endDate") LocalDate endDate
 
     );
@@ -22,14 +20,12 @@ public interface StatisticsDAO {
         @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
-
     );
 
     List<Map<String, Object>> getMonthlyExpenseRankChart(
         @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
-
     );
 
     List<Map<String, Object>> getSalesHistory(

@@ -33,8 +33,10 @@ public class UserinfoDAOTest {
 
     @Test
     void loginTest() {
-        log.info("login result={}", userInfoDAO.login(testUser()));
+        userInfoDAO.login("0000000000","test123!");
+        log.info("login result={}",  userInfoDAO.login("0000000000","kim123!"));
     }
+
 
     @Test
     void register() {
