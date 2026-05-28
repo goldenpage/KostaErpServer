@@ -2,6 +2,7 @@ package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
 import com.oopsw.kostaerpserver.vo.Disposal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,14 +11,10 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class DisposalServiceImpl implements DisposalService {
 
     private final DisposalDAO disposalDAO;
-
-    //생성자 주입
-    public DisposalServiceImpl(DisposalDAO disposalDAO) {
-        this.disposalDAO = disposalDAO;
-    }
 
     @Override
     public List<Disposal> getDisposals() {
