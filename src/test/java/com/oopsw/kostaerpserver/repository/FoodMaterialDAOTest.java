@@ -25,16 +25,38 @@ public class FoodMaterialDAOTest {
     }
 
     @Test
-    void getFoodMaterialListTest() {
-        List<FoodMaterial> list = foodMaterialDAO.getFoodMaterialList(
-                "0000000000",
-                "idDesc",
-                5,
-                0
-        );
+    void getFoodMaterialListIdDescTest() {
+        List<FoodMaterial> list =
+                foodMaterialDAO.getFoodMaterialListIdDesc("0000000000", 5, 0);
 
         list.forEach(System.out::println);
+        assertTrue(list.size() > 0);
+    }
 
+    @Test
+    void getFoodMaterialListIdAscTest() {
+        List<FoodMaterial> list =
+                foodMaterialDAO.getFoodMaterialListIdAsc("0000000000", 5, 0);
+
+        list.forEach(System.out::println);
+        assertTrue(list.size() > 0);
+    }
+
+    @Test
+    void getFoodMaterialListExpAscTest() {
+        List<FoodMaterial> list =
+                foodMaterialDAO.getFoodMaterialListExpAsc("0000000000", 5, 0);
+
+        list.forEach(System.out::println);
+        assertTrue(list.size() > 0);
+    }
+
+    @Test
+    void getFoodMaterialListExpDescTest() {
+        List<FoodMaterial> list =
+                foodMaterialDAO.getFoodMaterialListExpDesc("0000000000", 5, 0);
+
+        list.forEach(System.out::println);
         assertTrue(list.size() > 0);
     }
 
