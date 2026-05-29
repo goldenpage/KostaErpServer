@@ -19,10 +19,12 @@ public class StatisticsServiceTest {
     @Autowired
     StatisticsService statisticsService;
 
+    String bId = "0000000000";
+
     @Test
     void getMonthlyFoodMaterialExpenseRankTest() {
         List<Map<String, Object>> list =
-            statisticsService.getMonthlyFoodMaterialExpenseRank("0000000000",
+            statisticsService.getMonthlyFoodMaterialExpenseRank(bId,
                 LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(list);
@@ -30,7 +32,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getTotalExpenseTest() {
-        Long result = statisticsService.getTotalExpense("0000000000",
+        Long result = statisticsService.getTotalExpense(bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(result);
@@ -40,18 +42,16 @@ public class StatisticsServiceTest {
     void getMonthlyExpenseRankChartTest() {
         List<Map<String,Object>> list =
             statisticsService.getMonthlyExpenseRankChart(
-            "0000000000",
+            bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
-
         assertNotNull(list);
-
 
     }
 
     @Test
     void getSalesHistoryTest() {
         List<Map<String, Object>> list = statisticsService.getSalesHistory(
-            "0000000000",
+            bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
         assertNotNull(list);
     }
@@ -62,7 +62,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getTotalSalesTest() {
-        Long result = statisticsService.getTotalSales("0000000000",
+        Long result = statisticsService.getTotalSales(bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(result);
@@ -73,7 +73,7 @@ public class StatisticsServiceTest {
     @Test
     void getMenuSalesRankTest() {
         List<Map<String, Object>> list = statisticsService.getMenuSalesRank(
-            "0000000000",
+            bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(list);
@@ -82,7 +82,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getDisposalRateTest() {
-        Double result = statisticsService.getDisposalRate("0000000000",
+        Double result = statisticsService.getDisposalRate(bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(result);
@@ -91,7 +91,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getTotalDisposalPriceTest() {
-        Long result = statisticsService.getTotalDisposalPrice("0000000000",
+        Long result = statisticsService.getTotalDisposalPrice(bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
             assertNotNull(result);
@@ -101,7 +101,7 @@ public class StatisticsServiceTest {
     void getTopDisposalMaterialsTest() {
         List<Map<String,Object>> list =
             statisticsService.getTopDisposalMaterials(
-            "0000000000",
+            bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(list);
@@ -112,7 +112,7 @@ public class StatisticsServiceTest {
     void getDisposalReasonRatioTest() {
         List<Map<String, Object>> list =
             statisticsService.getDisposalReasonRatio(
-            "0000000000",
+            bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(list);
@@ -122,7 +122,7 @@ public class StatisticsServiceTest {
     @Test
     void getDailyDisposalChartTest() {
         List<Map<String,Object>> list = statisticsService.getDailyDisposalChart(
-            "0000000000",
+            bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
         assertNotNull(list);

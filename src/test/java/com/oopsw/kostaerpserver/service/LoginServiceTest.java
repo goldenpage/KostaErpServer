@@ -1,13 +1,12 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.vo.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.oopsw.kostaerpserver.vo.User;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +20,13 @@ public class LoginServiceTest {
     @Autowired
     LoginServiceImpl loginService;
 
+    String bId = "0000000000";
 
     @Test
     void loginTest() {
-        User user = loginService.login("0000000000", "test123");
+        User user = loginService.login(bId, "test123");
         assertNotNull(user);
-        assertEquals("0000000000",user.getBId());
+        assertEquals(bId,user.getBId());
     }
 
     @Test
@@ -45,17 +45,17 @@ public class LoginServiceTest {
 
     @Test
     void checkMemberByVOTest() {
-        User user = loginService.checkMemberByVO("0000000000", "김사장",
+        User user = loginService.checkMemberByVO(bId, "김사장",
             "test123");
 
         assertNotNull(user);
-        assertEquals("0000000000", user.getBId());
+        assertEquals(bId, user.getBId());
     }
 
     @Test
     @Transactional
     void setPwTest() {
-        int result = loginService.setPw("test123", "0000000000", "김사장",
+        int result = loginService.setPw("test123", bId, "김사장",
             "01000000000");
         assertNotNull(result);
         assertTrue(result==1);
@@ -71,14 +71,14 @@ public class LoginServiceTest {
 
     @Test
     void getBidCheckTest() {
-        int result = loginService.getBidCheck("0000000000");
+        int result = loginService.getBidCheck(bId);
         assertNotNull(result);
         assertTrue(result==1);
     }
 
     @Test
     void checkPwFindUserTest() {
-        int result = loginService.checkPwFindUser("0000000000", "김사장",
+        int result = loginService.checkPwFindUser(bId, "김사장",
             "01000000000");
         assertNotNull(result);
         assertTrue(result==1);
