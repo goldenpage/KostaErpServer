@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface LoginService {
-    boolean login(String bId, String pw);
-    int register(User user);
-    User checkMemberByVO(User user);
-    int setPw(User user);
-    int getPhoneCheck(@Param("phone") String phone);
+    User login(String bId, String pw);
+    int register(User user, boolean marketingAgree);
+    User checkMemberByVO(String bId, String name,String pw);
+   int setPw( String pw, String bId, String name, String phone);
+    int getPhoneCheck( String phone);
     int getBidCheck(@Param("bId") String bId);
-    int checkPwFindUser(User user);
+    int checkPwFindUser(String bId, String name, String phone);
 }

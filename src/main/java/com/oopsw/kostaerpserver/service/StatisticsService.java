@@ -1,13 +1,13 @@
-package com.oopsw.kostaerpserver.repository;
+package com.oopsw.kostaerpserver.service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
-@Mapper
-public interface StatisticsDAO {
+@Service
+public interface StatisticsService {
 
     List<Map<String, Object>> getMonthlyFoodMaterialExpenseRank(
         String bId,

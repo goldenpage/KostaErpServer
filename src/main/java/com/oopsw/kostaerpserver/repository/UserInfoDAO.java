@@ -9,11 +9,11 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserInfoDAO {
 
-    boolean login(String bId, String pw);
+    User login(String bId, String pw);
     int register(User user);
-    User checkMemberByVO(User user);
-    int setPw(User user);
-    int getPhoneCheck(@Param("phone") String phone);
+    User checkMemberByVO(String bId, String name, String pw);
+    int setPw( String pw, String bId, String name, String phone);
+    int getPhoneCheck(String phone);
     int getBidCheck(@Param("bId") String bId);
-    int checkPwFindUser(User user);
+    int checkPwFindUser(String bId, String name, String phone);
 }

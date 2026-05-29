@@ -2,40 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oopsw.kostaerpserver.repository.UserInfoDAO">
-  <insert id="register" parameterType="map">
+  <insert id="register" parameterType="com.oopsw.kostaerpserver.vo.User">
     INSERT INTO USERINFO (
-    bid,
-    name,
-    phone,
-    email,
-    storeName,
-    storeType,
-    storeCategory,
-    pw,
-    signDate,
-    agreementDate,
-    marketingDate
+      bid,
+      name,
+      phone,
+      email,
+      storeName,
+      storeType,
+      storeCategory,
+      pw,
+      signDate,
+      agreementDate,
+      marketingDate
     )
     VALUES (
-    #{bId},
-    #{name},
-    #{phone},
-    #{email},
-    #{storeName},
-    #{storeType},
-    #{storeCategory},
-    #{pw},
-    SYSDATE,
-    SYSDATE,
-    <choose>
-      <when test="marketingDate != null and marketingDate != ''">
-        SYSDATE
-      </when>
-      <otherwise>
-        NULL
-      </otherwise>
-    </choose>
-    )
+             #{bId},
+             #{name},
+             #{phone},
+             #{email},
+             #{storeName},
+             #{storeType},
+             #{storeCategory},
+             #{pw},
+             #{signDate},
+             #{agreementDate},
+             #{marketingDate}
+           )
   </insert>
 
   <select id="checkMemberByVO" resultType="com.oopsw.kostaerpserver.vo.User">
@@ -47,23 +40,24 @@
     UPDATE USERINFO SET pw = #{pw} WHERE bId = #{bId} AND NAME = #{name} AND PHONE = #{phone}
   </update>
 
-  <select id="login" resultType="hashmap" parameterType="map">
+  <select id="login" resultType="com.oopsw.kostaerpserver.vo.User">
     SELECT bId, name FROM USERINFO
     WHERE bId = #{bId} AND pw = #{pw}
   </select>
 
 
   <select id = "getPhoneCheck" resultType="int">
-    SELECT bId, name, phone FROM USERINFO
+    SELECT COUNT(*)
+    FROM USERINFO
     WHERE phone = #{phone}
   </select>
 
   <select id="getBidCheck" resultType="int">
-    SELECT bId FROM USERINFO WHERE bId = #{bId}
+    SELECT COUNT(*) FROM USERINFO WHERE bId = #{bId}
   </select>
 
   <select id="checkPwFindUser" resultType="int">
-    SELECT bId FROM USERINFO WHERE bId = #{bId} AND name = #{name} AND phone = #{phone}
+    SELECT COUNT(*) FROM USERINFO WHERE bId = #{bId} AND name = #{name} AND phone = #{phone}
   </select>
 
 </mapper>
