@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.service;
 import com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class AddFoodMaterialServiceImpl implements AddFoodMaterialService {
-    @Autowired
-    AddFoodMaterialDAO addFoodMaterialDAO;
+    private final AddFoodMaterialDAO addFoodMaterialDAO;
 
     // 1. 사용하고 있는 식자재 개수 조회
     public int getFoodMaterialCount(String bId){
