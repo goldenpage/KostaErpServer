@@ -1,15 +1,18 @@
 package com.oopsw.kostaerpserver.repository;
 
 import com.oopsw.kostaerpserver.vo.Menu;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+@Slf4j
+@ActiveProfiles("test")
 @SpringBootTest
 public class MenuDAOTest {
 
@@ -20,7 +23,7 @@ public class MenuDAOTest {
     void getMenuListTest() {
         List<Menu> list = menuDAO.getMenuList("0000000000");
 
-        list.forEach(System.out::println);
+        list.forEach(menu -> log.info("menu = {}", menu));
 
         assertTrue(list.size() > 0);
     }
@@ -29,7 +32,7 @@ public class MenuDAOTest {
     void getMenuDetailTest() {
         List<Menu> list = menuDAO.getMenuDetail("MI001");
 
-        list.forEach(System.out::println);
+        list.forEach(menu -> log.info("menu detail = {}", menu));
 
         assertTrue(list.size() > 0);
     }
@@ -37,7 +40,7 @@ public class MenuDAOTest {
     @Test
     void getLackMaterialCountTest() {
         int count = menuDAO.getLackMaterialCount("MI001", 1);
-        System.out.println("lack count = " + count);
+        log.info("lack count = {}", count);
 
         assertTrue(count >= 0);
     }
@@ -54,7 +57,7 @@ public class MenuDAOTest {
                 "0000000000"
         );
 
-        System.out.println("update result = " + result);
+        log.info("update result = {}", result);
 
         assertTrue(result > 0);
     }

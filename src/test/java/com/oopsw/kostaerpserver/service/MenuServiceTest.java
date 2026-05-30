@@ -25,7 +25,7 @@ public class MenuServiceTest {
     void getMenuListTest() {
         List<Menu> list = menuService.getMenuList(bId);
 
-        list.forEach(System.out::println);
+        list.forEach(menu -> log.info("menu = {}", menu));
 
         assertTrue(list.size() > 0);
     }
@@ -34,7 +34,7 @@ public class MenuServiceTest {
     void getMenuDetailTest() {
         List<Menu> list = menuService.getMenuDetail("MI001");
 
-        list.forEach(System.out::println);
+        list.forEach(menu -> log.info("menu detail = {}", menu));
 
         assertTrue(list.size() > 0);
     }
@@ -44,7 +44,7 @@ public class MenuServiceTest {
     void saleMenuTest() {
         menuService.saleMenu("MI001", 1, bId);
 
-        System.out.println("판매 차감 테스트 완료");
+        log.info("판매 차감 테스트 완료");
     }
 
     @Test
