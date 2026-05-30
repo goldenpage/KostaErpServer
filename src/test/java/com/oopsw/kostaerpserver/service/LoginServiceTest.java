@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +24,7 @@ public class LoginServiceTest {
     String bId = "0000000000";
 
     @Test
-    void loginTest() {
+    void loginTest() throws BadRequestException {
         User user = loginService.login(bId, "test123");
         assertNotNull(user);
         assertEquals(bId,user.getBId());

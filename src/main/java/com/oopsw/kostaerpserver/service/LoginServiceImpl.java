@@ -1,9 +1,10 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.UserInfoDAO;
+import com.oopsw.kostaerpserver.service.Interface.LoginService;
 import com.oopsw.kostaerpserver.vo.User;
 import java.time.LocalDateTime;
-import java.util.Date;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,10 @@ public class LoginServiceImpl implements LoginService {
     UserInfoDAO userInfoDAO;
 
     @Override
-    public User login(String bId, String pw) {
+    public User login(String bId, String pw) throws BadRequestException {
+        if (bId == null || bId.isBlank()) {
+            throw new BadRequestException("사업자 ID는 필수입니다.");
+        }
         return userInfoDAO.login(bId, pw);
     }
 
