@@ -30,7 +30,7 @@ public class AddMenuDAOTest {
     @Test
     void getMenuCategoryList() {
         List<MenuCategory> list = addMenuDAO.getMenuCategoryList("0000000000");
-        System.out.println(list);
+        log.info("getMenuCategoryList: {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -38,7 +38,7 @@ public class AddMenuDAOTest {
     void checkMenuCategoryExists() {
         MenuCategory vo = new MenuCategory("MC006","김밥류", "0000000000");
         int count = addMenuDAO.checkMenuCategoryExists(vo);
-        System.out.println(count);
+        log.info("checkMenuCategoryExists(): {}", count);
         Assertions.assertTrue(count > 0);
     }
 
@@ -46,28 +46,28 @@ public class AddMenuDAOTest {
     void addMenuCategory() {
         MenuCategory vo = new MenuCategory("M007","테스트메뉴카테고리", "0000000000");
         int result = addMenuDAO.addMenuCategory(vo);
-        System.out.println(result);
+        log.info("addMenuCategory(): {}", vo.getMenuCategory(), result);
         Assertions.assertTrue(result == 1);
     }
 
     @Test
     void deleteMenuCategory() {
         int result = addMenuDAO.deleteMenuCategory("떡볶이류");
-        System.out.println(result);
+        log.info("deleteMenuCategory(): {}", result);
         Assertions.assertTrue(result == 1);
     }
 
     @Test
     void getCategoryId() {
         String categoryId = addMenuDAO.getCategoryId("김밥류");
-        System.out.println(categoryId);
+        log.info("getCategoryId(): {}", categoryId);
         Assertions.assertNotNull(categoryId);
     }
 
     @Test
     void hasMenuByCategory() {
         int count = addMenuDAO.hasMenuByCategory("한식");
-        System.out.println(count);
+        log.info("hasMenuByCategory(): {}", count);
         Assertions.assertTrue(count >= 0);
     }
 
@@ -82,7 +82,7 @@ public class AddMenuDAOTest {
         vo.setMenuCategoryId(categoryId);
 
         int result = addMenuDAO.addMenu(vo);
-        System.out.println(result);
+        log.info("addMenu(): {}", vo.getMenuName(), result);
         Assertions.assertTrue(result > 0);
     }
 
@@ -91,35 +91,35 @@ public class AddMenuDAOTest {
         AddMenu vo = new AddMenu("M009","테스트메뉴", 9000, "MC001");
 
         String menuId = addMenuDAO.getNewMenuId(vo);
-        System.out.println(menuId);
+        log.info("getNewMenuId(): {}", vo.getMenuName(), menuId);
         Assertions.assertNull(menuId);
     }
 
     @Test
     void hasMenuCheck_notExists() {
         String result = addMenuDAO.hasMenuCheck("xxxxxxx");
-        System.out.println(result);
+        log.info("hasMenuCheck(): {}", result);
         Assertions.assertNull(result);
     }
 
     @Test
     void hasMenuCheck_exists() {
         String result = addMenuDAO.hasMenuCheck("치즈김밥");
-        System.out.println(result);
+        log.info("hasMenuCheck(): {}", result);
         Assertions.assertNotNull(result);
     }
 
     @Test
     void getMenuList() {
         List<Menu> list = addMenuDAO.getMenuList("0000000000");
-        System.out.println(list);
+        log.info("getMenuList: {}", list);
         Assertions.assertNotNull(list);
     }
 
     @Test
     void getMenuDetail() {
         List<Menu> detail = addMenuDAO.getMenuDetail("1");
-        System.out.println(detail);
+        log.info("getMenuDetail: {}", detail);
         Assertions.assertNotNull(detail);
     }
 
@@ -131,14 +131,14 @@ public class AddMenuDAOTest {
 
         Used used = new Used("U020",5, foodMaterialId, menuId);
         int result = addMenuDAO.addUsedMaterial(used);
-        System.out.println(result);
+        log.info("addUsedMaterial() 결과: {}", foodMaterialId, menuId, result);
         Assertions.assertTrue(result > 0);
     }
 
     @Test
     void deleteUsedMaterial() {
         int result = addMenuDAO.deleteUsedMaterial("99999");
-        System.out.println(result);
+        log.info("deleteUsedMaterial(): {}", result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -150,7 +150,7 @@ public class AddMenuDAOTest {
         params.put("bId", "0000000000");
 
         int result = addMenuDAO.updateFoodMaterialAfterSale(params);
-        System.out.println(result);
+        log.info("updateFoodMaterialAfterSale(): {}", result);
         Assertions.assertTrue(result >= 0);
     }
 }
