@@ -25,7 +25,7 @@ public class FoodMaterialServiceTest {
     void getFoodMaterialCountTest() {
         int count = foodMaterialService.getFoodMaterialCount(bId);
 
-        System.out.println("count = " + count);
+        log.info("count = {}", count);
 
         assertTrue(count > 0);
     }
@@ -35,7 +35,7 @@ public class FoodMaterialServiceTest {
         List<FoodMaterial> list =
                 foodMaterialService.getFoodMaterialList(bId, "idDesc", 1, 5);
 
-        list.forEach(System.out::println);
+        list.forEach(food -> log.info("food = {}", food));
 
         assertTrue(list.size() > 0);
     }
@@ -45,7 +45,7 @@ public class FoodMaterialServiceTest {
         List<FoodMaterial> list =
                 foodMaterialService.getFoodMaterialList(bId, "expAsc", 1, 5);
 
-        list.forEach(System.out::println);
+        list.forEach(food -> log.info("food = {}", food));
 
         assertTrue(list.size() > 0);
     }
@@ -55,7 +55,7 @@ public class FoodMaterialServiceTest {
         List<FoodMaterial> list =
                 foodMaterialService.searchFoodMaterial(bId, "햄");
 
-        list.forEach(System.out::println);
+        list.forEach(food -> log.info("food = {}", food));
 
         assertTrue(list.size() > 0);
     }
@@ -72,6 +72,6 @@ public class FoodMaterialServiceTest {
 
         foodMaterialService.deleteFoodMaterial(foodMaterialId, bId);
 
-        System.out.println("삭제 테스트 대상 = " + foodMaterialId);
+        log.info("삭제 테스트 대상 = {}", foodMaterialId);
     }
 }
