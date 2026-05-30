@@ -28,14 +28,14 @@ public class AddFoodMaterialDAOTest {
     @Test
     void getFoodCategoryList() {
         List<FoodCategory> list = addFoodMaterialDAO.getFoodCategoryList();
-        System.out.println(list);
+        log.info("getFoodCategoryList: {}", list);
         Assertions.assertNotNull(list);
     }
 
     @Test
     void checkFoodCategoryExists() {
         int count = addFoodMaterialDAO.checkFoodCategoryExists("정육");
-        System.out.println(count);
+        log.info("checkFoodCategoryExists(): {}", count);
         Assertions.assertTrue(count > 0);
     }
 
@@ -46,35 +46,35 @@ public class AddFoodMaterialDAOTest {
         vo.setFoodCategoryId("FC005");
         vo.setFoodCategory("테스트카테고리");
         int count = addFoodMaterialDAO.addFoodCategory(vo);
-        System.out.println(count);
+        log.info("addFoodCategory(): {}", vo.getFoodCategory(), count);
         Assertions.assertTrue(count > 0);
     }
 
     @Test
     void deleteFoodCategory() {
         int result = addFoodMaterialDAO.deleteFoodCategory("반찬");
-        System.out.println(result);
+        log.info("deleteFoodCategory(): {}", result);
         Assertions.assertTrue(result == 1);
     }
 
     @Test
     void getCategoryId() {
         String categoryId = addFoodMaterialDAO.getCategoryId("정육");
-        System.out.println(categoryId);
+        log.info("getCategoryId(): {}", categoryId);
         Assertions.assertNotNull(categoryId);
     }
 
     @Test
     void hasFoodMaterialByCategory() {
         int count = addFoodMaterialDAO.hasFoodMaterialByCategory("육류");
-        System.out.println(count);
+        log.info("hasFoodMaterialByCategory(): {}", count);
         Assertions.assertTrue(count >= 0);
     }
 
     @Test
     void getFoodMaterialCount() {
         int count = addFoodMaterialDAO.getFoodMaterialCount("0000000000");
-        System.out.println(count);
+        log.info("getFoodMaterialCount(): {}", count);
         Assertions.assertTrue(count >= 0);
     }
 
@@ -96,7 +96,7 @@ public class AddFoodMaterialDAOTest {
         vo.setBId("0000000000");
 
         int result = addFoodMaterialDAO.addFoodMaterial(vo);
-        System.out.println(result);
+        log.info("addFoodMaterial(): {}", vo.getFoodMaterialName(), result);
         Assertions.assertTrue(result == 1);
     }
 
@@ -109,7 +109,7 @@ public class AddFoodMaterialDAOTest {
         params.put("pageSize", 10);
 
         List<FoodMaterial> list = addFoodMaterialDAO.getFoodMaterialList(params);
-        System.out.println(list);
+        log.info("getFoodMaterialList: {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -120,14 +120,14 @@ public class AddFoodMaterialDAOTest {
         params.put("bId", "0000000000");
 
         List<FoodMaterial> list = addFoodMaterialDAO.getFoodMaterialByName(params);
-        System.out.println(list);
+        log.info("getFoodMaterialByName: {}", list);
         Assertions.assertNotNull(list);
     }
 
     @Test
     void getFoodMaterialListAll() {
         List<FoodMaterial> list = addFoodMaterialDAO.getFoodMaterialListAll("0000000000");
-        System.out.println(list);
+        log.info("getFoodMaterialListAll: {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -135,7 +135,7 @@ public class AddFoodMaterialDAOTest {
     void getFoodMaterialDetail() {
         // DB에 실제 존재하는 foodMaterialId로 변경 필요
         FoodMaterial vo = addFoodMaterialDAO.getFoodMaterialDetail("FM001");
-        System.out.println(vo);
+        log.info("getFoodMaterialDetail(): {}", vo);
         Assertions.assertNotNull(vo);
     }
 
@@ -153,7 +153,7 @@ public class AddFoodMaterialDAOTest {
         params.put("bId", "0000000000");
         int result = addFoodMaterialDAO.deleteFoodMaterial(params);
 
-        System.out.println(result);
+        log.info("deleteFoodMaterial(): {}", foodMaterialId, result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -165,7 +165,7 @@ public class AddFoodMaterialDAOTest {
         params.put("endDate", "2025-12-31");
 
         int total = addFoodMaterialDAO.getFoodMaterialTotalAmount(params);
-        System.out.println(total);
+        log.info("getFoodMaterialTotalAmount(): {}", total);
         Assertions.assertTrue(total >= 0);
     }
 
@@ -177,7 +177,7 @@ public class AddFoodMaterialDAOTest {
         params.put("endDate", "2025-12-31");
 
         List<FoodMaterial> list = addFoodMaterialDAO.getFoodMaterialSpendingRank(params);
-        System.out.println(list);
+        log.info("getFoodMaterialSpendingRank(): {}", list);
         Assertions.assertNotNull(list);
     }
 }

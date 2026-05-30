@@ -30,7 +30,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void getFoodMaterialCount() {
         int count = addFoodMaterialService.getFoodMaterialCount("0000000000");
-        System.out.println(count);
+        log.info("getFoodMaterialCount: {}", count);
         Assertions.assertTrue(count >= 0);
     }
 
@@ -52,7 +52,7 @@ public class AddFoodMaterialServiceTest {
         vo.setBId("0000000000");
 
         int result = addFoodMaterialService.addFoodMaterial(vo);
-        System.out.println(result);
+        log.info("addFoodMaterial(): {}", vo.getFoodMaterialName(), result);
         Assertions.assertTrue(result == 1);
     }
 
@@ -60,7 +60,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void checkFoodCategoryExists_exists() {
         int count = addFoodMaterialService.checkFoodCategoryExists("정육");
-        System.out.println(count);
+        log.info("checkFoodCategoryExists: {}", count);
         Assertions.assertTrue(count > 0);
     }
 
@@ -68,7 +68,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void checkFoodCategoryExists_notExists() {
         int count = addFoodMaterialService.checkFoodCategoryExists("없는카테고리");
-        System.out.println(count);
+        log.info("checkFoodCategoryExists() : {}", count);
         Assertions.assertTrue(count == 0);
     }
 
@@ -80,7 +80,7 @@ public class AddFoodMaterialServiceTest {
         vo.setFoodCategory("테스트카테고리");
 
         int result = addFoodMaterialService.addFoodCategory(vo);
-        System.out.println(result);
+        log.info("addFoodCategory(): {}", vo.getFoodCategory(), result);
         Assertions.assertTrue(result == 1);
     }
 
@@ -88,7 +88,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void deleteFoodCategory() {
         int result = addFoodMaterialService.deleteFoodCategory("반찬");
-        System.out.println(result);
+        log.info("deleteFoodCategory(): {}", result);
         Assertions.assertTrue(result == 1);
     }
 
@@ -100,7 +100,7 @@ public class AddFoodMaterialServiceTest {
         params.put("bId", "0000000000");
 
         List<FoodMaterial> list = addFoodMaterialService.getFoodMaterialByName(params);
-        System.out.println(list);
+        log.info("getFoodMaterialByName: {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -114,7 +114,7 @@ public class AddFoodMaterialServiceTest {
         params.put("pageSize", 10);
 
         List<FoodMaterial> list = addFoodMaterialService.getFoodMaterialList(params);
-        System.out.println(list);
+        log.info("getFoodMaterialList: {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -122,7 +122,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void getFoodMaterialDetail() {
         FoodMaterial vo = addFoodMaterialService.getFoodMaterialDetail("FM001");
-        System.out.println(vo);
+        log.info("getFoodMaterialDetail(): {}", vo);
         Assertions.assertNotNull(vo);
     }
 
@@ -130,7 +130,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void deleteUsedByFoodMaterial() {
         int result = addFoodMaterialService.deleteUsedByFoodMaterial("99999");
-        System.out.println(result);
+        log.info("deleteUsedByFoodMaterial(): {}", result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -138,7 +138,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void deleteDisposalsByFoodMaterial() {
         int result = addFoodMaterialService.deleteDisposalsByFoodMaterial("99999");
-        System.out.println(result);
+        log.info("deleteDisposalsByFoodMaterial(): {}", result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -155,7 +155,7 @@ public class AddFoodMaterialServiceTest {
         params.put("bId", "0000000000");
 
         int result = addFoodMaterialService.deleteFoodMaterial(params);
-        System.out.println(result);
+        log.info("deleteFoodMaterial(): {}", foodMaterialId, result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -168,7 +168,7 @@ public class AddFoodMaterialServiceTest {
         params.put("endDate", "2025-12-31");
 
         int total = addFoodMaterialService.getFoodMaterialTotalAmount(params);
-        System.out.println(total);
+        log.info("getFoodMaterialTotalAmount(): {}", total);
         Assertions.assertTrue(total >= 0);
     }
 
@@ -181,7 +181,7 @@ public class AddFoodMaterialServiceTest {
         params.put("endDate", "2025-12-31");
 
         List<FoodMaterial> list = addFoodMaterialService.getFoodMaterialSpendingRank(params);
-        System.out.println(list);
+        log.info("getFoodMaterialSpendingRank(): {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -189,7 +189,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void getFoodCategoryList() {
         List<FoodCategory> list = addFoodMaterialService.getFoodCategoryList();
-        System.out.println(list);
+        log.info("getFoodCategoryList()): {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -197,7 +197,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void hasFoodMaterialByCategory() {
         int count = addFoodMaterialService.hasFoodMaterialByCategory("육류");
-        System.out.println(count);
+        log.info("hasFoodMaterialByCategory(): {}", count);
         Assertions.assertTrue(count >= 0);
     }
 
@@ -205,7 +205,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void getFoodMaterialListAll() {
         List<FoodMaterial> list = addFoodMaterialService.getFoodMaterialListAll("0000000000");
-        System.out.println(list);
+        log.info("getFoodMaterialListAll(): {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -213,13 +213,7 @@ public class AddFoodMaterialServiceTest {
     @Test
     void getCategoryId() {
         String categoryId = addFoodMaterialService.getCategoryId("정육");
-        System.out.println(categoryId);
+        log.info("getCategoryId(): {}", categoryId);
         Assertions.assertNotNull(categoryId);
     }
-
-
-
-
-
-
 }
