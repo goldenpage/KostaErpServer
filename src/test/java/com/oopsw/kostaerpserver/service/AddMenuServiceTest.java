@@ -43,7 +43,7 @@ public class AddMenuServiceTest {
         vo.setMenuCategoryId(categoryId);
 
         int result = addMenuService.addMenu(vo);
-        System.out.println(result);
+        log.info("addMenu(): {}", vo.getMenuName(), result);
         Assertions.assertTrue(result > 0);
     }
 
@@ -53,7 +53,7 @@ public class AddMenuServiceTest {
         String categoryId = addMenuDAO.getCategoryId("김밥류");
         AddMenu vo = new AddMenu("MI001", "치즈김밥", 4000, categoryId);
         String menuId = addMenuService.getNewMenuId(vo);
-        System.out.println(menuId);
+        log.info("getNewMenuId(): {}", vo.getMenuName(), menuId);
         Assertions.assertNotNull(menuId);
     }
 
@@ -62,7 +62,7 @@ public class AddMenuServiceTest {
     void checkMenuCategoryExists_exists() {
         MenuCategory vo = new MenuCategory("MC006", "김밥류", "0000000000");
         int count = addMenuService.checkMenuCategoryExists(vo);
-        System.out.println(count);
+        log.info("checkMenuCategoryExists(): {}", count);
         Assertions.assertTrue(count > 0);
     }
 
@@ -71,7 +71,7 @@ public class AddMenuServiceTest {
     void addMenuCategory() {
         MenuCategory vo = new MenuCategory("MC099", "테스트메뉴카테고리", "0000000000");
         int result = addMenuService.addMenuCategory(vo);
-        System.out.println(result);
+        log.info("addMenuCategory(): {}", vo.getMenuCategory(), result);
         Assertions.assertTrue(result == 1);
     }
 
@@ -79,7 +79,7 @@ public class AddMenuServiceTest {
     @Test
     void deleteMenuCategory() {
         int result = addMenuService.deleteMenuCategory("떡볶이류");
-        System.out.println(result);
+        log.info("deleteMenuCategory(): {}", result);
         Assertions.assertTrue(result == 1);
     }
 
@@ -92,7 +92,7 @@ public class AddMenuServiceTest {
 
         Used used = new Used("U020", 5, foodMaterialId, menuId);
         int result = addMenuService.addUsedMaterial(used);
-        System.out.println(result);
+        log.info("addUsedMaterial(): {}", foodMaterialId, menuId, result);
         Assertions.assertTrue(result > 0);
     }
 
@@ -100,7 +100,7 @@ public class AddMenuServiceTest {
     @Test
     void deleteUsedMaterial() {
         int result = addMenuService.deleteUsedMaterial("99999");
-        System.out.println(result);
+        log.info("deleteUsedMaterial(): {}", result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -113,7 +113,7 @@ public class AddMenuServiceTest {
         params.put("bId", "0000000000");
 
         int result = addMenuService.updateFoodMaterialAfterSale(params);
-        System.out.println(result);
+        log.info("updateFoodMaterialAfterSale(): {}", result);
         Assertions.assertTrue(result >= 0);
     }
 
@@ -121,7 +121,7 @@ public class AddMenuServiceTest {
     @Test
     void getMenuCategoryList() {
         List<MenuCategory> list = addMenuService.getMenuCategoryList("0000000000");
-        System.out.println(list);
+        log.info("getMenuCategoryList(): {}", list);
         Assertions.assertNotNull(list);
     }
 
@@ -129,7 +129,7 @@ public class AddMenuServiceTest {
     @Test
     void hasMenuByCategory() {
         int count = addMenuService.hasMenuByCategory("한식");
-        System.out.println(count);
+        log.info("hasMenuByCategory(): {}", count);
         Assertions.assertTrue(count >= 0);
     }
 
@@ -137,7 +137,7 @@ public class AddMenuServiceTest {
     @Test
     void hasMenuCheck_exists() {
         String result = addMenuService.hasMenuCheck("치즈김밥");
-        System.out.println(result);
+        log.info("hasMenuCheck(): {}", result);
         Assertions.assertNotNull(result);
     }
 
@@ -145,7 +145,7 @@ public class AddMenuServiceTest {
     @Test
     void getCategoryId() {
         String categoryId = addMenuService.getCategoryId("김밥류");
-        System.out.println(categoryId);
+        log.info("getCategoryId(): {}", categoryId);
         Assertions.assertNotNull(categoryId);
     }
 }

@@ -5,6 +5,7 @@ import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.Menu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class AddMenuServiceImpl implements AddMenuService {
-    @Autowired
-    AddMenuDAO addMenuDAO;
+
+    private final AddMenuDAO addMenuDAO;
 
     // 1. 메뉴 입력
     @Override
