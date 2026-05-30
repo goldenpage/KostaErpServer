@@ -27,8 +27,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     public Long getTotalExpense(String bId, LocalDate startDate,
         LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getTotalExpense(bId, startDate,endDate);
-        return 0L;
+        return statisticsDAO.getTotalExpense(bId, startDate,endDate);
+
     }
 
     @Override
@@ -36,72 +36,73 @@ public class StatisticsServiceImpl implements StatisticsService {
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
 
-        statisticsDAO.getMonthlyExpenseRankChart(bId, startDate, endDate);
-        return List.of();
+        return statisticsDAO.getMonthlyExpenseRankChart(bId, startDate,
+            endDate);
+
     }
 
     @Override
     public List<Map<String, Object>> getSalesHistory(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getSalesHistory(bId, startDate, endDate);
-        return List.of();
+        return statisticsDAO.getSalesHistory(bId, startDate, endDate);
+
     }
 
     @Override
     public Long getTotalSales(String bId, LocalDate startDate,
         LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getTotalSales(bId, startDate, endDate);
-        return 0L;
+        return statisticsDAO.getTotalSales(bId, startDate, endDate);
+
     }
 
     @Override
     public List<Map<String, Object>> getMenuSalesRank(String bId,
         LocalDate startDate, LocalDate endDate) {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getMenuSalesRank(bId, startDate, endDate);
-        return List.of();
+        return statisticsDAO.getMenuSalesRank(bId, startDate, endDate);
+
     }
 
     @Override
     public Double getDisposalRate(String bId, LocalDate startDate,
         LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getDisposalRate(bId, startDate, endDate);
-        return 0.0;
+        return statisticsDAO.getDisposalRate(bId, startDate, endDate);
+
     }
 
     @Override
     public Long getTotalDisposalPrice(String bId, LocalDate startDate,
         LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getTotalDisposalPrice(bId, startDate, endDate);
-        return 0L;
+        return statisticsDAO.getTotalDisposalPrice(bId, startDate, endDate);
+
     }
 
     @Override
     public List<Map<String, Object>> getTopDisposalMaterials(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getTopDisposalMaterials(bId, startDate, endDate);
-        return List.of();
+        return statisticsDAO.getTopDisposalMaterials(bId, startDate, endDate);
+
     }
 
     @Override
     public List<Map<String, Object>> getDisposalReasonRatio(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getDisposalReasonRatio(bId, startDate, endDate);
-        return List.of();
+        return statisticsDAO.getDisposalReasonRatio(bId, startDate, endDate);
+
     }
 
     @Override
     public List<Map<String, Object>> getDailyDisposalChart(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        statisticsDAO.getDailyDisposalChart(bId, startDate, endDate);
-        return List.of();
+        return statisticsDAO.getDailyDisposalChart(bId, startDate, endDate);
+
     }
 
     private void validateSearchCondition(String bId, LocalDate startDate, LocalDate endDate) {
