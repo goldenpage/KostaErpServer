@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service;
+package com.oopsw.kostaerpserver.service.Interface;
 
 import com.oopsw.kostaerpserver.vo.Notice;
 import java.util.List;
