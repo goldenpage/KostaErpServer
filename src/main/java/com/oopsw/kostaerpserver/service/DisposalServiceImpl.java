@@ -1,6 +1,7 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
+import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
