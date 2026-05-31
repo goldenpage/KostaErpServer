@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service;
+package com.oopsw.kostaerpserver.service.Interface;
 
 import com.oopsw.kostaerpserver.vo.Disposal;
 import java.time.LocalDate;

@@ -1,6 +1,7 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.MenuDAO;
+import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import com.oopsw.kostaerpserver.vo.Menu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

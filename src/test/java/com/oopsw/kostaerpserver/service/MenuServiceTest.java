@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import com.oopsw.kostaerpserver.vo.Menu;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
