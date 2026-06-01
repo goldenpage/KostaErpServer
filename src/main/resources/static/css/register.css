@@ -1,0 +1,132 @@
+.signup-box {
+  max-width: 500px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* 각 입력 구역(div)을 감싸는 클래스 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* 메인 타이틀 (회원가입) */
+.main-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* =========================================
+   2. 텍스트 및 기본 입력칸
+   ========================================= */
+/* 각 항목의 제목 */
+.section-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+/* 기본 입력 박스 (이메일, 비밀번호 등) */
+.inputbutton {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   3. 휴대폰 인증 영역
+   ========================================= */
+.phone-auth-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.phone-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.auth-send-btn {
+  width: 100px;
+  padding: 10px;
+  background-color: #666666;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: background-color 0.3s;
+}
+
+.auth-send-btn:hover {
+  background-color: #555555;
+}
+
+/* =========================================
+   4. 선택 및 체크 영역
+   ========================================= */
+/* 라디오 버튼, 셀렉트 박스 가로 정렬 */
+.flex-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-top: 5px;
+}
+
+/* 체크박스/라디오 버튼 글씨 클릭용 클래스 */
+.click-label {
+  cursor: pointer;
+}
+
+/* 드롭다운 박스 */
+.store-select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 체크박스 세로 정렬 */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* =========================================
+   5. 하단 버튼 영역
+   ========================================= */
+/* 버튼들을 묶어주는 그룹 */
+.btn-group {
+  margin-top: 30px;
+}
+
+.submitbutton {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitbutton:hover {
+  background-color: #000000;
+}

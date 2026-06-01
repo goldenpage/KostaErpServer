@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Insert title here</title>
+  <style>
+
+    .sideMenu {
+      width: 260px;
+      min-height: 100vh;
+      padding: 24px 18px;
+      box-sizing: border-box;
+      background-color: #f8fafc;
+      border-right: 1px solid #d9e2ec;
+    }
+
+    .sideMenu > img {
+      display: block;
+      width: 110px;
+      height: auto;
+      margin: 0 auto 28px;
+      cursor: pointer;
+    }
+
+    .sideMenu > ul {
+      list-style: none;
+      margin: 0 0 22px;
+      padding: 0;
+    }
+
+    .sideMenu > ul + ul {
+      padding-top: 18px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .sideMenu > ul > li {
+      padding: 9px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      color: #334155;
+    }
+
+    .sideMenu > ul > li:first-child {
+      margin-bottom: 6px;
+      padding: 0 12px 8px;
+      cursor: default;
+      font-size: 13px;
+      font-weight: 700;
+      color: #2563eb;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .sideMenu > ul > li:not(:first-child):hover {
+      background-color: #e0f2fe;
+      color: #0369a1;
+    }
+
+
+    .profile {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      list-style: none;
+      margin: 0 0 24px;
+      padding: 14px 20px;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+
+    .profile li {
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .profile li:first-child {
+      cursor: default;
+      font-weight: 700;
+      color: #0f172a;
+      background-color: #f1f5f9;
+    }
+
+    .profile li:not(:first-child):hover {
+      background-color: #f1f5f9;
+      color: #2563eb;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="sideMenu">
+  <img alt="logo" src="/KostaErp/view/asset/image.png"
+       onclick="location.href='/KostaErp/controller?cmd=foodMaterialAction'"/>
+  <ul>
+    <li>식자재관리</li>
+    <li onclick="location.href='controller?cmd=addFoodMaterialUIAction'">식자재입력</li>
+    <li onclick="location.href='controller?cmd=addMenuUIAction'">메뉴입력</li>
+    <li onclick="location.href='controller?cmd=foodMaterialAction'">식자재조회</li>
+    <li onclick="location.href='controller?cmd=menuAction'">메뉴상세조회</li>
+  </ul>
+  <ul>
+    <li>폐기관리</li>
+    <li onclick="location.href='controller?cmd=disposalUIAction'">폐기품목확인</li>
+  </ul>
+  <ul>
+    <li>통계</li>
+    <li
+        onclick="location.href='controller?cmd=revenueStatisticsUIAction'">매출통계
+    </li>
+    <li
+        onclick="location.href='controller?cmd=usedStatisticsUIAction'">지출통계
+    </li>
+    <li
+        onclick="location.href='controller?cmd=disposalStatisticUIAction'">폐기통계
+    </li>
+  </ul>
+</div>
+
+
+</body>
+</html>
