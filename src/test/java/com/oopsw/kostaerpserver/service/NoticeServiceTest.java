@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.oopsw.kostaerpserver.service.Interface.NoticeService;
 import java.util.List;
 
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
