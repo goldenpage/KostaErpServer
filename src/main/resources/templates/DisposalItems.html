@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>폐기 품목 관리</title>
+    <link rel="stylesheet" th:href="@{/css/DisposalItems.css}">
+</head>
+<body>
+<div class="container">
+
+
+        <h2>폐기 품목 확인</h2>
+
+        <div class="content_item">
+            <form class="category" th:action="@{/disposal-items}" method="get">
+                <input type="hidden" name="bId" th:value="${bId}">
+                <label for="category">카테고리</label>
+                <select id="category" name="category">
+                    <option value="">전체</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category}"
+                            th:text="${category}"
+                            th:selected="${category == selectedCategory}">
+                        채소
+                    </option>
+                </select>
+
+                <label for="reason">사유</label>
+                <select id="reason" name="reason">
+                    <option value="">전체</option>
+                    <option th:each="reason : ${reasons}"
+                            th:value="${reason}"
+                            th:text="${reason}"
+                            th:selected="${reason == selectedReason}">
+                        변질
+                    </option>
+                </select>
+
+                <button type="submit">조회</button>
+                <button type="button" th:onclick="|location.href='@{/disposal-items(bId=${bId})}'|">초기화</button>
+            </form>
+
+            <table class="list_container">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>식자재명</th>
+                    <th>카테고리</th>
+                    <th>유형</th>
+                    <th>총폐기용량(g)</th>
+                    <th>총폐기가격</th>
+                    <th>폐기일</th>
+                    <th>사유</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(list)}">
+                    <td class="center" colspan="8">조회된 폐기 품목이 없습니다.</td>
+                </tr>
+                <tr th:each="d : ${list}">
+                    <td class="center" th:text="${d.disposalId != null && #strings.length(d.disposalId) >= 6 ? #strings.substring(d.disposalId, 3, 6) : d.disposalId}">001</td>
+                    <td class="center" th:text="${d.foodMaterialName}">양파</td>
+                    <td class="center" th:text="${d.foodCategory}">채소</td>
+                    <td class="center" th:text="${d.foodMaterialType}">고체</td>
+                    <td class="right" th:text="${#numbers.formatInteger(d.disposalCountAll, 0, 'COMMA')}">0</td>
+                    <td class="right" th:text="${#numbers.formatInteger(d.disposalPrice, 0, 'COMMA')}">0</td>
+                    <td class="center" th:text="${d.disposalDate}">2026-05-31</td>
+                    <td class="actionCell">
+                        <div>
+                            <select th:id="|reason_${d.disposalId}|">
+                                <option value="D" th:selected="${d.reason == '변질'}">변질</option>
+                                <option value="B" th:selected="${d.reason == '파손'}">파손</option>
+                                <option value="E" th:selected="${d.reason == '유통기한만료'}">유통기한 만료</option>
+                                <option value="BETC" th:selected="${d.reason == '기타'}">기타</option>
+                            </select>
+                            <button type="button" th:data-disposal-id="${d.disposalId}"
+                                    onclick="updateReason(this.dataset.disposalId)">확인</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="page" th:if="${totalPages > 0}">
+                <a th:if="${currentPage > 1}"
+                   th:href="@{/disposal-items(bId=${bId}, category=${selectedCategory}, reason=${selectedReason}, page=${currentPage - 1})}">이전</a>
+                <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+                   th:href="@{/disposal-items(bId=${bId}, category=${selectedCategory}, reason=${selectedReason}, page=${i})}"
+                   th:text="${i}"
+                   th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+                <a th:if="${currentPage < totalPages}"
+                   th:href="@{/disposal-items(bId=${bId}, category=${selectedCategory}, reason=${selectedReason}, page=${currentPage + 1})}">다음</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/disposalItems.js}"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+package com.oopsw.kostaerpserver.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.oopsw.kostaerpserver.service.Interface.DisposalService;
+import com.oopsw.kostaerpserver.vo.Disposal;
+
+@Controller
+public class DisposalController {
+
+    private final DisposalService disposalService;
+
+    public DisposalController(DisposalService disposalService) {
+        this.disposalService = disposalService;
+    }
+
+    @GetMapping("/disposal-items")
+    public String disposalItemsPage(
+            @RequestParam(defaultValue = "0000000000") String bId,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String reason,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int size,
+
+            Model model){
+
+        List<Disposal> list;
+        if (category != null && !category.isBlank()) {
+            list = disposalService.getDisposalsByCategoryAndBId(category, bId);
+        } else {
+            list = disposalService.getDisposalsPaging(bId, page, size);
+        }
+
+        if (reason != null && !reason.isBlank()) {
+            list = list.stream()
+                    .filter(disposal -> reason.equals(disposal.getReason()))
+                    .toList();
+        }
+
+        int totalCount = disposalService.getTotalCount(bId);
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        model.addAttribute("bId", bId);
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedReason", reason);
+        model.addAttribute("list", list);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("categories", disposalService.getCategories());
+        model.addAttribute("reasons", disposalService.getReasons());
+
+        return "disposalItems";
+    }
+}
+

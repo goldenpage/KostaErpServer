@@ -72,7 +72,7 @@
     </select>
 
     <select id="getDisposalsPaging" resultType="com.oopsw.kostaerpserver.vo.Disposal">
-        SELECT d.*, f.foodMaterialName, fc.foodCategory, r.reason
+        SELECT d.*, f.foodMaterialName, fc.foodCategory, f.foodMaterialType, r.reason
         FROM DISPOSALS d
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
         JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
