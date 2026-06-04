@@ -1,6 +1,7 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.FoodMaterialDAO;
+import com.oopsw.kostaerpserver.service.Interface.FoodMaterialService;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
