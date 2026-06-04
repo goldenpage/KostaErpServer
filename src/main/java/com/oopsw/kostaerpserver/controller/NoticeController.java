@@ -2,6 +2,7 @@ package com.oopsw.kostaerpserver.controller;
 
 import java.time.LocalDate;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,13 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
 
 @Controller
+@RequiredArgsConstructor
 public class NoticeController {
 
     private final NoticeService noticeService;
-
-    public NoticeController(NoticeService noticeService) {
-        this.noticeService = noticeService;
-    }
 
     @GetMapping("/notice")
     public String noticePage(
