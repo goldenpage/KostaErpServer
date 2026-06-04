@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Insert title here</title>
+  <style>
+    .profile {
+      display: flex;
+      justify-content: end;
+      gap: 12px;
+    }
+
+    li {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    li:hover {
+      opacity: 0.5
+    }
+
+
+  </style>
+  <script>
+    function goBack() {
+      history.back();
+    }
+  </script>
+</head>
+<body>
+
+<ul class="profile">
+
+  <li><span>${info.NAME}님</span></li>
+  <li onclick="location.href='controller?cmd=logoutAction'">로그아웃</li>
+  <li onclick="location.href='controller?cmd=notificationUI'">알림</li>
+  <li onclick="goBack()">뒤로가기</button>
+</ul>
+
+
+</body>
+
+</html>

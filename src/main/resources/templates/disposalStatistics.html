@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>폐기통계</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="KostaErp/view/css/disposalStatistics.css">
+
+
+</head>
+
+<body>
+<div class="container">
+  <section>
+    <jsp:include page="../common/sideMenu.jsp" />
+  </section>
+
+  <div class="main">
+    <div>
+      <jsp:include page="../common/userName.jsp" />
+    </div>
+
+    <div class="top_area">
+      <h1>폐기통계</h1>
+
+      <form method="get"
+            action="controller">
+        <input type="hidden" name="cmd" value="disposalStatisticUIAction">
+        <input type="month" name="month" value="${selectedMonth}">
+        <button type="submit">조회</button>
+      </form>
+    </div>
+
+    <div class="content_item">
+      <div class="disposal_price">
+        <div>폐기율: ${disposalRate}%</div>
+
+        <div>
+          총 폐기금액:
+          <fmt:formatNumber value="${totalDisposalPrice}" pattern="#,###" />
+          원
+        </div>
+
+        <div>
+          <div>폐기품목 Top3</div>
+
+          <table>
+            <thead>
+            <tr>
+              <th>번호</th>
+              <th>식자재명</th>
+              <th>폐기횟수</th>
+              <th>총 폐기금액</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <c:forEach var="item" items="${top3List}" varStatus="status">
+              <tr>
+                <td>${status.count}</td>
+                <td>${item.foodMaterialName}</td>
+                <td>${item.disposalCount}</td>
+                <td><fmt:formatNumber value="${item.totalDisposalPrice}"
+                                      pattern="#,###" /> 원</td>
+              </tr>
+            </c:forEach>
+
+            <c:if test="${empty top3List}">
+              <tr>
+                <td colspan="4">폐기 데이터가 없습니다.</td>
+              </tr>
+            </c:if>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="disposal_ratio">
+        <div>폐기사유 비율</div>
+        <div class="chart_box">
+          <canvas id="reasonChart"></canvas>
+        </div>
+      </div>
+
+      <div class="disposal_solid_liquid">
+        <div>날짜별 폐기량</div>
+        <div class="chart_box">
+          <canvas id="dailyDisposalChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="dailyLabelsJson">${dailyLabelsJson}</script>
+<script type="application/json" id="dailyDatasetsJson">${dailyDatasetsJson}</script>
+<script type="application/json" id="reasonLabelsJson">${reasonLabelsJson}</script>
+<script type="application/json" id="reasonValuesJson">${reasonValuesJson}</script>
+
+<script>
+  function readJson(id) {
+    const
+        text = document.getElementById(id).textContent.trim();
+    return JSON.parse(text || "[]");
+  }
+
+  const
+      dailyLabels = readJson("dailyLabelsJson");
+  const
+      dailyDatasets = readJson("dailyDatasetsJson");
+  const
+      reasonLabels = readJson("reasonLabelsJson");
+  const
+      reasonValues = readJson("reasonValuesJson");
+
+  new Chart(document.querySelector("#dailyDisposalChart"), {
+    type : "line",
+    data : {
+      labels : dailyLabels,
+      datasets : dailyDatasets
+    }
+  });
+
+  new Chart(document.querySelector("#reasonChart"), {
+    type : "doughnut",
+    data : {
+      labels : reasonLabels,
+      datasets : [ {
+        data : reasonValues
+      } ]
+    }
+  });
+</script>
+</body>
+
+</html>

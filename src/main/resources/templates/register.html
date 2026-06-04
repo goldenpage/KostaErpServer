@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+<script src="
+https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="view/css/register.css">
+<body>
+<form method="post"
+      action="/KostaErp/controller?cmd=addUserAction"
+      onsubmit="return checkPassword()" class="signup-box">
+
+  <h1 class="main-title">회원가입</h1>
+
+  <div class="form-group">
+    <div class="section-title">사업자번호</div>
+    <input type="text" id="bId" name="bId" class="inputbutton" maxlength=10
+           minlength=10 placeholder="사업자번호 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">상호명</div>
+    <input type="text" name="storeName" class="inputbutton"
+           placeholder="상호명 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">성명</div>
+    <input type="text" name="name" class="inputbutton"
+           placeholder="성명 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">이메일</div>
+    <input name="email" type="email" class="inputbutton"
+           placeholder="이메일 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">휴대폰인증</div>
+    <div class="phone-auth-group">
+      <input type="text" id="phone" name="phone" class="phone-input"
+             placeholder="휴대폰 번호 입력 (숫자만)" required>
+      <button type="button" id="sendBtn" class="auth-send-btn"
+              onclick="sendPhoneCodeJquery()">인증발송
+      </button>
+      <div id="phoneMessage"></div>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="phoneCode" name="phoneCode"
+           class="phone-input" placeholder="인증번호 입력">
+
+    <button type="button" class="auth-send-btn"
+            onclick="verifyPhoneCode()">확인
+    </button>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">비밀번호</div>
+    <input name="pw" type="password" class="inputbutton"
+           placeholder="비밀번호 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">비밀번호 확인</div>
+    <input name="pwConfirm" type="password" class="inputbutton"
+           placeholder="비밀번호 한 번 더 입력해주세요" required>
+    <div>${errorMessage}</div>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">사업자 유형 선택</div>
+    <div class="flex-row">
+      <label class="click-label">
+        <input type="radio" name="businessType" value="간이과세자"> 간이과세자
+      </label> <label class="click-label">
+      <input type="radio" name="businessType" value="일반과세자"> 일반과세자
+    </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">업태 종류</div>
+    <div class="flex-row">
+      <select name="storeType" class="store-select">
+        <option value="일반음식점">일반음식점</option>
+        <option value="휴게음식점">휴게음식점</option>
+
+      </select> <select name="storeCategory" class="store-select">
+      <option value="한식">한식</option>
+      <option value="중식">중식</option>
+      <option value="일식">일식</option>
+    </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">소상공인 증명</div>
+    <div>
+      <button type="button" onclick="checkBid()">인증하기</button>
+      <div id="businessMessage">${businessMessage}</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-group">
+      <label class="click-label"> <input name="signAgree"
+                                         type="checkbox" name="" required> 소득 확인을 위한 개인정보 동의 약관 필수
+      </label> <label class="click-label"> <input name="agreementAgree"
+                                                  type="checkbox" name="" required>개인정보 수집 동의 필수
+    </label> <label class="click-label"> <input name="marketingAgree"
+                                                type="checkbox" name=""> 마케팅 정보 메일, SMS 수신 동의
+    </label>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button type="submit" class="submitbutton">회원가입 완료</button>
+    <button type="button" class="submitbutton"
+            onclick="location.href='/controller?cmd=loginUIAction'">기존
+      계정으로 로그인
+    </button>
+  </div>
+</form>
+<script>
+  function checkPassword() {
+    const
+        pw = document.querySelector('input[name="pw"]').value;
+    const
+        pwConfirm = document.querySelector('input[name="pwConfirm"]').value;
+
+    if (pw !== pwConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function sendPhoneCode() {
+    const
+        phone = document.querySelector("#phone").value
+
+    if (!phone) {
+      alert("휴대폰 번호를 입력해주세요")
+      return;
+    }
+    const xhr = new XMLHttpRequest();
+    const url = '${pageContext.request.contextPath}/controller?cmd=phoneSendAction&phone='
+        + encodeURIComponent(phone);
+
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          document.querySelector("#phoneMessage").innerText = xhr.responseText;
+        } else {
+          alert("인증번호 발송 중 오류가 발생했습니다.");
+        }
+      }
+    };
+
+    xhr.send();
+
+  }
+
+  function sendPhoneCodeJquery() {
+    const phone = document.querySelector("#phone").value
+
+    if (!phone) {
+      alert("휴대폰 번호를 입력해주세요")
+      return;
+    }
+    const url = '${pageContext.request.contextPath}/controller?cmd=phoneSendAction&phone='
+        + encodeURIComponent(phone);
+
+    $.ajax({
+      method: 'GET',
+      url: url,
+      success: function (result) {
+        $("#phoneMessage").html(result);
+      }
+    });
+  }
+
+  function verifyPhoneCode() {
+    const
+        phone = document.querySelector("#phone").value;
+    const
+        phoneCode = document.querySelector("#phoneCode").value;
+
+    const xhr = new XMLHttpRequest();
+    const url = '${pageContext.request.contextPath}/controller?cmd=phoneVerifyAction&phone='
+        + encodeURIComponent(phone)
+        + '&phoneCode='
+        + encodeURIComponent(phoneCode);
+
+    xhr.open("GET", url, true);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          document.querySelector("#phoneMessage").innerText = xhr.responseText;
+        } else {
+          alert("인증번호 확인 중 오류가 발생했습니다.");
+        }
+      }
+    };
+
+    xhr.send();
+  }
+
+  function checkBid() {
+    const bId = document.querySelector("#bId").value;
+
+    if (!bId || bId.length !== 10) {
+      alert("사업자번호 10자리를 입력해주세요.");
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    const url = '${pageContext.request.contextPath}/controller?cmd=idCheckAction&bId='
+        + encodeURIComponent(bId);
+
+    xhr.open("GET", url, true);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          document.querySelector("#businessMessage").innerText = xhr.responseText;
+        } else {
+          alert("사업자번호 인증 중 오류가 발생했습니다.");
+        }
+      }
+    };
+
+    xhr.send();
+  }
+</script>
+</body>
+
+</html>
