@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>폐기 품목 관리</title>
-    <link rel="stylesheet" th:href="@{/css/DisposalItems.css}">
+    <link rel="stylesheet" th:href="@{/css/disposalItems.css}">
 </head>
 <body>
 <div class="container">
 
 
         <h2>폐기 품목 확인</h2>
-
+    <main class="main">
         <div class="content_item">
             <form class="category" th:action="@{/disposal-items}" method="get">
                 <input type="hidden" name="bId" th:value="${bId}">

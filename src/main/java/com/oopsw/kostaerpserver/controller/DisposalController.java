@@ -2,6 +2,7 @@ package com.oopsw.kostaerpserver.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +12,10 @@ import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
 
 @Controller
+@RequiredArgsConstructor
 public class DisposalController {
 
     private final DisposalService disposalService;
-
-    public DisposalController(DisposalService disposalService) {
-        this.disposalService = disposalService;
-    }
 
     @GetMapping("/disposal-items")
     public String disposalItemsPage(
