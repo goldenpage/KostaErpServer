@@ -83,3 +83,18 @@
   background-color: #f1f5f9;
   color: #2563eb;
 }
+
+.profile {
+  display: flex;
+  justify-content: end;
+  gap: 12px;
+}
+
+li {
+  cursor: pointer;
+  list-style: none;
+}
+
+li:hover {
+  opacity: 0.5
+}
