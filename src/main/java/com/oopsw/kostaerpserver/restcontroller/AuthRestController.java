@@ -17,17 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController()
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class LoginRestController {
+public class AuthRestController {
 
     private final LoginService loginService;
-
 
     @PostMapping("/auth/login")
     public ResponseEntity<Map> login(@RequestBody LoginRequest loginRequest)
         throws BadRequestException {
         loginService.login(loginRequest.getBId(), loginRequest.getPw());
         return ResponseEntity.ok().build();
-
     }
 
     @PostMapping("/auth/users")

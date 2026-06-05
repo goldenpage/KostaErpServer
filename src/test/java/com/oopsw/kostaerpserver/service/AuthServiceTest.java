@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
-public class LoginServiceTest {
+public class AuthServiceTest {
     @Autowired
     LoginServiceImpl loginService;
 
@@ -35,19 +35,18 @@ public class LoginServiceTest {
     @Test
     @Transactional
     void registerTest() {
-        RegisterRequest request = new RegisterRequest();
-        request.setBId("0000000004");
-        request.setName("김수장");
-        request.setPw("test123");
-        request.setPhone("010-2222-3333");
-        request.setEmail("test@test.com");
-        request.setStoreCategory("한식");
-        request.setStoreName("테스트가게");
-        request.setStoreType("음식점");
-        request.setMarketingAgree(true);
-
+        RegisterRequest request = RegisterRequest.builder()
+            .bId("0000000004")
+            .name("김수장")
+            .pw("test123")
+            .phone("010-2222-3333")
+            .email("test@test.com")
+            .storeCategory("한식")
+            .storeName("테스트가게")
+            .storeType("음식점")
+            .marketingAgree(true)
+            .build();
         int result = loginService.register(request);
-
         assertNotNull(result);
         assertEquals(1, result);
     }
