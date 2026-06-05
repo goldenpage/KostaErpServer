@@ -4,18 +4,18 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>매출통계</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="/KostaErp/view/css/revenueStatistics.css">
+  <link rel="stylesheet" th:href="@{/css/revenueStatistics.css}">
 
 </head>
 
 <body>
 <div class="container">
   <section >
-    <jsp:include page="../common/sideMenu.jsp" />
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
   </section>
 
   <div class="main">
-    <jsp:include page="../common/userName.jsp" />
+    <div th:replace="~{common/userName :: userName}"></div>
 
     <div class="top_area">
       <h1>매출통계</h1>

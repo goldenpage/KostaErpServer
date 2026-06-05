@@ -19,7 +19,6 @@
       opacity: 0.5
     }
 
-
   </style>
   <script>
     function goBack() {
@@ -30,8 +29,7 @@
 <body>
 
 <ul class="profile">
-
-  <li><span>${info.NAME}님</span></li>
+  <li><span th:text="${info.NAME}">님</span></li>
   <li onclick="location.href='controller?cmd=logoutAction'">로그아웃</li>
   <li onclick="location.href='controller?cmd=notificationUI'">알림</li>
   <li onclick="goBack()">뒤로가기</button>

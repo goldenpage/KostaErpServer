@@ -24,6 +24,7 @@ public class FoodMaterialController {
             @RequestParam(defaultValue = "5") int size,
             Model model
     ) {
+
         List<FoodMaterial> foodList =
                 foodMaterialService.getFoodMaterialList(bId, sort, page, size);
 

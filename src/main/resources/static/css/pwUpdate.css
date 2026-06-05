@@ -1,0 +1,124 @@
+/* 1. 바디 초기화 (동일 톤앤매너) */
+body {
+  font-family: 'Malgun Gothic', dotum, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* 2. 비밀번호 변경 박스 */
+.change-box {
+  max-width: 450px;
+  margin: 100px auto;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.main-title {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+/* 안내 문구 */
+.description {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+/* 3. 입력 구역 간격 및 제목 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+/* 4. 입력칸 클래스 */
+.inputbutton {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.phone-auth-group {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.auth-send-btn {
+  width: 100px;
+  padding: 10px;
+  background-color: #666666;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.auth-send-btn:hover {
+  background-color: #555555;
+}
+
+.message {
+  font-size: 13px;
+  color: #333333;
+  margin-top: 6px;
+  min-height: 18px;
+}
+
+.error-message {
+  font-size: 13px;
+  color: #d00;
+  margin-bottom: 12px;
+}
+
+/* 5. 변경 완료 버튼 클래스 */
+.submitbutton {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitbutton:hover {
+  background-color: #000000;
+}
+
+/* 비밀번호 보안 안내 텍스트 */
+.password-hint {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}

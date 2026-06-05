@@ -5,17 +5,17 @@
   <title>지출통계</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="/KostaErp/view/css/usedStatistics.css">
+  <link rel="stylesheet" th:href="@{/css/usedStatistics.css}">
 
 </head>
 <body>
 <div class="container">
   <section >
-    <jsp:include page="../common/sideMenu.jsp" />
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
   </section>
 
   <div class="main">
-    <jsp:include page="../common/userName.jsp" />
+    <div th:replace="~{common/userName :: userName}"></div>
 
     <div class="top_area">
       <h1>지출통계</h1>
