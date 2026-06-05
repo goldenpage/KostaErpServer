@@ -7,6 +7,7 @@
   <title>폐기통계</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
   <link rel="stylesheet" th:href="@{/css/disposalStatistics.css}">
 </head>
 
@@ -99,30 +100,8 @@
   </div>
 </div>
 
-<script th:inline="javascript">
-  const dailyLabels = [[${dailyLabelsJson}]];
-  const dailyDatasets = [[${dailyDatasetsJson}]];
-  const reasonLabels = [[${reasonLabelsJson}]];
-  const reasonValues = [[${reasonValuesJson}]];
 
-  new Chart(document.querySelector("#dailyDisposalChart"), {
-    type: "line",
-    data: {
-      labels: dailyLabels,
-      datasets: dailyDatasets
-    }
-  });
-
-  new Chart(document.querySelector("#reasonChart"), {
-    type: "doughnut",
-    data: {
-      labels: reasonLabels,
-      datasets: [{
-        data: reasonValues
-      }]
-    }
-  });
-</script>
+<script th:src="@{/js/disposalStatistics.js}"></script>
 
 </body>
 </html>
