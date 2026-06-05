@@ -2,6 +2,7 @@ package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
+import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class AddFoodMaterialServiceImpl implements AddFoodMaterialService {
     }
 
     // 2. 식자재 입력
-    public int addFoodMaterial(FoodMaterial foodMaterial){
-        return addFoodMaterialDAO.addFoodMaterial(foodMaterial);
+    public int addFoodMaterial(AddFoodMaterial addFoodMaterial){
+        return addFoodMaterialDAO.addFoodMaterial(addFoodMaterial);
     }
 
     // 3. 카테고리 여부 체크

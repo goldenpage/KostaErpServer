@@ -1,4 +1,4 @@
-var pendingList = [];
+let pendingList = [];
 
 function today() {
     return new Date().toISOString().substring(0, 10);
@@ -15,112 +15,113 @@ function selectCategory(btn) {
 }
 
 function getSelectedCategoryName() {
-    var sel = document.querySelector('#categoryArea button.selected');
+    let sel = document.querySelector('#categoryArea button.selected');
     return sel ? sel.textContent.trim() : '';
 }
 
-function addCategoryAjax() {
-    var input = document.getElementById('getfoodCategory');
-    var categoryName = input.value.trim();
-    var msg = document.getElementById('categoryMsg');
+function addCategoryAjax(){
+    let input = document.getElementById('getFoodCategory');
+    let categoryName = input.value.trim();
+    let msg = document.getElementById('categoryMsg');
 
     if (!categoryName) {
         alert('카테고리명을 입력해주세요.');
         return;
     }
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", contextPath + "/controller?cmd=addFoodCategoryAction", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    fetch('/api/foodmaterial/foodcategory/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({foodCategory:categoryName})
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === 'success') {
+                console.log(categoryName)
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var parts = xhr.responseText.split("|");
-            var result = parts[0];
-            var getId = parts[1];
-            var getName = parts[2];
-
-            if (result === "success") {
                 msg.style.color = 'green';
                 msg.innerText = '카테고리가 추가되었습니다.';
 
-                var span = document.createElement('span');
+                let span = document.createElement('span');
                 span.style.cssText = 'display:inline-flex; align-items:center; gap:2px;';
-                var selectBtn = document.createElement('button');
+
+                let selectBtn = document.createElement('button');
                 selectBtn.type = 'button';
-                selectBtn.textContent = getName;
-                selectBtn.setAttribute('data-category-id', getId);
+                selectBtn.textContent = data.foodCategory;
+                selectBtn.setAttribute('data-category-id', data.foodCategory_Id);
                 selectBtn.onclick = function() { selectCategory(this); };
 
-                var delBtn = document.createElement('button');
+                let delBtn = document.createElement('button');
                 delBtn.type = 'button';
                 delBtn.className = 'remove_btn';
                 delBtn.innerHTML = '&#10005;';
-                delBtn.onclick = function() { deleteCategoryAjax(getName, this); };
+                delBtn.onclick = function() { deleteCategoryAjax(data.foodCategory, this); };
+
                 span.appendChild(selectBtn);
                 span.appendChild(delBtn);
                 document.getElementById('categoryArea').appendChild(span);
                 input.value = '';
             } else {
                 msg.style.color = 'red';
-                msg.innerText = getId;
+                msg.innerText = data.message;
+                console.log(categoryName)
             }
-        } else if (xhr.readyState === 4) {
+        })
+        .catch(() => {
             msg.style.color = 'red';
-            msg.innerText = '카테고리 추가 중 오류가 발생했습니다.';
-        }
-    };
-
-    xhr.send("foodCategory=" + encodeURIComponent(categoryName));
+            msg.innerText = '카테고리 추가 오류';
+        });
 }
 
 function deleteCategoryAjax(foodCategory, delBtn) {
     if (!confirm(foodCategory + ' 카테고리를 삭제하시겠습니까?'))
         return;
 
-    var msg = document.getElementById('categoryMsg');
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", contextPath + "/controller?cmd=deleteFoodCategoryAction", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    let msg = document.getElementById('categoryMsg');
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var parts = xhr.responseText.split("|");
-            var result = parts[0];
-            var value = parts[1];
+    fetch('/api/foodmaterial/foodcategory/delete', {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({foodCategory:foodCategory})
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === 'success') {
+                msg.style.color = 'green';
+                msg.innerText = data.message;
 
-            if (result === "success") {
-                msg.innerText = value;
-                var span = delBtn.closest('span');
-                var selectedId = document.getElementById('selectedCategoryId').value;
-                var selectBtn = span.querySelector('button:not(.remove_btn)');
-                if (selectBtn && selectBtn.getAttribute('data-category-id') === selectedId) {
+                let span = delBtn.closest('span');
+                let selectedId = document.getElementById('selectedCategoryId');
+                let selectBtn = span.querySelector('button:not(.remove_btn)');
+                if(selectBtn && selectBtn.getAttribute('data-category-id') === selectedId){
                     document.getElementById('selectedCategoryId').value = '';
                 }
                 span.remove();
             } else {
-                msg.innerText = value;
+                msg.style.color = 'red';
+                msg.innerText = data.message;
             }
-        } else if (xhr.readyState === 4) {
-            msg.innerText = '카테고리 삭제 중 오류가 발생했습니다.';
-        }
-    };
-
-    xhr.send("foodCategory=" + encodeURIComponent(foodCategory));
+        })
+        .catch(() => {
+            msg.style.color = 'red';
+            msg.innerText = '카테고리 삭제 오류 발생';
+        });
 }
 
 function addToList() {
-    var foodMaterialName = document.getElementById('foodMaterialName').value.trim();
-    var foodCategory_Id = document.getElementById('selectedCategoryId').value;
-    var foodCategoryName = getSelectedCategoryName();
-    var foodMaterialCount = document.getElementById('foodMaterialCount').value;
-    var foodMaterialCountAll = document.getElementById('foodMaterialCountAll').value;
-    var unit = document.getElementById('inputUnit').value;
-    var foodMaterialPrice = document.getElementById('foodMaterialPrice').value;
-    var foodMaterialType = document.getElementById('foodMaterialType').value.trim();
-    var vender = document.getElementById('vender').value.trim();
-    var incomeDate = document.getElementById('incomeDate').value;
-    var expirationDate = document.getElementById('expirationDate').value;
+    let foodMaterialName = document.getElementById('foodMaterialName').value.trim();
+    let foodCategory_Id = document.getElementById('selectedCategoryId').value;
+    let foodCategoryName = getSelectedCategoryName();
+    let foodMaterialCount = document.getElementById('foodMaterialCount').value;
+    let foodMaterialCountAll = document.getElementById('foodMaterialCountAll').value;
+    let unit = document.getElementById('inputUnit').value;
+    let foodMaterialPrice = document.getElementById('foodMaterialPrice').value;
+    let foodMaterialType = document.getElementById('foodMaterialType').value.trim();
+    let vender = document.getElementById('vender').value.trim();
+    let incomeDate = document.getElementById('incomeDate').value;
+    let expirationDate = document.getElementById('expirationDate').value;
 
     if (!incomeDate) incomeDate = today();
 
@@ -153,7 +154,7 @@ function addToList() {
 }
 
 function renderPendingList() {
-    var body = document.getElementById('registerBody');
+    let body = document.getElementById('registerBody');
     body.innerHTML = '';
 
     if (pendingList.length === 0) {
@@ -175,34 +176,9 @@ function renderPendingList() {
 }
 
 function removeRow(el) {
-    var idx = Number(el.getAttribute('data-index'));
+    let idx = Number(el.getAttribute('data-index'));
     pendingList.splice(idx, 1);
     renderPendingList();
-}
-
-function rebuildHiddenFields() {
-    var container = document.getElementById('hiddenFields');
-    container.innerHTML = '';
-    pendingList.forEach(function(item) {
-        var fields = [
-            ['foodMaterialName', item.foodMaterialName],
-            ['foodCategory_Id', item.foodCategory_Id],
-            ['foodMaterialCount', item.foodMaterialCount],
-            ['foodMaterialCountAll', item.foodMaterialCountAll],
-            ['foodMaterialPrice', item.foodMaterialPrice],
-            ['foodMaterialType', item.foodMaterialType],
-            ['vender', item.vender],
-            ['incomeDate', item.incomeDate],
-            ['expirationDate', item.expirationDate]
-        ];
-        fields.forEach(function(f) {
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = f[0];
-            input.value = f[1];
-            container.appendChild(input);
-        });
-    });
 }
 
 function clearInputs() {
@@ -222,21 +198,18 @@ function clearInputs() {
 }
 
 function searchMaterial() {
-    var keyword = document.getElementById('searchInput').value.trim();
-    var body = document.getElementById('searchResultBody');
+    let keyword = document.getElementById('searchInput');
+    let body = document.getElementById('searchResultBody');
 
-    if (!keyword) {
+    if(!keyword){
         body.innerHTML = '<tr><td colspan="5" class="empty_msg">검색어를 입력하세요</td></tr>';
         return;
     }
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", contextPath + "/controller?cmd=searchFoodMaterialAction&keyword=" + encodeURIComponent(keyword), true);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var list = JSON.parse(xhr.responseText);
-            if (list.length === 0) {
+    fetch('/api/foodmaterial/search/add' + encodeURIComponent(keyword))
+        .then(res => res.json())
+        .then(list => {
+            if (!list || list.length === 0) {
                 body.innerHTML = '<tr><td colspan="5" class="empty_msg">검색 결과가 없습니다</td></tr>';
                 return;
             }
@@ -249,12 +222,10 @@ function searchMaterial() {
                     '<td><button type="button" onclick=\'fillFromSearch(' + JSON.stringify(m) + ')\'>&#8853;</button></td>' +
                     '</tr>';
             }).join('');
-        } else if (xhr.readyState === 4) {
+        })
+        .catch(() => {
             body.innerHTML = '<tr><td colspan="5" class="empty_msg">검색 중 오류가 발생했습니다</td></tr>';
-        }
-    };
-
-    xhr.send();
+        });
 }
 
 function fillFromSearch(data) {
@@ -262,8 +233,8 @@ function fillFromSearch(data) {
     document.getElementById('vender').value = data.vender;
     document.getElementById('foodMaterialType').value = data.foodMaterialType || '';
 
-    var catBtns = document.querySelectorAll('#categoryArea button[data-category-id]');
-    var matched = false;
+    let catBtns = document.querySelectorAll('#categoryArea button[data-category-id]');
+    let matched = false;
 
     catBtns.forEach(function(btn) {
         btn.classList.remove('selected');
@@ -284,8 +255,37 @@ function fillFromSearch(data) {
 function registerAll() {
     if (pendingList.length === 0) {
         alert('등록할 식자재가 없습니다.');
-        return false;
+        return;
     }
-    rebuildHiddenFields();
-    return true;
+    console.log("1: " + pendingList)
+    let formData = new FormData();
+    pendingList.forEach(function(item) {
+        formData.append('foodMaterialName', item.foodMaterialName);
+        formData.append('foodCategory_Id', item.foodCategory_Id);
+        formData.append('foodMaterialCount', item.foodMaterialCount);
+        formData.append('foodMaterialCountAll', item.foodMaterialCountAll);
+        formData.append('foodMaterialPrice', item.foodMaterialPrice);
+        formData.append('foodMaterialType', item.foodMaterialType);
+        formData.append('vender', item.vender);
+        formData.append('incomeDate', item.incomeDate);
+        formData.append('expirationDate', item.expirationDate);
+    });
+    console.log("2: " + pendingList)
+    fetch('/foodmaterial/add', {
+        method: 'POST',
+        body: formData
+    }).then(res => {
+        if (res.ok || res.redirected) {
+            alert('식자재 등록에 성공했습니다.');
+            pendingList = [];
+            renderPendingList();
+            console.log("success: " + pendingList)
+        } else {
+            alert('식자재 등록에 실패했습니다.');
+            console.log("fail: " + pendingList)
+        }
+    }).catch(() => {
+        alert('식자재 등록 중 오류가 발생했습니다.');
+        console.log("error: " + pendingList)
+    });
 }

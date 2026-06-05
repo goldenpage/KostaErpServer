@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
@@ -82,10 +83,10 @@ public class AddFoodMaterialDAOTest {
     void addFoodMaterial() {
         String categoryId = addFoodMaterialDAO.getCategoryId("정육");
 
-        FoodMaterial vo = new FoodMaterial();
+        AddFoodMaterial vo = new AddFoodMaterial();
 
         vo.setFoodMaterialName("테스트식자재");
-        vo.setFoodCategory(categoryId);
+        vo.setFoodCategory_Id(categoryId);
         vo.setFoodMaterialCount(10);
         vo.setFoodMaterialCountAll(10000);
         vo.setFoodMaterialPrice(5000);

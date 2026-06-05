@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
+import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 
@@ -11,7 +12,7 @@ public interface AddFoodMaterialService {
     int getFoodMaterialCount(String bId);
 
     // 2. 식자재 입력
-    int addFoodMaterial(FoodMaterial foodMaterial);
+    int addFoodMaterial(AddFoodMaterial AddfoodMaterial);
 
     // 3. 카테고리 여부 체크
     int checkFoodCategoryExists(String foodCategory);

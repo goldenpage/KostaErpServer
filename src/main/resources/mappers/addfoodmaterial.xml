@@ -10,7 +10,7 @@
         INSERT INTO FOODM(foodMaterialName, foodCategory_Id, foodMaterialCount,
                           foodMaterialCountAll, foodMaterialPrice, foodMaterialType, vender,
                           incomeDate, expirationDate, bId)
-        VALUES(#{foodMaterialName}, #{foodCategory}, #{foodMaterialCount},
+        VALUES(#{foodMaterialName}, #{foodCategory_Id}, #{foodMaterialCount},
                #{foodMaterialCountAll}, #{foodMaterialPrice}, #{foodMaterialType},
                #{vender}, #{incomeDate}, #{expirationDate}, #{bId})
     </insert>
