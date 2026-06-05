@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.dto.RegisterRequest;
 import com.oopsw.kostaerpserver.repository.UserInfoDAO;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
 import com.oopsw.kostaerpserver.vo.User;
@@ -24,11 +25,26 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public int register(User user, boolean marketingAgree) {
+    public int register(RegisterRequest request) {
         LocalDateTime now = LocalDateTime.now();
-        user.setAgreementDate(now);
-        user.setSignDate(now);
-        user.setMarketingDate(marketingAgree ? now : null);
+
+        if (request != null) {
+
+        }
+
+        User user = User.builder()
+            .bId(request.getBId())
+            .pw(request.getPw())
+            .phone(request.getPhone())
+            .name(request.getName())
+            .email(request.getEmail())
+            .storeName(request.getStoreName())
+            .storeType(request.getStoreType())
+            .storeCategory(request.getStoreCategory())
+            .signDate(now)
+            .agreementDate(now)
+            .marketingDate(request.isMarketingAgree() ? now : null)
+            .build();
 
         return userInfoDAO.register(user);
     }

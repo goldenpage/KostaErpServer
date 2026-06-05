@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.dto.RegisterRequest;
 import com.oopsw.kostaerpserver.vo.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +22,7 @@ public class LoginServiceTest {
     @Autowired
     LoginServiceImpl loginService;
 
+
     String bId = "0000000000";
 
     @Test
@@ -32,16 +34,22 @@ public class LoginServiceTest {
 
     @Test
     @Transactional
-    void resisterTest() {
-        int result =
-            loginService.register(
-                User.builder().bId("0000000004").name("김수장").pw("test123").phone(
-                    "010"
-                        + "-2222"
-                    + "-3333").email("test@test.com").storeCategory("한식")
-                    .storeName("테스트가게").storeType("음식점").build(), true);
+    void registerTest() {
+        RegisterRequest request = new RegisterRequest();
+        request.setBId("0000000004");
+        request.setName("김수장");
+        request.setPw("test123");
+        request.setPhone("010-2222-3333");
+        request.setEmail("test@test.com");
+        request.setStoreCategory("한식");
+        request.setStoreName("테스트가게");
+        request.setStoreType("음식점");
+        request.setMarketingAgree(true);
+
+        int result = loginService.register(request);
+
         assertNotNull(result);
-        assertTrue(result ==1);
+        assertEquals(1, result);
     }
 
     @Test
