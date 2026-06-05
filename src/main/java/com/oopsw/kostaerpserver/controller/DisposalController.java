@@ -23,25 +23,38 @@ public class DisposalController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String reason,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "5") int size,
 
             Model model){
+
+        int totalCount = disposalService.getTotalCount(bId);
 
         List<Disposal> list;
         if (category != null && !category.isBlank()) {
             list = disposalService.getDisposalsByCategoryAndBId(category, bId);
         } else {
-            list = disposalService.getDisposalsPaging(bId, page, size);
+            list = disposalService.getDisposalsPaging(bId, 1, totalCount > 0 ? totalCount : size);
         }
 
         if (reason != null && !reason.isBlank()) {
             list = list.stream()
-                    .filter(disposal -> reason.equals(disposal.getReason()))
-                    .toList();
+                    .filter(disposal -> reason.equals(disposal.getReason())).toList();
+        }
+        totalCount = list.size();
+
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+        int fromIndex = (page - 1) * size;
+        int toIndex = fromIndex + size;
+
+        if (toIndex > totalCount) {
+            toIndex = totalCount;
         }
 
-        int totalCount = disposalService.getTotalCount(bId);
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+        if (fromIndex < totalCount) {
+            list = list.subList(fromIndex, toIndex);
+        } else {
+            list = java.util.Collections.emptyList();
+        }
 
         model.addAttribute("bId", bId);
         model.addAttribute("selectedCategory", category);
@@ -49,8 +62,9 @@ public class DisposalController {
         model.addAttribute("list", list);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("categories", disposalService.getCategories());
         model.addAttribute("reasons", disposalService.getReasons());
+        List<String> categories = disposalService.getCategories().stream().distinct().toList();
+        model.addAttribute("categories", categories);
 
         return "disposalItems";
     }
