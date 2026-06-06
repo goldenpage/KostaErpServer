@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.controller;
 
+import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.service.Interface.AddMenuService;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,27 +18,31 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AddMenuRestController {
     private final AddMenuService addMenuService;
+    private final AddFoodMaterialService addFoodMaterialService;
 
     @PostMapping("/menu/menucategory/add")
     public Map<String, Object> addMenuCategory(@RequestBody Map<String, String> body) {
         String menuCategory = body.get("menuCategory");
         Map<String, Object> response = new HashMap<>();
         try{
-            int result = addMenuService.checkMenuCategoryExists(menuCategory);
+            MenuCategory vo = new MenuCategory();
+            vo.setMenuCategory(menuCategory);
+            vo.setBId("0000000000");
+            int result = addMenuService.checkMenuCategoryExists(vo);
+
             if(result > 0){
                 response.put("result", "fail");
                 response.put("message", "이미 존재하는 카테고리");
                 return response;
             }
-            MenuCategory vo = new MenuCategory();
-            vo.setMenuCategory(menuCategory);
-            addMenuService.addMenuCategory(vo);
 
+            addMenuService.addMenuCategory(vo);
             String categoryId = addMenuService.getCategoryId(menuCategory);
 
             response.put("result", "success");
             response.put("menuCategoryId", categoryId);
             response.put("menuCategory", menuCategory);
+
         } catch (Exception e) {
             response.put("result", "fail");
             response.put("message", "카테고리 추가 실패");
@@ -50,16 +56,18 @@ public class AddMenuRestController {
         Map<String, Object> response = new HashMap<>();
 
         try{
-            int exist = addMenuService.deleteMenuCategory(menuCategory);
+            int exist = addMenuService.hasMenuByCategory(menuCategory);
             if(exist > 0){
                 response.put("result", "fail");
                 response.put("message", "사용중인 카테고리");
                  return response;
             }
 
-            int result = addMenuService.deleteMenuCategory(menuCategory);
+            addMenuService.deleteMenuCategory(menuCategory);
+
             response.put("result", "success");
             response.put("menuCategoryId", menuCategory + "가 삭제되었습니다.");
+
         }catch (Exception e){
             response.put("result", "fail");
             response.put("message", "카테고리 삭제 오류");
@@ -67,4 +75,9 @@ public class AddMenuRestController {
         return response;
     }
 
+    @GetMapping("/menu/foodmaterial/list")
+    public List<FoodMaterial> getFoodMaterialList(HttpSession session) {
+        String bId = "0000000000";
+        return addFoodMaterialService.getFoodMaterialListAll(bId);
+    }
 }
