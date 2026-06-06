@@ -198,7 +198,7 @@ function clearInputs() {
 }
 
 function searchMaterial() {
-    let keyword = document.getElementById('searchInput');
+    let keyword = document.getElementById('searchInput').value.trim();
     let body = document.getElementById('searchResultBody');
 
     if(!keyword){
@@ -206,7 +206,7 @@ function searchMaterial() {
         return;
     }
 
-    fetch('/api/foodmaterial/search/add' + encodeURIComponent(keyword))
+    fetch('/api/foodmaterial/search/add/' + encodeURIComponent(keyword))
         .then(res => res.json())
         .then(list => {
             if (!list || list.length === 0) {

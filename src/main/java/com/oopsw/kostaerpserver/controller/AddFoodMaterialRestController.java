@@ -74,7 +74,7 @@ public class AddFoodMaterialRestController {
             @PathVariable String foodMaterialName, HttpSession session){
         Map<String, Object> response = new HashMap<>();
         response.put("foodMaterialName", foodMaterialName);
-        response.put("0000000000", session.getAttribute("loginOK"));
+        response.put("bId", "0000000000");
         return addFoodMaterialService.getFoodMaterialByName(response);
     }
 }
