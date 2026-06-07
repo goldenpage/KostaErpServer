@@ -4,6 +4,7 @@ import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
 import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
 import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
 import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpense;
 import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
 import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
 import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
@@ -93,5 +94,11 @@ public interface StatisticsService {
         String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
+    );
+
+    List<MonthlyExpense> getMonthlyExpense(
+        String bId,
+        LocalDate startDate,
+        LocalDate endDate
     );
 }

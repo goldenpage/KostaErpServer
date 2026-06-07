@@ -4,6 +4,7 @@ import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
 import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
 import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
 import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpense;
 import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
 import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
 import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
@@ -137,6 +138,14 @@ public class StatisticsServiceImpl implements StatisticsService {
     ) {
         validateSearchCondition(bId, startDate, endDate);
         return statisticsDAO.getMonthlyRevenue(bId, startDate, endDate);
+    }
+
+
+    @Override
+    public List<MonthlyExpense> getMonthlyExpense(String bId,
+        LocalDate startDate, LocalDate endDate) {
+        validateSearchCondition(bId, startDate, endDate);
+        return statisticsDAO.getMonthlyExpense(bId, startDate, endDate);
     }
 
     private void validateSearchCondition(String bId, LocalDate startDate, LocalDate endDate) {

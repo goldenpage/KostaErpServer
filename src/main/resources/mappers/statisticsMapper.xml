@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oopsw.kostaerpserver.repository.StatisticsDAO">
-  <select id="getMonthlyFoodMaterialExpenseRank"  resultType="com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank">
+  <select id="getMonthlyFoodMaterialExpenseRank"
+    resultType="com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank">
     SELECT
-    RANK() OVER (
-    ORDER BY f.foodMaterialPrice * f.foodMaterialCount DESC
+      RANK() OVER (
+      ORDER BY SUM(f.foodMaterialPrice * f.foodMaterialCount) DESC
     ) AS ranking,
-    f.foodMaterial_Id AS foodMaterialId,
-    f.foodMaterialName AS foodMaterialName,
-    f.foodMaterialPrice AS foodMaterialPrice,
-    f.foodMaterialCount AS foodMaterialCount,
-    f.foodMaterialPrice * f.foodMaterialCount AS totalExpense,
-    f.incomeDate AS incomeDate
+      f.foodMaterialName,
+      ROUND(
+        SUM(f.foodMaterialPrice * f.foodMaterialCount)
+          / NULLIF(SUM(f.foodMaterialCount), 0)
+      ) AS foodMaterialPrice,
+      SUM(f.foodMaterialCount) AS foodMaterialCount,
+      SUM(f.foodMaterialPrice * f.foodMaterialCount) AS totalExpense
     FROM FOODM f
     WHERE f.bId = #{bId}
-    AND f.incomeDate >= #{startDate}
-    AND f.incomeDate &lt; #{endDate}
+      AND f.incomeDate >= #{startDate}
+      AND f.incomeDate &lt; #{endDate}
+    GROUP BY f.foodMaterialName
     ORDER BY totalExpense DESC
+  </select>
+
+  <select id="getMonthlyExpense"
+    resultType="com.oopsw.kostaerpserver.dto.MonthlyExpense">
+    SELECT
+      DATE_FORMAT(f.incomeDate, '%Y-%m') AS expenseMonth,
+      COALESCE(SUM(f.foodMaterialPrice * f.foodMaterialCount), 0) AS totalExpense
+    FROM FOODM f
+    WHERE f.bId = #{bId}
+      AND f.incomeDate >= #{startDate}
+      AND f.incomeDate &lt; #{endDate}
+    GROUP BY DATE_FORMAT(f.incomeDate, '%Y-%m')
+    ORDER BY expenseMonth
   </select>
 
 <select id="getMonthlyExpenseRankChart" resultType="com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart">

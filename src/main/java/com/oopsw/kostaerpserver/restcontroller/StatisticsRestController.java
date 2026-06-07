@@ -6,6 +6,7 @@ import com.oopsw.kostaerpserver.dto.DisposalRateResponse;
 import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
 import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
 import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpense;
 import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
 import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
 import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
@@ -263,6 +264,26 @@ public class StatisticsRestController {
 
         return ResponseEntity.ok(
             statisticsService.getMonthlyRevenue(
+                user.getBId(),
+                request.getStartDate(),
+                request.getEndDate()
+            )
+        );
+    }
+
+    @GetMapping("/expenses/monthly")
+    public ResponseEntity<List<MonthlyExpense>> getMonthlyExpense(
+        @ModelAttribute StatisticsRequest request,
+        HttpSession session
+    ) {
+        User user = (User) session.getAttribute("info");
+
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        return ResponseEntity.ok(
+            statisticsService.getMonthlyExpense(
                 user.getBId(),
                 request.getStartDate(),
                 request.getEndDate()

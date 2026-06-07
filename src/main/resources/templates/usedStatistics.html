@@ -21,17 +21,15 @@
     <div class="top_area">
       <h1>지출통계</h1>
 
-      <form method="get"
-            action="/controller">
-        <input type="hidden" name="cmd" value="usedStatisticsUIAction">
-        <input type="month" name="month" value="${selectedMonth}">
+      <form id="searchForm">
+        <input  type="month" id="month" name="month">
         <button type="submit">조회</button>
       </form>
     </div>
 
-    <div class="summary" th:text="${selectedMonth}">
+    <div class="summary" >
       총 지출액:
-      <span th:text="${#numbers.formatInteger(totalExpense, 0, 'COMMA')}"/>
+      <span id="totalUsedPrice">0</span>
       원
     </div>
 
@@ -57,22 +55,7 @@
         <th>총 지출액</th>
       </tr>
       </thead>
-      <tbody>
-      <tr th:each="item: ${rankList}">
-        <td th:text="${item.ranking}"></td>
-        <td th:text="${item.foodMaterialName}"></td>
-        <td>
-          <span th:text="${#numbers.formatInteger(item.foodMaterialPrice, 0, 'COMMA')}"></span>원
-        </td>
-        <td th:text="${item.foodMaterialCount}"></td>
-        <td>
-          <span th:text="${#numbers.formatInteger(item.totalExpense, 0, 'COMMA')}"></span>원
-        </td>
-      </tr>
-
-      <tr th:if="${rankList == null or #lists.isEmpty(rankList)}">
-          <td colspan="5">지출 데이터가 없습니다.</td>
-        </tr>
+      <tbody id="rankTableBody">
       </tbody>
     </table>
   </div>
