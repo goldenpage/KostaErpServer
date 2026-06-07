@@ -1,40 +1,30 @@
 let pwPhoneVerified = false;
 
-function sendPwPhoneCode() {
+const sendPwPhoneCode = async () => {
   const bId = document.querySelector("#bId").value.trim();
   const name = document.querySelector("#name").value.trim();
   const phone = document.querySelector("#phone").value.trim();
-
-  pwPhoneVerified = false;
 
   if (!bId || !name || !phone) {
     alert("아이디, 이름, 휴대폰 번호를 모두 입력해주세요.");
     return;
   }
 
-  const xhr = new XMLHttpRequest();
-  const url = '${pageContext.request.contextPath}/controller?cmd=pwPhoneSendAction';
-  const params = 'bId=' + encodeURIComponent(bId)
-      + '&name=' + encodeURIComponent(name)
-      + '&phone=' + encodeURIComponent(phone);
+  pwPhoneVerified = false;
+  try {
+    const res = await fetch(`http://127.0.0.1:15000/api/auth/pw/phone/code`, {
+      method: "post",
+      body: JSON.stringify(phone),
 
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    });
+    const data = await res.json();
+  } catch (err){
+    console.error(err)
+  }
 
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        document.querySelector("#phoneMessage").innerText = xhr.responseText;
-      } else {
-        alert("인증번호 발송 중 오류가 발생했습니다.");
-      }
-    }
-  };
-
-  xhr.send(params);
 }
 
-function verifyPwPhoneCode() {
+const verifyPwPhoneCode = async () => {
   const phone = document.querySelector("#phone").value.trim();
   const phoneCode = document.querySelector("#phoneCode").value.trim();
 
@@ -43,26 +33,18 @@ function verifyPwPhoneCode() {
     return;
   }
 
-  const xhr = new XMLHttpRequest();
-  const url = '${pageContext.request.contextPath}/controller?cmd=pwPhoneVerifyAction';
-  const params = 'phone=' + encodeURIComponent(phone)
-      + '&phoneCode=' + encodeURIComponent(phoneCode);
+  try{
+  const res = await fetch(`http://127.0.0.1:15000`, {
+    method: "post",
+    body: JSON.stringify(phoneCode)
+  })
 
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+  const data = await res.json();
 
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        document.querySelector("#phoneMessage").innerText = xhr.responseText;
-        pwPhoneVerified = xhr.responseText.indexOf("완료") > -1;
-      } else {
-        alert("인증번호 확인 중 오류가 발생했습니다.");
-      }
-    }
-  };
+  } catch (err) {
+    console.error(err)
+  }
 
-  xhr.send(params);
 }
 
 function checkPw() {
@@ -91,3 +73,17 @@ document.querySelector("#name").addEventListener("input", function () {
 document.querySelector("#phone").addEventListener("input", function () {
   pwPhoneVerified = false;
 });
+
+document.querySelector("#pwUpdateBtn").addEventListener("click",()=>{
+  checkPw()
+})
+
+
+document.querySelector("#sendPhoneBtn").addEventListener("click", () => {
+  sendPwPhoneCode();
+})
+
+document.querySelector("#verifyBtn").addEventListener("click", () => {
+verifyPwPhoneCode();
+})
+

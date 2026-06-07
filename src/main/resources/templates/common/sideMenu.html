@@ -1,40 +1,31 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Insert title here</title>
-  <link rel="stylesheet" th:href="@{/css/addFoodMaterial.css}">
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="sideMenu">
-  <img alt="logo" src="/KostaErp/view/asset/image.png"
-       onclick="location.href='/KostaErp/controller?cmd=foodMaterialAction'"/>
+<div class="sideMenu" th:fragment="sideMenu">
+  <img alt="logo" th:src="@{/asset/image.png}"
+       th:onclick="|location.href='@{/foodmaterials}'|"/>
+
   <ul>
     <li>식자재관리</li>
-    <li onclick="location.href='controller?cmd=addFoodMaterialUIAction'">식자재입력</li>
-    <li onclick="location.href='controller?cmd=addMenuUIAction'">메뉴입력</li>
-    <li onclick="location.href='controller?cmd=foodMaterialAction'">식자재조회</li>
-    <li onclick="location.href='controller?cmd=menuAction'">메뉴상세조회</li>
+    <li th:onclick="|location.href='@{/addfoodmaterial}'|">식자재입력</li>
+    <li th:onclick="|location.href='@{/addmenu}'|">메뉴입력</li>
+    <li th:onclick="|location.href='@{/foodmaterials}'|">식자재조회</li>
+    <li th:onclick="|location.href='@{/menu}'|">메뉴상세조회</li>
   </ul>
+
   <ul>
     <li>폐기관리</li>
-    <li onclick="location.href='controller?cmd=disposalUIAction'">폐기품목확인</li>
+    <li th:onclick="|location.href='@{/disposalitems}'|">폐기품목확인</li>
   </ul>
+
   <ul>
     <li>통계</li>
-    <li
-        onclick="location.href='controller?cmd=revenueStatisticsUIAction'">매출통계
-    </li>
-    <li
-        onclick="location.href='controller?cmd=usedStatisticsUIAction'">지출통계
-    </li>
-    <li
-        onclick="location.href='controller?cmd=disposalStatisticUIAction'">폐기통계
-    </li>
+    <li th:onclick="|location.href='@{/revenuestatistics}'|">매출통계</li>
+    <li th:onclick="|location.href='@{/usedstatistics}'|">지출통계</li>
+    <li th:onclick="|location.href='@{/disposalstatistics}'|">폐기통계</li>
   </ul>
 </div>
-
 
 </body>
 </html>

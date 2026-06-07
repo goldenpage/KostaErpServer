@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <title>지출통계</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
   <link rel="stylesheet" th:href="@{/css/usedStatistics.css}">
-
 </head>
+
 <body>
 <div class="container">
-  <section >
+  <section>
     <div th:replace="~{common/sideMenu :: sideMenu}"></div>
   </section>
 
@@ -20,17 +21,15 @@
     <div class="top_area">
       <h1>지출통계</h1>
 
-      <form method="get"
-            action="/controller">
-        <input type="hidden" name="cmd" value="usedStatisticsUIAction">
-        <input type="month" name="month" value="${selectedMonth}">
+      <form id="searchForm">
+        <input  type="month" id="month" name="month">
         <button type="submit">조회</button>
       </form>
     </div>
 
-    <div class="summary">
-      ${selectedMonth} 총 지출액:
-      <fmt:formatNumber value="${totalExpense}" pattern="#,###" />
+    <div class="summary" >
+      총 지출액:
+      <span id="totalUsedPrice">0</span>
       원
     </div>
 
@@ -56,77 +55,13 @@
         <th>총 지출액</th>
       </tr>
       </thead>
-      <tbody>
-      <c:forEach var="item" items="${rankList}">
-        <tr>
-          <td>${item.ranking}</td>
-          <td>${item.foodMaterialName}</td>
-          <td><fmt:formatNumber value="${item.foodMaterialPrice}"
-                                pattern="#,###" />원</td>
-          <td>${item.foodMaterialCount}</td>
-          <td><fmt:formatNumber value="${item.totalExpense}"
-                                pattern="#,###" />원</td>
-        </tr>
-      </c:forEach>
-
-      <c:if test="${empty rankList}">
-        <tr>
-          <td colspan="5">지출 데이터가 없습니다.</td>
-        </tr>
-      </c:if>
+      <tbody id="rankTableBody">
       </tbody>
     </table>
   </div>
 </div>
 
-<script type="application/json" id="rankLabelsJson">${rankLabelsJson}</script>
-<script type="application/json" id="rankValuesJson">${rankValuesJson}</script>
-<script type="application/json" id="monthlyLabelsJson">${monthlyLabelsJson}</script>
-<script type="application/json" id="monthlyValuesJson">${monthlyValuesJson}</script>
 
-<script>
-  function readJson(id) {
-    var text = document.getElementById(id).textContent.trim();
-    return JSON.parse(text || "[]");
-  }
-
-  var rankLabels = readJson("rankLabelsJson");
-  var rankValues = readJson("rankValuesJson");
-  var monthlyLabels = readJson("monthlyLabelsJson");
-  var monthlyValues = readJson("monthlyValuesJson");
-
-  new Chart(document.getElementById("rankChart"), {
-    type : "bar",
-    data : {
-      labels : rankLabels,
-      datasets : [ {
-        label : "지출액",
-        data : rankValues,
-        backgroundColor : "#2563eb"
-      } ]
-    },
-    options : {
-      indexAxis : "y",
-      responsive : true,
-      maintainAspectRatio : false
-    }
-  });
-
-  new Chart(document.getElementById("monthlyChart"), {
-    type : "bar",
-    data : {
-      labels : monthlyLabels,
-      datasets : [ {
-        label : "월별 총 지출액",
-        data : monthlyValues,
-        backgroundColor : "#16a34a"
-      } ]
-    },
-    options : {
-      responsive : true,
-      maintainAspectRatio : false
-    }
-  });
-</script>
+<script th:src="@{/js/usedStatistics.js}"></script>
 </body>
 </html>

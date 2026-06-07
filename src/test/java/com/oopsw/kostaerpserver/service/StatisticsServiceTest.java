@@ -1,6 +1,13 @@
 package com.oopsw.kostaerpserver.service;
 
 
+import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
+import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
+import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
+import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
+import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
+import com.oopsw.kostaerpserver.dto.SalesHistory;
 import com.oopsw.kostaerpserver.service.Interface.StatisticsService;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +31,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getMonthlyFoodMaterialExpenseRankTest() {
-        List<Map<String, Object>> list =
+        List<MonthlyFoodMaterialExpenseRank> list =
             statisticsService.getMonthlyFoodMaterialExpenseRank(bId,
                 LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
@@ -41,7 +48,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getMonthlyExpenseRankChartTest() {
-        List<Map<String,Object>> list =
+        List<MonthlyExpenseRankChart> list =
             statisticsService.getMonthlyExpenseRankChart(
             bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
@@ -51,7 +58,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getSalesHistoryTest() {
-        List<Map<String, Object>> list = statisticsService.getSalesHistory(
+        List<SalesHistory> list = statisticsService.getSalesHistory(
             bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
         assertNotNull(list);
@@ -73,7 +80,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getMenuSalesRankTest() {
-        List<Map<String, Object>> list = statisticsService.getMenuSalesRank(
+        List<MenuSalesRank> list = statisticsService.getMenuSalesRank(
             bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 
@@ -100,7 +107,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getTopDisposalMaterialsTest() {
-        List<Map<String,Object>> list =
+        List<DisposalTopMaterialsResponse> list =
             statisticsService.getTopDisposalMaterials(
             bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
@@ -111,7 +118,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getDisposalReasonRatioTest() {
-        List<Map<String, Object>> list =
+        List<DisposalReasonRatio> list =
             statisticsService.getDisposalReasonRatio(
             bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
@@ -122,7 +129,7 @@ public class StatisticsServiceTest {
 
     @Test
     void getDailyDisposalChartTest() {
-        List<Map<String,Object>> list = statisticsService.getDailyDisposalChart(
+        List<DailyDisposalChart> list = statisticsService.getDailyDisposalChart(
             bId,
             LocalDate.of(2026, 5, 1), LocalDate.of(2026, 6, 1));
 

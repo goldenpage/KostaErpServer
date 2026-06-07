@@ -14,7 +14,10 @@ ul {
 }
 
 .main {
-  width: 100%;
+  width: calc(100% - 330px);
+  min-width: 0;
+  padding: 20px;
+  overflow-x: hidden;
 }
 
 .main table {
@@ -49,8 +52,18 @@ ul {
   color: #64748b;
 }
 
-.disposal_price table {
-  min-width: 420px;
+.top_area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+}
+
+.disposal_price .table_scroll {
+
+  overflow-x: auto;
+
 }
 
 .profile {
@@ -122,4 +135,15 @@ th, td {
 canvas {
   width: 100% !important;
   height: 300px !important;
+}
+
+
+@media (max-width: 1200px) {
+  .content_item {
+    flex-direction: column;
+  }
+  .content_item > div {
+    width: 100%;
+  }
+
 }
