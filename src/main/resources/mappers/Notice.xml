@@ -5,7 +5,11 @@
 
     <insert id="insertNotice">
         INSERT INTO DISPOSAL_NOTICE (disposal_id, notice_date, read_yn)
-        VALUES (#{disposalId}, CURDATE(), 'N')
+        SELECT #{disposalId}, CURDATE(), 'N'
+        WHERE NOT EXISTS (
+        SELECT 1 FROM DISPOSAL_NOTICE
+        WHERE disposal_id = #{disposalId}
+        )
     </insert>
 
     <select id="getNoticeList" resultType="com.oopsw.kostaerpserver.vo.Notice">
@@ -24,6 +28,7 @@
         WHERE f.bId = #{bId}
         AND f.expirationDate &lt; CURDATE()
         AND IFNULL(d.disposalCountAll, 0) &gt; 0
+        AND (n.read_yn = 'N' OR n.read_yn IS NULL)
         ORDER BY f.expirationDate DESC
     </select>
 

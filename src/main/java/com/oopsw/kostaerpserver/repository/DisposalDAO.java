@@ -41,6 +41,8 @@ public interface DisposalDAO {
             @Param("disposalId") String disposalId,
             @Param("reasonId") String reasonId);
 
+    int insertDisposal(Disposal disposal);
+
     List<String> getExpiredDisposalIds(@Param("bId") String bId);
 
     double getDisposalRate(

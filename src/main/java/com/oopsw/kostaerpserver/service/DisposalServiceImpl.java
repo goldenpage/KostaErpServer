@@ -69,6 +69,12 @@ public class DisposalServiceImpl implements DisposalService {
     }
 
     @Override
+    @Transactional
+    public boolean insertDisposal(Disposal disposal) {
+        return disposalDAO.insertDisposal(disposal) == 1;
+    }
+
+    @Override
     public List<String> getExpiredDisposalIds(String bId) {
         return disposalDAO.getExpiredDisposalIds(bId);
     }
