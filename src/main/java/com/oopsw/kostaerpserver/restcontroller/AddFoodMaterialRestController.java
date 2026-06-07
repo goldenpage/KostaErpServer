@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.controller;
+package com.oopsw.kostaerpserver.restcontroller;
 
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
