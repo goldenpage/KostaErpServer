@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.controller;
+package com.oopsw.kostaerpserver.controller.restcontroller;
 
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.service.Interface.AddMenuService;
@@ -6,7 +6,6 @@ import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
