@@ -1,12 +1,20 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
+import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
+import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
+import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpense;
+import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
+import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
+import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
+import com.oopsw.kostaerpserver.dto.SalesHistory;
 import com.oopsw.kostaerpserver.repository.StatisticsDAO;
 import com.oopsw.kostaerpserver.service.Interface.StatisticsService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +24,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final StatisticsDAO statisticsDAO;
 
     @Override
-    public List<Map<String, Object>> getMonthlyFoodMaterialExpenseRank(
+    public List<MonthlyFoodMaterialExpenseRank> getMonthlyFoodMaterialExpenseRank(
         String bId, LocalDate startDate, LocalDate endDate) {
         validateSearchCondition(bId, startDate, endDate);
         return statisticsDAO.getMonthlyFoodMaterialExpenseRank(bId, startDate, endDate);
@@ -32,17 +40,16 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<Map<String, Object>> getMonthlyExpenseRankChart(String bId,
+    public List<MonthlyExpenseRankChart> getMonthlyExpenseRankChart(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
 
         return statisticsDAO.getMonthlyExpenseRankChart(bId, startDate,
             endDate);
-
     }
 
     @Override
-    public List<Map<String, Object>> getSalesHistory(String bId,
+    public List<SalesHistory> getSalesHistory(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
         return statisticsDAO.getSalesHistory(bId, startDate, endDate);
@@ -58,7 +65,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<Map<String, Object>> getMenuSalesRank(String bId,
+    public List<MenuSalesRank> getMenuSalesRank(String bId,
         LocalDate startDate, LocalDate endDate) {
         validateSearchCondition(bId, startDate, endDate);
         return statisticsDAO.getMenuSalesRank(bId, startDate, endDate);
@@ -82,15 +89,31 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<Map<String, Object>> getTopDisposalMaterials(String bId,
-        LocalDate startDate, LocalDate endDate)  {
+    public List<DisposalTopMaterialsResponse> getTopDisposalMaterials(
+        String bId,
+        LocalDate startDate,
+        LocalDate endDate
+    ) {
         validateSearchCondition(bId, startDate, endDate);
-        return statisticsDAO.getTopDisposalMaterials(bId, startDate, endDate);
+        List<Map<String, Object>> list = statisticsDAO.getTopDisposalMaterials(
+            bId,
+            startDate,
+            endDate
+        );
 
+        return list.stream()
+            .map(item -> DisposalTopMaterialsResponse.builder()
+                .foodMaterialId(String.valueOf(item.get("foodMaterialId")))
+                .foodMaterialName(String.valueOf(item.get("foodMaterialName")))
+                .disposalCount(((Number) item.get("disposalCount")).intValue())
+                .totalDisposalPrice(((Number) item.get("totalDisposalPrice")).intValue())
+                .build()
+            )
+            .toList();
     }
 
     @Override
-    public List<Map<String, Object>> getDisposalReasonRatio(String bId,
+    public List<DisposalReasonRatio> getDisposalReasonRatio(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
         return statisticsDAO.getDisposalReasonRatio(bId, startDate, endDate);
@@ -98,11 +121,31 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<Map<String, Object>> getDailyDisposalChart(String bId,
+    public List<DailyDisposalChart> getDailyDisposalChart(String bId,
         LocalDate startDate, LocalDate endDate)  {
         validateSearchCondition(bId, startDate, endDate);
-        return statisticsDAO.getDailyDisposalChart(bId, startDate, endDate);
 
+        return statisticsDAO.getDailyDisposalChart( bId,
+            startDate,
+            endDate);
+    }
+
+    @Override
+    public List<MonthlyRevenue> getMonthlyRevenue(
+        String bId,
+        LocalDate startDate,
+        LocalDate endDate
+    ) {
+        validateSearchCondition(bId, startDate, endDate);
+        return statisticsDAO.getMonthlyRevenue(bId, startDate, endDate);
+    }
+
+
+    @Override
+    public List<MonthlyExpense> getMonthlyExpense(String bId,
+        LocalDate startDate, LocalDate endDate) {
+        validateSearchCondition(bId, startDate, endDate);
+        return statisticsDAO.getMonthlyExpense(bId, startDate, endDate);
     }
 
     private void validateSearchCondition(String bId, LocalDate startDate, LocalDate endDate) {
@@ -117,4 +160,5 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
     }
+
 }

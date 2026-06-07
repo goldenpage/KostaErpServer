@@ -12,7 +12,7 @@ public class AuthController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String login(String bId, String pw) {
+    public String login() {
         return "login";
     }
 

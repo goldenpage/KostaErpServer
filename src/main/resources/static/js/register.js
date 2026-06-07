@@ -8,100 +8,81 @@ function checkPassword() {
   return true;
 }
 
-function sendPhoneCode() {
-  const phone = document.querySelector("#phone").value
-  if (!phone) {
-    alert("휴대폰 번호를 입력해주세요")
-    return;
-  }
-  const xhr = new XMLHttpRequest();
-  const url = '${pageContext.request.contextPath}/controller?cmd=phoneSendAction&phone='
-      + encodeURIComponent(phone);
-
-  xhr.open('GET', url, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        document.querySelector("#phoneMessage").innerText = xhr.responseText;
-      } else {
-        alert("인증번호 발송 중 오류가 발생했습니다.");
-      }
-    }
-  };
-
-  xhr.send();
-
+const sendPhoneCode = async () => {
+  const res = await fetch(`http://127.0.0.1/api/users/phone/code`, {
+    method:"post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body:JSON.stringify(phone)
+  })
+  const data  = await res.json();
 }
 
-function sendPhoneCodeJquery() {
-  const phone = document.querySelector("#phone").value
+const verifyPhoneCode = async  () => {
+  const res = fetch(`http://127.0.0.1:15000/api/users/phone/verify`, {
+    method: "post",
+    headers:{
+      "Content-Type": "application/json",
+    },
+    body:JSON.stringify(code)
+  })
 
-  if (!phone) {
-    alert("휴대폰 번호를 입력해주세요")
-    return;
-  }
-  const url = '${pageContext.request.contextPath}/controller?cmd=phoneSendAction&phone='
-      + encodeURIComponent(phone);
-
-  $.ajax({
-    method: 'GET',
-    url: url,
-    success: function (result) {
-      $("#phoneMessage").html(result);
-    }
-  });
+  const data = await res.json();
 }
 
-function verifyPhoneCode() {
-  const
-      phone = document.querySelector("#phone").value;
-  const
-      phoneCode = document.querySelector("#phoneCode").value;
+const checkBid = async  () => {
+  const res = await fetch('http://127.0.0.1:15000/api/users/business/status',{
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bid)
+  })
 
-  const xhr = new XMLHttpRequest();
-  const url = '${pageContext.request.contextPath}/controller?cmd=phoneVerifyAction&phone='
-      + encodeURIComponent(phone)
-      + '&phoneCode='
-      + encodeURIComponent(phoneCode);
-
-  xhr.open("GET", url, true);
-
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        document.querySelector("#phoneMessage").innerText = xhr.responseText;
-      } else {
-        alert("인증번호 확인 중 오류가 발생했습니다.");
-      }
-    }
-  };
-
-  xhr.send();
+  const data = await res.json();
 }
 
-function checkBid() {
-  const bId = document.querySelector("#bId").value;
+const register = async () => {
+  const res = await fetch(`http://127.0.0.1:15000/api/auth/users`, {
+    method:"post",
+    body: JSON.stringify(user)
+  })
 
-  if (!bId || bId.length !== 10) {
-    alert("사업자번호 10자리를 입력해주세요.");
-    return;
+  const data = await res.json();
+}
+
+const registerBtn = document.querySelector("#registerBtn");
+const sendBtn = document.querySelector("#sendBtn");
+const verifyBtn = document.querySelector("#verifyBtn")
+
+registerBtn.addEventListener("click",() => {
+  register();
+
+  if (register.status == 200) {
+    location.href = "/login";
+  }else{
+    location.href = "/register";
   }
 
-  const xhr = new XMLHttpRequest();
-  const url = '${pageContext.request.contextPath}/controller?cmd=idCheckAction&bId='
-      + encodeURIComponent(bId);
+})
 
-  xhr.open("GET", url, true);
+sendBtn.addEventListener("click", () => {
+  sendPhoneCode()
 
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        document.querySelector("#businessMessage").innerText = xhr.responseText;
-      } else {
-        alert("사업자번호 인증 중 오류가 발생했습니다.");
-      }
-    }
-  };
+  if (sendPhoneCode.status == 200) {
+    phone.value = '';
+  }else{
+    phone.value = '';
+  }
+})
 
-  xhr.send();
-}
+verifyBtn.addEventListener("click", ()=> {
+  verifyPhoneCode()
+
+  if (verifyPhoneCode.status == 200) {
+    phone.value = '';
+  }else{
+    phone.value = '';
+  }
+})

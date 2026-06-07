@@ -1,5 +1,13 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
+import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
+import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpense;
+import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
+import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
+import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
+import com.oopsw.kostaerpserver.dto.SalesHistory;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -9,77 +17,87 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StatisticsDAO {
 
-    List<Map<String, Object>> getMonthlyFoodMaterialExpenseRank(
-        String bId,
+    List<MonthlyFoodMaterialExpenseRank> getMonthlyFoodMaterialExpenseRank(
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
-
     );
 
     Long getTotalExpense(
-        String bId,
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
     );
 
-    List<Map<String, Object>> getMonthlyExpenseRankChart(
-        String bId,
+    List<MonthlyExpenseRankChart> getMonthlyExpenseRankChart(
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
     );
 
-    List<Map<String, Object>> getSalesHistory(
-        String bId,
+    List<SalesHistory> getSalesHistory(
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
     );
 
     Long getTotalSales(
-        String bId,
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
 
     );
 
-    List<Map<String, Object>> getMenuSalesRank(
-        String bId,
+    List<MenuSalesRank> getMenuSalesRank(
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
 
     );
 
     Double getDisposalRate(
-        String bId,
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
 
     );
 
     Long getTotalDisposalPrice(
-        String bId,
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
 
     );
 
     List<Map<String, Object>> getTopDisposalMaterials(
-        String bId,
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
 
     );
 
-    List<Map<String, Object>> getDisposalReasonRatio(
-        String bId,
+    List<DisposalReasonRatio> getDisposalReasonRatio(
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
 
     );
 
-    List<Map<String, Object>> getDailyDisposalChart(
-        String bId,
+    List<DailyDisposalChart> getDailyDisposalChart(
+        @Param("bId") String bId,
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate
+    );
 
+    List<MonthlyRevenue> getMonthlyRevenue(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
+
+    List<MonthlyExpense> getMonthlyExpense(
+        String bId,
+        LocalDate startDate,
+        LocalDate endDate
     );
 }
