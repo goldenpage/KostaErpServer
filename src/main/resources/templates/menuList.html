@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>메뉴 조회</title>
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
+  <link rel="stylesheet" th:href="@{/css/menuList.css}">
+</head>
+
+<body>
+<div class="container"
+     id="menuPage"
+     th:data-b-id="${bId}"
+     th:data-selected-menu-id="${selectedMenuId}">
+
+  <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+
+  <div class="main">
+
+    <div th:replace="~{common/userName :: userName}"></div>
+
+    <h1>메뉴 상세 조회</h1>
+
+    <div class="content_item">
+
+      <div class="content_left">
+        <div class="menu_list">
+
+          <table>
+            <thead>
+            <tr>
+              <th>선택</th>
+              <th>판매가능 메뉴</th>
+              <th>가격(원)</th>
+              <th>카테고리</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="menu : ${menuList}">
+              <td>
+                <input type="radio"
+                       name="menuSelect"
+                       th:value="${menu.menuId}"
+                       th:checked="${menu.menuId == selectedMenuId}">
+              </td>
+
+              <td>
+                <button type="button"
+                        class="menuBtn"
+                        th:value="${menu.menuId}"
+                        th:text="${menu.menuName}">
+                  메뉴명
+                </button>
+              </td>
+
+              <td th:text="${menu.menuPrice}">0</td>
+              <td th:text="${menu.menuCategory}">카테고리</td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(menuList)}">
+              <td colspan="4">조회된 메뉴가 없습니다.</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+      <div class="content_right">
+
+        <h3>사용하는 식자재</h3>
+
+        <table id="ingredientDetail">
+          <thead>
+          <tr>
+            <th>식자재명</th>
+            <th>사용량</th>
+            <th>식자재 가격</th>
+            <th>사용 원가</th>
+          </tr>
+          </thead>
+
+          <tbody id="ingredientTableBody">
+          <tr>
+            <td colspan="4">메뉴를 선택하면 식자재 정보가 표시됩니다.</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="sale_form_area">
+          <label>
+            판매수량:
+            <input type="number" id="saleCount" value="1" min="1">
+          </label>
+
+          <button type="button" id="saleBtn">판매 처리</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/js/menuList.js}"></script>
+</body>
+</html>

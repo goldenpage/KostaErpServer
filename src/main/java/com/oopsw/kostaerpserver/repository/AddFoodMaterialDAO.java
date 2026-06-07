@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,7 +16,7 @@ public interface AddFoodMaterialDAO {
     int getFoodMaterialCount(String bId);
 
     // 2. 식자재 입력
-    int addFoodMaterial(FoodMaterial foodMaterial);
+    int addFoodMaterial(AddFoodMaterial addFoodMaterial);
 
     // 3. 카테고리 여부 체크
     int checkFoodCategoryExists(String foodCategory);
