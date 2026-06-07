@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>메뉴 조회</title>
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
   <link rel="stylesheet" th:href="@{/css/menuList.css}">
 </head>
 
@@ -12,11 +14,11 @@
      th:data-b-id="${bId}"
      th:data-selected-menu-id="${selectedMenuId}">
 
-<!--  <div th:replace="~{common/sideMenu :: sideMenu}"></div>-->
+  <div th:replace="~{common/sideMenu :: sideMenu}"></div>
 
   <div class="main">
 
-<!--    <div th:replace="~{common/userName :: userName}"></div>-->
+    <div th:replace="~{common/userName :: userName}"></div>
 
     <h1>메뉴 상세 조회</h1>
 
