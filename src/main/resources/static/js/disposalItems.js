@@ -1,9 +1,7 @@
 function updateReason(disposalId) {
     const select = document.getElementById(`reason_${disposalId}`);
-    fetch(`/api/disposal-items/${disposalId}/reason`, {
-        method: "PATCH",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({reasonId: select.value})
+    fetch(`http://127.0.0.1:15000/api/disposal-items/${disposalId}/reason?reasonId=${select.value}`, {
+        method: "PATCH"
     }).then(response => {
         if (!response.ok) {
             alert("폐기 사유 변경에 실패했습니다.");
@@ -18,7 +16,7 @@ function loadDisposalData(page = 1, isPopState = false) {
     const category = document.getElementById('category').value;
     const reason = document.getElementById('reason').value;
 
-    const url = `/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}`;
+    const url = `http://127.0.0.1:15000/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}`;
 
     fetch(url).
         then(response => {

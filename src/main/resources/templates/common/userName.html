@@ -3,23 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Insert title here</title>
-  <style>
-    .profile {
-      display: flex;
-      justify-content: end;
-      gap: 12px;
-    }
-
-    li {
-      cursor: pointer;
-      list-style: none;
-    }
-
-    li:hover {
-      opacity: 0.5
-    }
-
-  </style>
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
   <script>
     function goBack() {
       history.back();
@@ -28,11 +12,11 @@
 </head>
 <body>
 
-<ul class="profile">
-  <li><span th:text="${info.NAME}">님</span></li>
-  <li onclick="location.href='controller?cmd=logoutAction'">로그아웃</li>
-  <li onclick="location.href='controller?cmd=notificationUI'">알림</li>
-  <li onclick="goBack()">뒤로가기</button>
+<ul class="profile" th:fragment="userName">
+  <li><span th:text="${session.info != null ? session.info.name : '사용자'}"></span></li>
+  <li th:onclick="|location.href='@{/login}'|">로그아웃</li>
+  <li th:onclick="|location.href='@{/notice}'|">알림</li>
+  <li onclick="goBack()">뒤로가기</li>
 </ul>
 
 

@@ -9,12 +9,12 @@
 <body>
 <div class="container">
   <section>
-    <th:block th:replace="~{common/sideMenu :: sideMenu}"></th:block>
+    <th:block th:replace="~{common/sideMenu}"></th:block>
   </section>
 
   <div class="main">
     <div>
-      <th:block th:replace="~{common/userName :: userName}"></th:block>
+      <th:block th:replace="~{common/userName}"></th:block>
     </div>
     <h1>메뉴 입력</h1>
 
@@ -36,20 +36,19 @@
           <div class="input_row">
             <div class="category_buttons" id="categoryArea">
               <th:block th:each="category : ${categoryList}">
-                                    <span style="display:inline-flex; align-items:center; gap:2px;">
-                                        <button type="button" onclick="selectCategory(this)"
-                                                th:data-category-id="${category.menuCategoryId}"
-                                                th:text="${category.menuCategory}"></button>
-                                        <button type="button" class="remove_btn"
-                                                th:onclick="|deleteCategoryAjax('${category.menuCategory}', this)|">&#10005;</button>
-                                    </span>
+                <span style="display:inline-flex; align-items:center; gap:2px;">
+                  <button type="button" onclick="selectCategory(this)"
+                          th:data-category-id="${category.menuCategoryId}"
+                          th:text="${category.menuCategory}"></button>
+                  <button type="button" class="remove_btn"
+                          th:data-category-name="${category.menuCategory}"
+                          onclick="deleteCategoryAjax(this.dataset.categoryName, this)">&#10005;</button>
+                </span>
               </th:block>
             </div>
           </div>
           <div id="categoryMsg" style="font-size:13px; margin-bottom:8px;"></div>
         </div>
-
-        <form method="post" th:action="@{/addMenu}" class="addMenu">
           <input type="hidden" id="selectedCategoryId" name="_dummy" value="">
 
           <div class="input_section">
@@ -71,11 +70,6 @@
               <label>식자재</label>
               <select id="inputIngredientSelect">
                 <option value="">-- 선택 --</option>
-                <th:block th:each="fm : ${foodMaterialList}">
-                  <option th:value="${fm.foodMaterialId}"
-                          th:data-name="${fm.foodMaterialName}"
-                          th:text="${fm.foodMaterialName} + ' (' + ${fm.foodCategory} + ')'"></option>
-                </th:block>
               </select>
               <label>수량</label>
               <input type="number" id="inputIngredientAmount" placeholder="50" min="1">
@@ -106,7 +100,6 @@
           </div>
 
           <div id="hiddenFields"></div>
-        </form>
 
       </div>
 
@@ -153,9 +146,6 @@
     </div>
   </div>
 </div>
-<script th:inline="javascript">
-  var contextPath = /*[[@{/}]]*/ '/';
-</script>
 <script th:src="@{/js/addMenu.js}"></script>
 </body>
 </html>

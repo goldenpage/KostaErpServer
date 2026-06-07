@@ -88,6 +88,17 @@
         WHERE disposal_Id = #{disposalId}
     </update>
 
+    <insert id="insertDisposal">
+        INSERT INTO DISPOSALS (
+        disposalCountAll, disposalPrice, disposalDate,
+        foodMaterial_Id, reason_Id
+        )
+        VALUES (
+        #{disposalCountAll}, #{disposalPrice}, #{disposalDate},
+        #{foodMaterialId}, #{reasonId}
+        )
+    </insert>
+
     <select id="getExpiredDisposalIds" resultType="string">
         SELECT d.disposal_Id
         FROM DISPOSALS d

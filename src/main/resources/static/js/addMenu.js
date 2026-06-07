@@ -1,13 +1,11 @@
-var pendingList = [];
+let pendingList = [];
 
-function today() {
-    return new Date().toISOString().substring(0, 10);
-}
-
-document.getElementById('incomeDate').value = today();
+document.addEventListener('DOMContentLoaded', function() {
+    loadFoodMaterialList();
+});
 
 function selectCategory(btn) {
-    document.querySelectorAll('#categoryArea button').forEach(function(b) {
+    document.querySelectorAll('#categoryArea button[data-category-id]').forEach(function(b) {
         b.classList.remove('selected');
     });
     btn.classList.add('selected');
@@ -15,277 +13,308 @@ function selectCategory(btn) {
 }
 
 function getSelectedCategoryName() {
-    var sel = document.querySelector('#categoryArea button.selected');
+    let sel = document.querySelector('#categoryArea button.selected');
     return sel ? sel.textContent.trim() : '';
 }
 
-function addCategoryAjax() {
-    var input = document.getElementById('getfoodCategory');
-    var categoryName = input.value.trim();
-    var msg = document.getElementById('categoryMsg');
+function loadFoodMaterialList() {
+    fetch('/api/menu/foodmaterial/list')
+        .then(res => res.json())
+        .then(list => {
+            let select = document.getElementById('inputIngredientSelect');
+            select.innerHTML = '<option value="">-- 선택 --</option>';
+            list.forEach(function(fm) {
+                let option = document.createElement('option');
+                option.value = fm.foodMaterialId;
+                option.setAttribute('data-name', fm.foodMaterialName);
+                option.textContent = fm.foodMaterialName + ' (' + fm.foodCategory + ')';
+                select.appendChild(option);
+            });
+        })
+        .catch(() => { console.error('식자재 목록 불러오기 실패'); });
+}
 
-    if (!categoryName) {
-        alert('카테고리명을 입력해주세요.');
+function addIngredient(){
+    let select  = document.getElementById('inputIngredientSelect');
+    let foodMaterialId = select.value;
+    let foodMaterialName = select.options[select.selectedIndex].getAttribute('data-name');
+    let usedCount = document.getElementById('inputIngredientAmount').value;
+
+    if (!foodMaterialId) {
+        alert('식자재를 선택해주세요.');
+        return;
+    }
+    if (!usedCount || Number(usedCount) <= 0) {
+        alert('수량을 올바르게 입력해주세요.');
         return;
     }
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", contextPath + "/controller?cmd=addFoodCategoryAction", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    let body = document.getElementById('ingredientBody');
+    let emptyRow = body.querySelector('td[colspan]');
+    if (emptyRow) emptyRow.closest('tr').remove();
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var parts = xhr.responseText.split("|");
-            var result = parts[0];
-            var getId = parts[1];
-            var getName = parts[2];
+    let tr = document.createElement('tr');
+    tr.setAttribute('data-food-material-id', foodMaterialId);
+    tr.setAttribute('data-used-count', usedCount);
+    tr.innerHTML =
+        '<td>' + foodMaterialName + '</td>' +
+        '<td>' + Number(usedCount).toLocaleString() + 'g</td>' +
+        '<td><span class="remove_btn" onclick="removeIngredientRow(this)">&#8854;</span></td>';
+    body.appendChild(tr);
 
-            if (result === "success") {
+    select.selectedIndex = 0;
+    document.getElementById('inputIngredientAmount').value = '';
+}
+
+function removeIngredientRow(el) {
+    let body = document.getElementById('ingredientBody');
+    el.closest('tr').remove();
+    if (body.querySelectorAll('tr').length === 0) {
+        body.innerHTML = '<tr><td colspan="3" class="empty_msg">추가된 식자재가 없습니다</td></tr>';
+    }
+}
+
+
+function addCategoryAjax() {
+    let input = document.getElementById('getMenuCategory');
+    let categoryName = input.value.trim();
+    let msg = document.getElementById('categoryMsg');
+
+    if(!categoryName){
+        alert('카테고리명을 입력해주세요');
+        return;
+    }
+
+    fetch('/api/menu/menucategory/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({menuCategory:categoryName})
+    }).then(res => res.json())
+        .then(data => {
+            if(data.result === 'success'){
                 msg.style.color = 'green';
-                msg.innerText = '카테고리가 추가되었습니다.';
+                msg.innerText = '카테고리가 추가되었습니다,';
 
-                var span = document.createElement('span');
+                let span = document.createElement('span');
                 span.style.cssText = 'display:inline-flex; align-items:center; gap:2px;';
-                var selectBtn = document.createElement('button');
+
+                let selectBtn = document.createElement('button');
                 selectBtn.type = 'button';
-                selectBtn.textContent = getName;
-                selectBtn.setAttribute('data-category-id', getId);
+                selectBtn.textContent = data.menuCategory;
+                selectBtn.setAttribute('data-category-id', data.menuCategoryId);
                 selectBtn.onclick = function() { selectCategory(this); };
 
-                var delBtn = document.createElement('button');
+                let delBtn = document.createElement('button');
                 delBtn.type = 'button';
                 delBtn.className = 'remove_btn';
                 delBtn.innerHTML = '&#10005;';
-                delBtn.onclick = function() { deleteCategoryAjax(getName, this); };
+                delBtn.onclick = function() { deleteCategoryAjax(data.menuCategory, this); };
+
                 span.appendChild(selectBtn);
                 span.appendChild(delBtn);
                 document.getElementById('categoryArea').appendChild(span);
                 input.value = '';
-            } else {
+            }else{
                 msg.style.color = 'red';
-                msg.innerText = getId;
+                msg.innerText = data.message;
             }
-        } else if (xhr.readyState === 4) {
+        })
+        .catch(() => {
             msg.style.color = 'red';
-            msg.innerText = '카테고리 추가 중 오류가 발생했습니다.';
-        }
-    };
-
-    xhr.send("foodCategory=" + encodeURIComponent(categoryName));
+            msg.innerText = '카테고리 추가 중 오류 발생';
+        });
 }
 
-function deleteCategoryAjax(foodCategory, delBtn) {
-    if (!confirm(foodCategory + ' 카테고리를 삭제하시겠습니까?'))
-        return;
+function deleteCategoryAjax(menuCategory, delBtn) {
+    if (!confirm(menuCategory + ' 카테고리를 삭제하시겠습니까?')) return;
 
-    var msg = document.getElementById('categoryMsg');
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", contextPath + "/controller?cmd=deleteFoodCategoryAction", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    let msg = document.getElementById('categoryMsg');
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var parts = xhr.responseText.split("|");
-            var result = parts[0];
-            var value = parts[1];
+    fetch('/api/menu/menucategory/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ menuCategory: menuCategory })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.result === 'success') {
+                msg.style.color = 'green';
+                msg.innerText = data.message;
 
-            if (result === "success") {
-                msg.innerText = value;
-                var span = delBtn.closest('span');
-                var selectedId = document.getElementById('selectedCategoryId').value;
-                var selectBtn = span.querySelector('button:not(.remove_btn)');
+                let span = delBtn.closest('span');
+                let selectedId = document.getElementById('selectedCategoryId').value;
+                let selectBtn = span.querySelector('button:not(.remove_btn)');
                 if (selectBtn && selectBtn.getAttribute('data-category-id') === selectedId) {
                     document.getElementById('selectedCategoryId').value = '';
                 }
                 span.remove();
             } else {
-                msg.innerText = value;
+                msg.style.color = 'red';
+                msg.innerText = data.message;
             }
-        } else if (xhr.readyState === 4) {
+        })
+        .catch(() => {
+            msg.style.color = 'red';
             msg.innerText = '카테고리 삭제 중 오류가 발생했습니다.';
-        }
-    };
-
-    xhr.send("foodCategory=" + encodeURIComponent(foodCategory));
+        });
 }
 
-function addToList() {
-    var foodMaterialName = document.getElementById('foodMaterialName').value.trim();
-    var foodCategory_Id = document.getElementById('selectedCategoryId').value;
-    var foodCategoryName = getSelectedCategoryName();
-    var foodMaterialCount = document.getElementById('foodMaterialCount').value;
-    var foodMaterialCountAll = document.getElementById('foodMaterialCountAll').value;
-    var unit = document.getElementById('inputUnit').value;
-    var foodMaterialPrice = document.getElementById('foodMaterialPrice').value;
-    var foodMaterialType = document.getElementById('foodMaterialType').value.trim();
-    var vender = document.getElementById('vender').value.trim();
-    var incomeDate = document.getElementById('incomeDate').value;
-    var expirationDate = document.getElementById('expirationDate').value;
-
-    if (!incomeDate) incomeDate = today();
-
-    if (!foodMaterialName) { alert('식자재명을 입력해주세요.'); return; }
-    if (!foodCategory_Id) { alert('카테고리를 선택해주세요.'); return; }
-    if (!foodMaterialCount || Number(foodMaterialCount) < 0) { alert('전체수량을 올바르게 입력해주세요.'); return; }
-    if (!foodMaterialCountAll || Number(foodMaterialCountAll) < 0) { alert('식자재 용량을 올바르게 입력해주세요.'); return; }
-    if (!foodMaterialPrice || Number(foodMaterialPrice) < 0) { alert('가격을 올바르게 입력해주세요.'); return; }
-    if (!foodMaterialType) { alert('타입을 입력해주세요.'); return; }
-    if (!vender) { alert('구입처를 입력해주세요.'); return; }
-    if (!expirationDate) { alert('유통기한을 입력해주세요.'); return; }
-    if (expirationDate < incomeDate) { alert('유통기한이 매입일자보다 이전입니다.'); return; }
-
-    pendingList.push({
-        foodMaterialName: foodMaterialName,
-        foodCategory_Id: foodCategory_Id,
-        foodCategoryName: foodCategoryName,
-        foodMaterialCount: foodMaterialCount,
-        foodMaterialCountAll: foodMaterialCountAll,
-        unit: unit,
-        foodMaterialPrice: foodMaterialPrice,
-        foodMaterialType: foodMaterialType,
-        vender: vender,
-        incomeDate: incomeDate,
-        expirationDate: expirationDate
+function getIngredientList(){
+    let rows = document.querySelectorAll('#ingredientBody tr[data-food-material-id]');
+    let list = [];
+    rows.forEach(function(row){
+        list.push({
+            foodMaterialId: row.getAttribute('data-food-material-id'),
+            foodMaterialName: row.querySelectorAll('td')[0].textContent,
+            usedCount: row.getAttribute('data-used-count')
+        });
     });
-
-    renderPendingList();
-    clearInputs();
+    return list;
 }
 
-function renderPendingList() {
-    var body = document.getElementById('registerBody');
-    body.innerHTML = '';
+function addMenuToList(){
+    let menuName = document.getElementById('inputMenuName').value.trim();
+    let menuCategoryId = document.getElementById('selectedCategoryId').value;
+    let menuCategory = getSelectedCategoryName();
+    let menuPrice = document.getElementById('inputMenuPrice').value;
+    let ingredients = getIngredientList();
 
-    if (pendingList.length === 0) {
-        body.innerHTML = '<tr><td colspan="6" class="empty_msg">추가된 식자재가 없습니다</td></tr>';
+    if (!menuName) {
+        alert('메뉴명을 입력해주세요.');
+        return;
+    }
+    if (!menuCategoryId) {
+        alert('카테고리를 선택해주세요.');
+        return;
+    }
+    if (!menuPrice || Number(menuPrice) < 0) {
+        alert('메뉴 가격을 올바르게 입력해주세요.');
+        return;
+    }
+    if (ingredients.length === 0) {
+        alert('사용 식자재를 추가해주세요.');
         return;
     }
 
-    pendingList.forEach(function(item, idx) {
-        var tr = document.createElement('tr');
+    let isDuplicate = pendingList.some(function(m) {
+        return m.menuName === menuName;
+    });
+    if (isDuplicate) {
+        alert('"' + menuName + '"은 이미 등록된 메뉴입니다.');
+        return;
+    }
+
+    pendingList.push({
+        menuName: menuName,
+        menuCategoryId: menuCategoryId,
+        menuCategory: menuCategory,
+        menuPrice: menuPrice,
+        ingredients: ingredients
+    });
+
+    renderMenuList();
+
+    document.getElementById('inputMenuName').value = '';
+    document.getElementById('inputMenuPrice').value = '';
+    document.getElementById('selectedCategoryId').value = '';
+    document.querySelectorAll('#categoryArea button[data-category-id]').forEach(function(b) {
+        b.classList.remove('selected');
+    });
+    document.getElementById('ingredientBody').innerHTML = '<tr><td colspan="3" class="empty_msg">추가된 식자재가 없습니다</td></tr>';
+}
+
+function renderMenuList(){
+    let body = document.getElementById('registerMenuBody');
+    body.innerHTML = '';
+
+    if (pendingList.length === 0) {
+        body.innerHTML = '<tr><td colspan="4" class="empty_msg">추가된 메뉴가 없습니다</td></tr>';
+        return;
+    }
+
+    pendingList.forEach(function(menu) {
+        let tr = document.createElement('tr');
+        tr.setAttribute('data-menu-name', menu.menuName);
         tr.innerHTML =
-            '<td>' + item.foodMaterialName + '</td>' +
-            '<td>' + item.foodCategoryName + '</td>' +
-            '<td>' + item.foodMaterialCount + '</td>' +
-            '<td>' + item.foodMaterialCountAll + item.unit + '</td>' +
-            '<td>' + Number(item.foodMaterialPrice).toLocaleString() + '원</td>' +
-            '<td><span class="remove_btn" data-index="' + idx + '" onclick="removeRow(this)">&#10005;</span></td>';
+            '<td>' + menu.menuName + '</td>' +
+            '<td>' + menu.menuCategory + '</td>' +
+            '<td>' + Number(menu.menuPrice).toLocaleString() + '원</td>' +
+            '<td><span class="remove_btn" onclick="removeMenuRow(this)">&#10005;</span></td>';
+        tr.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove_btn')) return;
+            showIngredientDetail(menu.menuName);
+            document.querySelectorAll('#registerMenuBody tr').forEach(function(r) {
+                r.classList.remove('selected_row');
+            });
+            this.classList.add('selected_row');
+        });
         body.appendChild(tr);
     });
 }
 
-function removeRow(el) {
-    var idx = Number(el.getAttribute('data-index'));
-    pendingList.splice(idx, 1);
-    renderPendingList();
-}
-
-function rebuildHiddenFields() {
-    var container = document.getElementById('hiddenFields');
-    container.innerHTML = '';
-    pendingList.forEach(function(item) {
-        var fields = [
-            ['foodMaterialName', item.foodMaterialName],
-            ['foodCategory_Id', item.foodCategory_Id],
-            ['foodMaterialCount', item.foodMaterialCount],
-            ['foodMaterialCountAll', item.foodMaterialCountAll],
-            ['foodMaterialPrice', item.foodMaterialPrice],
-            ['foodMaterialType', item.foodMaterialType],
-            ['vender', item.vender],
-            ['incomeDate', item.incomeDate],
-            ['expirationDate', item.expirationDate]
-        ];
-        fields.forEach(function(f) {
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = f[0];
-            input.value = f[1];
-            container.appendChild(input);
-        });
+function removeMenuRow(el){
+    let menuName = el.closest('tr').getAttribute('data-menu-name');
+    let idx = pendingList.findIndex(function(m) {
+        return m.menuName === menuName;
     });
+    if (idx !== -1)
+        pendingList.splice(idx, 1);
+    renderMenuList();
+    document.getElementById('selectedMenuName').textContent = '메뉴를 선택하세요';
+    document.getElementById('ingredientDetailBody').innerHTML =
+        '<tr><td colspan="2" class="empty_msg">-</td></tr>';
 }
 
-function clearInputs() {
-    document.getElementById('foodMaterialName').value = '';
-    document.getElementById('foodMaterialCount').value = '';
-    document.getElementById('foodMaterialCountAll').value = '';
-    document.getElementById('inputUnit').selectedIndex = 0;
-    document.getElementById('foodMaterialPrice').value = '';
-    document.getElementById('foodMaterialType').selectedIndex = 0;
-    document.getElementById('vender').value = '';
-    document.getElementById('expirationDate').value = '';
-    document.getElementById('incomeDate').value = today();
-    document.getElementById('selectedCategoryId').value = '';
-    document.querySelectorAll('#categoryArea button').forEach(function(b) {
-        b.classList.remove('selected');
+function showIngredientDetail(menuName){
+    let menu = pendingList.find(function(m) {
+        return m.menuName === menuName;
     });
+    if (!menu)
+        return;
+    document.getElementById('selectedMenuName').textContent = menuName;
+    let body = document.getElementById('ingredientDetailBody');
+    body.innerHTML = menu.ingredients.map(function(ing) {
+        return '<tr><td>' + ing.foodMaterialName + '</td><td>' + ing.usedCount + 'g</td></tr>';
+    }).join('');
 }
 
-function searchMaterial() {
-    var keyword = document.getElementById('searchInput').value.trim();
-    var body = document.getElementById('searchResultBody');
-
-    if (!keyword) {
-        body.innerHTML = '<tr><td colspan="5" class="empty_msg">검색어를 입력하세요</td></tr>';
+function registerAllMenus() {
+    if (pendingList.length === 0) {
+        alert('등록할 메뉴가 없습니다.');
         return;
     }
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", contextPath + "/controller?cmd=searchFoodMaterialAction&keyword=" + encodeURIComponent(keyword), true);
+    let formData = new FormData();
+    pendingList.forEach(function (item){
+        formData.append('menuName', item.menuName);
+        formData.append('menuPrice', item.menuPrice);
+        formData.append('menuCategoryId', item.menuCategoryId);
+        formData.append('menuIngredientCount', item.ingredients.length);
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var list = JSON.parse(xhr.responseText);
-            if (list.length === 0) {
-                body.innerHTML = '<tr><td colspan="5" class="empty_msg">검색 결과가 없습니다</td></tr>';
-                return;
-            }
-            body.innerHTML = list.map(function(m) {
-                return '<tr>' +
-                    '<td>' + m.foodMaterialName + '</td>' +
-                    '<td>' + m.foodCategory + '</td>' +
-                    '<td>' + m.vender + '</td>' +
-                    '<td>' + m.foodMaterialType + '</td>' +
-                    '<td><button type="button" onclick=\'fillFromSearch(' + JSON.stringify(m) + ')\'>&#8853;</button></td>' +
-                    '</tr>';
-            }).join('');
-        } else if (xhr.readyState === 4) {
-            body.innerHTML = '<tr><td colspan="5" class="empty_msg">검색 중 오류가 발생했습니다</td></tr>';
-        }
-    };
-
-    xhr.send();
-}
-
-function fillFromSearch(data) {
-    document.getElementById('foodMaterialName').value = data.foodMaterialName;
-    document.getElementById('vender').value = data.vender;
-    document.getElementById('foodMaterialType').value = data.foodMaterialType || '';
-
-    var catBtns = document.querySelectorAll('#categoryArea button[data-category-id]');
-    var matched = false;
-
-    catBtns.forEach(function(btn) {
-        btn.classList.remove('selected');
-        if (btn.textContent.trim() === data.foodCategory) {
-            btn.classList.add('selected');
-            document.getElementById('selectedCategoryId').value = btn.getAttribute('data-category-id');
-            matched = true;
-        }
+        item.ingredients.forEach(function(used){
+            formData.append('foodMaterialId', used.foodMaterialId);
+            formData.append('usedCount', used.usedCount);
+        });
     });
 
-    if (!matched) {
-        document.getElementById('selectedCategoryId').value = '';
-    }
+    fetch('/menu/add',{
+        method:'POST',
+        body: formData
+    }).then(res => res.json())
+        .then(data => {
+        if(data.result === 'success'){
+            alert(data.message);
+            pendingList = [];
+            renderMenuList();
 
-    alert('"' + data.foodMaterialName + '" 정보를 불러왔습니다.');
-}
+            document.getElementById('ingredientDetailBody').innerHTML =
+                '<tr><td colspan="2" class="empty_msg">-</td></tr>';
+            document.getElementById('selectedMenuName').textContent = '메뉴를 선택하세요';
 
-function registerAll() {
-    if (pendingList.length === 0) {
-        alert('등록할 식자재가 없습니다.');
-        return false;
-    }
-    rebuildHiddenFields();
-    return true;
+        }else{
+            alert(data.message);
+        }
+    }).catch(()=>{
+        alert("메뉴 등록 중 오류 발생");
+    })
 }

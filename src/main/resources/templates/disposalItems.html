@@ -8,7 +8,12 @@
 </head>
 <body>
 <div class="container">
+    <section>
+        <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+    </section>
 
+    <div class="main">
+        <div th:replace="~{common/userName :: userName}"></div>
         <h2>폐기 품목 확인</h2>
     <main class="main">
         <div class="content_item">

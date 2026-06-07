@@ -20,7 +20,15 @@ public class LoginServiceImpl implements LoginService {
         if (bId == null || bId.isBlank()) {
             throw new BadRequestException("사업자 ID는 필수입니다.");
         }
-        return userInfoDAO.login(bId, pw);
+        if (pw == null || pw.isBlank()) {
+            throw new BadRequestException("비밀번호는 필수입니다.");
+        }
+        User user = userInfoDAO.login(bId, pw);
+        if (user == null) {
+            throw new BadRequestException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
     }
 
 
