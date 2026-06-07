@@ -20,7 +20,7 @@ const login = async () => {
   if (res.ok) {
     console.log("로그인 성공");
     bid = '';
-    location.href = "/";
+    location.href = "/revenuestatistics";
   } else {
     console.log("로그인 실패");
     alert("로그인 실패");

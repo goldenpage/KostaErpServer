@@ -1,84 +1,97 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
+import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
+import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
+import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
+import com.oopsw.kostaerpserver.dto.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
+import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
+import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
+import com.oopsw.kostaerpserver.dto.SalesHistory;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface StatisticsService {
 
-    List<Map<String, Object>> getMonthlyFoodMaterialExpenseRank(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
-
+    List<MonthlyFoodMaterialExpenseRank> getMonthlyFoodMaterialExpenseRank(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
     );
 
     Long getTotalExpense(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
     ) ;
 
-    List<Map<String, Object>> getMonthlyExpenseRankChart(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+    List<MonthlyExpenseRankChart> getMonthlyExpenseRankChart(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
     ) ;
 
-    List<Map<String, Object>> getSalesHistory(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+    List<SalesHistory> getSalesHistory(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
     ) ;
 
     Long getTotalSales(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
 
     ) ;
 
-    List<Map<String, Object>> getMenuSalesRank(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
-
+    List<MenuSalesRank> getMenuSalesRank(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
     ) ;
 
     Double getDisposalRate(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
 
     ) ;
 
     Long getTotalDisposalPrice(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
 
     ) ;
 
-    List<Map<String, Object>> getTopDisposalMaterials(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+    List<DisposalTopMaterialsResponse> getTopDisposalMaterials(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
 
     ) ;
 
-    List<Map<String, Object>> getDisposalReasonRatio(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+    List<DisposalReasonRatio> getDisposalReasonRatio(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
 
     ) ;
 
-    List<Map<String, Object>> getDailyDisposalChart(
-        String bId,
-        LocalDate startDate,
-        LocalDate endDate
+    List<DailyDisposalChart> getDailyDisposalChart(
+        @Param("bId") String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
 
     ) ;
+
+    List<MonthlyRevenue> getMonthlyRevenue(
+        String bId,
+        @Param("startDate") LocalDate startDate,
+        @Param("endDate") LocalDate endDate
+    );
 }

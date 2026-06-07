@@ -7,28 +7,26 @@
   <title>폐기통계</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
   <link rel="stylesheet" th:href="@{/css/disposalStatistics.css}">
 </head>
 
 <body>
-<div class="container">
 
+<div class="container disposal-page">
   <section>
     <div th:replace="~{common/sideMenu :: sideMenu}"></div>
   </section>
 
   <div class="main">
-    <div>
-      <div th:replace="~{common/userName :: userName}"></div>
-    </div>
+    <div th:replace="~{common/userName :: userName}"></div>
 
     <div class="top_area">
       <h1>폐기통계</h1>
 
-      <form method="get" th:action="@{/controller}">
-        <input type="hidden" name="cmd" value="disposalStatisticUIAction">
-
+      <form method="get" th:action="@{/disposalstatistics}">
         <input type="month"
                name="month"
                th:value="${selectedMonth}">
@@ -38,68 +36,62 @@
     </div>
 
     <div class="content_item">
-      <div class="disposal_price">
 
+      <div class="disposal_price">
         <div>
           폐기율:
-          <span th:text="${disposalRate}">0</span>%
+          <span id="disposalRate">0</span>%
         </div>
 
         <div>
           총 폐기금액:
-          <span th:text="${#numbers.formatInteger(totalDisposalPrice, 0, 'COMMA')}">0</span>
+          <span id="totalDisposalPrice">0</span>
           원
         </div>
 
-        <div>
-          <div>폐기품목 Top3</div>
+        <div class="top3_area">
+          <div class="section_title">폐기품목 Top3</div>
 
-          <table>
-            <thead>
-            <tr>
-              <th>번호</th>
-              <th>식자재명</th>
-              <th>폐기횟수</th>
-              <th>총 폐기금액</th>
-            </tr>
-            </thead>
+          <div class="table_scroll">
+            <table>
+              <thead>
+              <tr>
+                <th>번호</th>
+                <th>식자재명</th>
+                <th>폐기횟수</th>
+                <th>총 폐기금액</th>
+              </tr>
+              </thead>
 
-            <tbody>
-            <tr th:each="item, status : ${top3List}">
-              <td th:text="${status.count}">1</td>
-              <td th:text="${item.foodMaterialName}">식자재명</td>
-              <td th:text="${item.disposalCount}">0</td>
-              <td>
-                <span th:text="${#numbers.formatInteger(item.totalDisposalPrice, 0, 'COMMA')}">0</span>
-                원
-              </td>
-            </tr>
-
-            <tr th:if="${#lists.isEmpty(top3List)}">
-              <td colspan="4">폐기 데이터가 없습니다.</td>
-            </tr>
-            </tbody>
-          </table>
+              <tbody id="topMaterialsBody">
+              <tr>
+                <td colspan="4">폐기 데이터가 없습니다.</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <div class="disposal_ratio">
-        <div>폐기사유 비율</div>
+        <div class="section_title">폐기사유 비율</div>
+
         <div class="chart_box">
           <canvas id="reasonChart"></canvas>
         </div>
       </div>
 
       <div class="disposal_solid_liquid">
-        <div>날짜별 폐기량</div>
+        <div class="section_title">날짜별 폐기량</div>
+
         <div class="chart_box">
           <canvas id="dailyDisposalChart"></canvas>
         </div>
       </div>
+
     </div>
   </div>
 </div>
-
 
 <script th:src="@{/js/disposalStatistics.js}"></script>
 

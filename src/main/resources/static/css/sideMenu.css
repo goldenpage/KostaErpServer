@@ -1,3 +1,5 @@
+
+
 .sideMenu {
   width: 260px;
   min-height: 100vh;
@@ -32,6 +34,7 @@
   cursor: pointer;
   font-size: 15px;
   color: #334155;
+  list-style: none;
 }
 
 .sideMenu > ul > li:first-child {
@@ -47,54 +50,4 @@
 .sideMenu > ul > li:not(:first-child):hover {
   background-color: #e0f2fe;
   color: #0369a1;
-}
-
-
-.profile {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
-  list-style: none;
-  margin: 0 0 24px;
-  padding: 14px 20px;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-}
-
-.profile li {
-  padding: 7px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #475569;
-}
-
-.profile li:first-child {
-  cursor: default;
-  font-weight: 700;
-  color: #0f172a;
-  background-color: #f1f5f9;
-}
-
-.profile li:not(:first-child):hover {
-  background-color: #f1f5f9;
-  color: #2563eb;
-}
-
-.profile {
-  display: flex;
-  justify-content: end;
-  gap: 12px;
-}
-
-li {
-  cursor: pointer;
-  list-style: none;
-}
-
-li:hover {
-  opacity: 0.5
 }
