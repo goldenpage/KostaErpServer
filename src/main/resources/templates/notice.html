@@ -1,55 +1,59 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>알림 페이지</title>
-  <link rel="stylesheet" th:href="@{/css/notice.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>알림 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/notice.css}">
 </head>
 <body>
 <div class="container">
 
-<main class="main">
-    <h2>알림 내역</h2>
+    <main class="main">
+        <h2>알림 내역</h2>
 
-    <div class="summary_box">
-      <span>유통기한 경과 상품 수: <b th:text="|${expiredCount} 개|">0 개</b></span>
-      <span>
-                총 폐기 재고량:
-                고체 <b th:text="${solidTotal >= 1000 ? #numbers.formatDecimal(solidTotal / 1000.0, 1, 2) + ' kg' : solidTotal + ' g'}">0 g</b>
-                /
-                액체 <b th:text="${liquidTotal >= 1000 ? #numbers.formatDecimal(liquidTotal / 1000.0, 1, 2) + ' L' : liquidTotal + ' mL'}">0 mL</b>
-            </span>
-      <span>최대 경과일: <b th:text="|${maxOverDay} 일|">0 일</b></span>
-      <span>현재 날짜: <b th:text="${currentDate}">2026-05-31</b></span>
-    </div>
+        <div class="summary_box">
+            <span>유통기한 경과 상품 수: <b th:text="|${expiredCount} 개|">0 개</b></span>
+            <span>
+        총 폐기 재고량:
+        고체 <b th:text="${solidTotal >= 1000 ? #numbers.formatDecimal(solidTotal / 1000.0, 1, 2) + ' kg' : solidTotal + ' g'}">0 g</b>
+        /
+        액체 <b th:text="${liquidTotal >= 1000 ? #numbers.formatDecimal(liquidTotal / 1000.0, 1, 2) + ' L' : liquidTotal + ' mL'}">0 mL</b>
+      </span>
+            <span>최대 경과일: <b th:text="|${maxOverDay} 일|">0 일</b></span>
+            <span>현재 날짜: <b th:text="${currentDate}">2026-05-31</b></span>
+        </div>
 
-    <div class="content_item">
-      <table class="list_container">
-        <thead>
-        <tr>
-          <th>식자재명</th>
-          <th>카테고리</th>
-          <th>폐기 수량</th>
-          <th>폐기 물품 유형</th>
-          <th>유통기한</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:if="${#lists.isEmpty(list)}">
-          <td colspan="5">조회된 알림이 없습니다.</td>
-        </tr>
-        <tr th:each="n : ${list}">
-          <td th:text="${n.foodMaterialName}">양파</td>
-          <td th:text="${n.foodCategory}">채소</td>
-          <td th:text="${n.disposalCountAll > 0 ? n.disposalCountAll : ''}">0</td>
-          <td th:text="${n.foodMaterialType}">고체</td>
-          <td th:text="${n.expirationDate}">2026-05-31</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
+        <div class="content_item">
+            <table class="list_container">
+                <thead>
+                <tr>
+                    <th>식자재명</th>
+                    <th>카테고리</th>
+                    <th>폐기 수량</th>
+                    <th>폐기 물품 유형</th>
+                    <th>유통기한</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:if="${#lists.isEmpty(list)}">
+                    <td colspan="5">조회된 알림이 없습니다.</td>
+                </tr>
+
+                <tr th:each="n : ${list}">
+                    <td th:text="${n.foodMaterialName}">양파</td>
+                    <td th:text="${n.foodCategory}">채소</td>
+                    <td th:text="${n.disposalCountAll > 0 ? n.disposalCountAll : ''}">0</td>
+                    <td th:text="${n.foodMaterialType}">고체</td>
+                    <td th:text="${n.expirationDate}">2026-05-31</td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </main>
+
 </div>
 </body>
 </html>
