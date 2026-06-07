@@ -24,7 +24,7 @@ public class UserinfoDAOTest {
 
     @Test
     void loginTest() {
-         User user  = userInfoDAO.login("0000000000","kim123!");
+         User user  = userInfoDAO.login("0000000000","test123");
         assertEquals("0000000000", user.getBId());
 
         //log.info("login result={}",  userInfoDAO.login("0000000000","kim123!"));
