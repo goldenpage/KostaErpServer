@@ -12,7 +12,7 @@ const sendPwPhoneCode = async () => {
 
   pwPhoneVerified = false;
   try {
-    const res = await fetch(`http://127.0.0.1:15000/api/auth/pw/phone/code`, {
+    const res = await fetch(`/api/auth/pw/phone/code`, {
       method: "post",
       body: JSON.stringify(phone),
 
