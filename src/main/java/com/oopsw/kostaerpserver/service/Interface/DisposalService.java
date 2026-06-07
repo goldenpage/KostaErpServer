@@ -25,6 +25,8 @@ public interface DisposalService {
 
     boolean updateReason(String disposalId, String reasonId);
 
+    boolean insertDisposal(Disposal disposal);
+
     List<String> getExpiredDisposalIds(String bId);
 
     double getDisposalRate(String bId, LocalDate startDate, LocalDate endDate);
