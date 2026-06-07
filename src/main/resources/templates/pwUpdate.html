@@ -6,12 +6,10 @@
   <title>비밀번호 변경</title>
   <link rel="stylesheet" th:href="@{/css/pwUpdate.css}">
 </head>
-  <script th:src="@{/js/pwUpdate.js}"></script>
+<script th:src="@{/js/pwUpdate.js}"></script>
 <body>
 
-<form method="post"
-      action="/KostaErp/controller?cmd=pwUpdateAction"
-      class="change-box" onsubmit="return checkPw()">
+<div class="change-box">
   <h1 class="main-title">비밀번호 변경</h1>
 
   <p class="description">
@@ -34,7 +32,7 @@
     <div class="phone-auth-group">
       <input type="text" id="phone" name="phone" class="phone-input"
              placeholder="휴대폰 번호를 입력해주세요" maxlength="11" required>
-      <button type="button" class="auth-send-btn" onclick="sendPwPhoneCode()">인증발송</button>
+      <button id="sendPhoneBtn" class="auth-send-btn">인증발송</button>
     </div>
     <div id="phoneMessage" class="message"></div>
   </div>
@@ -43,7 +41,7 @@
     <div class="phone-auth-group">
       <input type="text" id="phoneCode" name="phoneCode" class="phone-input"
              placeholder="인증번호 입력">
-      <button type="button" class="auth-send-btn" onclick="verifyPwPhoneCode()">확인</button>
+      <button id="verifyBtn" class="auth-send-btn">확인</button>
     </div>
   </div>
 
@@ -56,14 +54,14 @@
 
   <div class="form-group">
     <div class="section-title">새 비밀번호 확인</div>
-    <input  id="pwConfirm" name="pwConfirm" type="password" class="inputbutton"
-            placeholder="새 비밀번호를 한 번 더 입력하세요" required>
+    <input id="pwConfirm" name="pwConfirm" type="password" class="inputbutton"
+           placeholder="새 비밀번호를 한 번 더 입력하세요" required>
   </div>
 
-  <div class="error-message">${error}</div>
-  <button type="submit" class="submitbutton">비밀번호 변경 완료</button>
+  <div class="error-message" th:text="${errorMessage}"></div>
+  <button id="pwUpdateBtn" class="submitbutton">비밀번호 변경 완료</button>
 
-</form>
+</div>
 
 <script>
 
