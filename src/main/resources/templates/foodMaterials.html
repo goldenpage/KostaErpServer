@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>식자재 조회</title>
+    <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+    <link rel="stylesheet" th:href="@{/css/userName.css}">
     <link rel="stylesheet" th:href="@{/css/foodMaterials.css}">
 </head>
 
 <body>
-<div class="container">
+<div class="container"
+     id="foodMaterialPage"
+     th:data-b-id="${bId}"
+     th:data-sort="${sort}"
+     th:data-size="${size}"
+     th:data-current-page="${currentPage}"
+     th:data-total-page="${totalPage}">
 
-    <div class="sideMenu">
-        사이드 메뉴 영역
-    </div>
+<!--    <div th:replace="~{common/sideMenu :: sideMenu}"></div>-->
 
     <div class="main">
 
-        <ul class="profile">
-            <li>사용자님</li>
-            <li>로그아웃</li>
-            <li>알림</li>
-            <li onclick="history.back()">뒤로가기</li>
-        </ul>
+<!--        <div th:replace="~{common/userName :: userName}"></div>-->
 
         <h1>식자재 확인</h1>
 
@@ -51,8 +52,8 @@
                 <thead>
                 <tr class="list_item">
                     <th>
-                        <button type="button" onclick="loadFoodMaterials('idAsc', 1)">번호 ▲</button>
-                        <button type="button" onclick="loadFoodMaterials('idDesc', 1)">번호 ▼</button>
+                        <button type="button" class="sortBtn" value="idAsc">번호 ▲</button>
+                        <button type="button" class="sortBtn" value="idDesc">번호 ▼</button>
                     </th>
                     <th>식자재명</th>
                     <th>카테고리</th>
@@ -62,15 +63,17 @@
                     <th>구입처</th>
                     <th>매입날짜</th>
                     <th>
-                        <button type="button" onclick="loadFoodMaterials('expAsc', 1)">유통기한 ▲</button>
-                        <button type="button" onclick="loadFoodMaterials('expDesc', 1)">유통기한 ▼</button>
+                        <button type="button" class="sortBtn" value="expAsc">유통기한 ▲</button>
+                        <button type="button" class="sortBtn" value="expDesc">유통기한 ▼</button>
                     </th>
                     <th>품목유형</th>
                     <th>폐기수정</th>
                     <th>
                         <button type="button" id="selectAllBtn">전체선택</button>
                     </th>
-                    <th>삭제</th>
+                    <th>
+                        <button type="button" id="deleteSelectedBtn">선택삭제</button>
+                    </th>
                 </tr>
                 </thead>
 
@@ -83,8 +86,8 @@
                     <td th:text="${food.foodMaterialCountAll}">전체용량</td>
                     <td th:text="${food.foodMaterialPrice}">매입가격</td>
                     <td th:text="${food.vender}">구입처</td>
-                    <td th:text="${food.incomeDate}">매입날짜</td>
-                    <td th:text="${food.expirationDate}">유통기한</td>
+                    <td th:text="${#dates.format(food.incomeDate, 'yyyy-MM-dd')}">매입날짜</td>
+                    <td th:text="${#dates.format(food.expirationDate, 'yyyy-MM-dd')}">유통기한</td>
                     <td th:text="${food.foodMaterialType}">품목유형</td>
                     <td>폐기수정</td>
                     <td>
@@ -94,7 +97,8 @@
                     </td>
                     <td>
                         <button type="button"
-                                th:onclick="|deleteFoodMaterial('${food.foodMaterialId}')|">
+                                class="deleteBtn"
+                                th:value="${food.foodMaterialId}">
                             삭제
                         </button>
                     </td>
@@ -107,24 +111,23 @@
             </table>
 
             <ul class="page">
-                <li th:if="${currentPage > 1}">
-                    <button type="button"
-                            th:onclick="|loadFoodMaterials('${sort}', ${currentPage - 1})|">
+                <li>
+                    <button type="button" id="prevPageBtn">
                         &lt;
                     </button>
                 </li>
 
                 <li th:each="i : ${#numbers.sequence(1, totalPage)}">
                     <button type="button"
-                            th:onclick="|loadFoodMaterials('${sort}', ${i})|"
+                            class="pageBtn"
+                            th:value="${i}"
                             th:text="${i}">
                         1
                     </button>
                 </li>
 
-                <li th:if="${currentPage < totalPage}">
-                    <button type="button"
-                            th:onclick="|loadFoodMaterials('${sort}', ${currentPage + 1})|">
+                <li>
+                    <button type="button" id="nextPageBtn">
                         &gt;
                     </button>
                 </li>
@@ -134,11 +137,6 @@
     </div>
 </div>
 
-<script th:inline="javascript">
-    var bId = /*[[${bId}]]*/ "0000000000";
-    var currentSort = /*[[${sort}]]*/ "idDesc";
-    var pageSize = /*[[${size}]]*/ 5;
-</script>
 <script th:src="@{/js/foodMaterials.js}"></script>
 </body>
 </html>
