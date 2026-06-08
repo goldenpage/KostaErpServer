@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 
 @Slf4j
 @RestController()
@@ -38,29 +37,6 @@ public class AuthRestController {
     private final LoginService loginService;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map> login(@RequestBody LoginRequest loginRequest,
-        HttpServletRequest request)
-        throws BadRequestException {
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-            loginRequest.getBId(),
-            loginRequest.getPw());
-
-        Authentication authentication = authenticationManager.authenticate(
-            token);
-
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-
-        request.getSession(true).setAttribute(
-            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-            context
-        );
-
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/register")
     public ResponseEntity<Map> register(

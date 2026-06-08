@@ -1,6 +1,7 @@
 package com.oopsw.kostaerpserver.auth;
 
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +11,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -20,16 +22,35 @@ public class SecurityConfig {
     private final ErpUserDetailsService erpUserDetailsService;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable());
+    public SecurityFilterChain filterChain(HttpSecurity http,
+        AuthenticationManager authenticationManager) throws Exception {
+        JsonLoginFilter jsonLoginFilter = new JsonLoginFilter(
+            authenticationManager);
 
+        jsonLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
+
+        jsonLoginFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
+            res.setStatus(HttpServletResponse.SC_OK);
+            res.setContentType("application/json;charset=UTF-8");
+            res.getWriter().write("{\"message\":\"login success\"}");
+        });
+
+        jsonLoginFilter.setAuthenticationFailureHandler((req, res, ex) -> {
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            res.setContentType("application/json;charset=UTF-8");
+            res.getWriter().write("{\"message\":\"login fail\"}");
+        });
+
+
+
+
+        http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/login",
                 "/register",
                 "/api/auth/login",
-                "/api/auth/users",
                 "/css/**",
                 "/js/**",
                 "/asset/**"
@@ -37,7 +58,8 @@ public class SecurityConfig {
             .requestMatchers("/manager/**").hasRole("MANAGER")
             .anyRequest().authenticated()
         );
-
+        http.addFilterAt(jsonLoginFilter,
+            UsernamePasswordAuthenticationFilter.class);
 
         http.logout(logout ->
             logout.logoutUrl("/logout")
