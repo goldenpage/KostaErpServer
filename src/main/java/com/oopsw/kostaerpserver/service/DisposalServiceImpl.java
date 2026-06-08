@@ -4,6 +4,7 @@ import com.oopsw.kostaerpserver.repository.DisposalDAO;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +29,8 @@ public class DisposalServiceImpl implements DisposalService {
     }
 
     @Override
-    public List<String> getCategories() {
-        return disposalDAO.getCategories();
+    public List<String> getCategories(String bId) {
+        return disposalDAO.getCategories(bId);
     }
 
     @Override

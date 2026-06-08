@@ -86,23 +86,52 @@
                     </tbody>
                 </table>
 
-                <div class="page" th:if="${totalPages > 1}">
-                    <a th:if="${currentPage > 1}" href="javascript:void(0);"
-                       th:onclick="|movePage(${currentPage - 1})|">이전</a>
+                <div class="page">
 
-                    <a th:each="i : ${#numbers.sequence(1, totalPages)}" href="javascript:void(0);"
-                       th:onclick="|movePage(${i})|"
-                       th:text="${i}"
-                       th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+                    <a th:if="${currentPage > 1}"
+                       th:href="@{/disposal-items(
+            page=${currentPage - 1},
+            size=5,
+            bId=${bId},
+            category=${selectedCategory},
+            reason=${selectedReason})}">
+                        이전
+                    </a>
 
-                    <a th:if="${currentPage < totalPages}" href="javascript:void(0);"
-                       th:onclick="|movePage(${currentPage + 1})|">다음</a>
+                    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+
+        <a th:if="${i != currentPage}"
+           th:text="${i}"
+           th:href="@{/disposal-items(
+                page=${i},
+                size=5,
+                bId=${bId},
+                category=${selectedCategory},
+                reason=${selectedReason})}">
+        </a>
+
+        <strong th:if="${i == currentPage}"
+                th:text="${i}">
+        </strong>
+
+    </span>
+
+                    <a th:if="${currentPage < totalPages}"
+                       th:href="@{/disposal-items(
+            page=${currentPage + 1},
+            size=5,
+            bId=${bId},
+            category=${selectedCategory},
+            reason=${selectedReason})}">
+                        다음
+                    </a>
+
                 </div>
             </div>
         </div>
     </main>
 </div>
-
+</div>
 <script th:src="@{/js/disposalItems.js}"></script>
 </body>
 </html>

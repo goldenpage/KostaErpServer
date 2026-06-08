@@ -19,11 +19,11 @@ function loadDisposalData(page = 1, isPopState = false) {
     const url = `http://127.0.0.1:15000/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}`;
 
     fetch(url).
-        then(response => {
-            if (!response.ok){
-                throw new Error("데이터 조회 실패");
-            }
-                return response.text();
+    then(response => {
+        if (!response.ok){
+            throw new Error("데이터 조회 실패");
+        }
+        return response.text();
     }).then(htmlText => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
@@ -33,9 +33,9 @@ function loadDisposalData(page = 1, isPopState = false) {
             history.pushState({ bId, category, reason, page }, '', url);
         }
     }).catch(error => {
-            console.error("Error:", error);
-            alert("데이터 조회 중 오류 발생");
-        });
+        console.error("Error:", error);
+        alert("데이터 조회 중 오류 발생");
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function (){
@@ -74,4 +74,3 @@ function resetFilter(){
     document.getElementById('reason').value = '';
     loadDisposalData(1);
 }
-

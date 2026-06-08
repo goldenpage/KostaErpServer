@@ -15,7 +15,7 @@ public interface DisposalDAO {
 
     List<String> getFoodMaterialNames();
 
-    List<String> getCategories();
+    List<String> getCategories(@Param("bId") String bId);
 
     List<Disposal> getDisposalsFilteredPaging(
             @Param("bId") String bId,

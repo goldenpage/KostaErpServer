@@ -33,7 +33,7 @@ public class DisposalServiceTest {
     private DisposalService disposalService;
 
     @Test
-    //Service가 DAO의 전체 폐기 목록 조회 기능을 정상 호출하는지 테스트
+        //Service가 DAO의 전체 폐기 목록 조회 기능을 정상 호출하는지 테스트
     void getDisposalsTest() {
         log.info("getDisposalsTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -48,7 +48,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //식자재 이름 목록 조회 기능 테스트
+        //식자재 이름 목록 조회 기능 테스트
     void getFoodMaterialNamesTest() {
         log.info("getFoodMaterialNamesTest 시작");
         List<String> names = List.of("양파", "감자");
@@ -63,22 +63,22 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //카테고리 목록 조회 기능 테스트
+        //카테고리 목록 조회 기능 테스트
     void getCategoriesTest() {
         log.info("getCategoriesTest 시작");
         List<String> categories = List.of("채소", "육류");
-        when(disposalDAO.getCategories()).thenReturn(categories);
+        when(disposalDAO.getCategories(B_ID)).thenReturn(categories);
 
-        List<String> result = disposalService.getCategories();
+        List<String> result = disposalService.getCategories(B_ID);
 
         log.info("Fetched Categories: {}", result);
         assertThat(result).containsExactly("채소", "육류");
-        verify(disposalDAO).getCategories();
+        verify(disposalDAO).getCategories(B_ID);
         log.info("getCategoriesTest 성공 & 종료");
     }
 
     @Test
-    //페이지 번호를 offset으로 변환하는지 테스트
+        //페이지 번호를 offset으로 변환하는지 테스트
     void getDisposalsFilteredPaging_convertsPageToOffsetTest() {
         log.info("getDisposalsFilteredPaging_convertsPageToOffsetTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -93,7 +93,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //page가 1보다 작을 경우 offset을 0으로 처리하는지 테스트
+        //page가 1보다 작을 경우 offset을 0으로 처리하는지 테스트
     void getDisposalsFilteredPaging_ZeroOffsetTest() {
         log.info("getDisposalsFilteredPaging_ZeroOffsetTest 시작");
         when(disposalDAO.getDisposalsFilteredPaging(B_ID, 0, 6)).thenReturn(List.of());
@@ -107,7 +107,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기 데이터 개수 조회 기능 테스트
+        //폐기 데이터 개수 조회 기능 테스트
     void getDisposalCountTest() {
         log.info("getDisposalCountTest 시작");
         when(disposalDAO.getDisposalCount(B_ID)).thenReturn(3);
@@ -121,7 +121,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //전체 폐기 데이터 개수 조회 기능 테스트
+        //전체 폐기 데이터 개수 조회 기능 테스트
     void getTotalCountTest() {
         log.info("getTotalCountTest 시작");
         when(disposalDAO.getTotalCount(B_ID)).thenReturn(10);
@@ -135,7 +135,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기 사유 목록 조회 기능 테스트
+        //폐기 사유 목록 조회 기능 테스트
     void getReasonsTest() {
         log.info("getReasonsTest 시작");
         List<String> reasons = List.of("유통기한 만료", "파손");
@@ -150,7 +150,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //카테고리 + 사업장 기준 폐기 목록 조회 기능 테스트
+        //카테고리 + 사업장 기준 폐기 목록 조회 기능 테스트
     void getDisposalsByCategoryAndBIdTest() {
         log.info("getDisposalsByCategoryAndBIdTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -165,7 +165,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //페이지 번호를 offset으로 변환하는 페이징 기능 테스트
+        //페이지 번호를 offset으로 변환하는 페이징 기능 테스트
     void getDisposalsPaging_convertsPageToOffsetTest() {
         log.info("getDisposalsPaging_convertsPageToOffsetTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -180,7 +180,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기 사유 수정 성공 테스트
+        //폐기 사유 수정 성공 테스트
     void updateReason_successTest() {
         log.info("updateReason_successTest 시작");
         when(disposalDAO.updateReason("DIS001", "D")).thenReturn(1);
@@ -194,7 +194,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기 사유 수정 실패 테스트
+        //폐기 사유 수정 실패 테스트
     void updateReason_failTest() {
         log.info("updateReason_failTest 시작");
         when(disposalDAO.updateReason("DIS999", "D")).thenReturn(0);
@@ -208,7 +208,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //유통기한 지난 폐기 ID 조회 기능 테스트
+        //유통기한 지난 폐기 ID 조회 기능 테스트
     void getExpiredDisposalIdsTest() {
         log.info("getExpiredDisposalIdsTest 시작");
         List<String> ids = List.of("DIS001");
@@ -223,7 +223,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기율 조회 기능 테스트
+        //폐기율 조회 기능 테스트
     void getDisposalRateTest() {
         log.info("getDisposalRateTest 시작");
         when(disposalDAO.getDisposalRate(B_ID, START_DATE, END_DATE)).thenReturn(12.5);
@@ -237,7 +237,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //총 폐기 금액 조회 기능 테스트
+        //총 폐기 금액 조회 기능 테스트
     void getTotalDisposalPriceTest() {
         log.info("getTotalDisposalPriceTest 시작");
         when(disposalDAO.getTotalDisposalPrice(B_ID, START_DATE, END_DATE)).thenReturn(50000);
@@ -251,7 +251,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기 금액 상위 3개 품목 조회 기능 테스트
+        //폐기 금액 상위 3개 품목 조회 기능 테스트
     void getTop3DisposalItemsTest() {
         log.info("getTop3DisposalItemsTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -266,7 +266,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //폐기 사유 비율 조회 기능 테스트
+        //폐기 사유 비율 조회 기능 테스트
     void getDisposalReasonRatioTest() {
         log.info("getDisposalReasonRatioTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -281,7 +281,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //일별 폐기 수량 및 금액 조회 기능 테스트
+        //일별 폐기 수량 및 금액 조회 기능 테스트
     void selectDailyDisposalAmountTest() {
         log.info("selectDailyDisposalAmountTest 시작");
         List<Disposal> disposals = List.of(new Disposal());
@@ -296,7 +296,7 @@ public class DisposalServiceTest {
     }
 
     @Test
-    //식자재 타입별 일별 폐기 통계 조회 기능 테스트
+        //식자재 타입별 일별 폐기 통계 조회 기능 테스트
     void selectDailyDisposalByTypeTest() {
         log.info("selectDailyDisposalByTypeTest 시작");
         List<Disposal> disposals = List.of(new Disposal());

@@ -9,7 +9,7 @@ public interface DisposalService {
 
     List<String> getFoodMaterialNames();
 
-    List<String> getCategories();
+    List<String> getCategories(String bId);
 
     List<Disposal> getDisposalsFilteredPaging(String bId, int page, int size);
 
