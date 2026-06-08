@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
+import com.oopsw.kostaerpserver.dto.DisposalListResponse;
 
 
 @Controller
@@ -32,7 +33,7 @@ public class DisposalController {
         int totalCount = disposalService.getTotalCount(bId);
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        List<Disposal> list;
+        List<DisposalListResponse> list;
 
         if (category != null && !category.isBlank()) {
             list = disposalService.getDisposalsByCategoryAndBId(category, bId);

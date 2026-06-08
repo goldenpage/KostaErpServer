@@ -1,6 +1,7 @@
 package com.oopsw.kostaerpserver.repository;
 
 import com.oopsw.kostaerpserver.vo.Disposal;
+import com.oopsw.kostaerpserver.dto.DisposalListResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class DisposalDAOTest {
         //폐기 품목 조회 테스트
     void getDisposals() {
         log.info("getDisposals 시작");
-        List<Disposal> result = disposalDAO.getDisposals();
+        List<DisposalListResponse> result = disposalDAO.getDisposals();
 
         log.info("DB에서 조회된 전체 폐기 품목 수: {}", result != null ? result.size() : "null");
         assertThat(result).isNotNull();
@@ -60,7 +61,7 @@ public class DisposalDAOTest {
         //사업장 ID 기준 폐기 목록 페이징 조회 테스트
     void getDisposalsFilteredPaging() {
         log.info("getDisposalsFilteredPaging - B_ID: {} 시작", B_ID);
-        List<Disposal> result = disposalDAO.getDisposalsFilteredPaging(B_ID, 0, 6);
+        List<DisposalListResponse> result = disposalDAO.getDisposalsFilteredPaging(B_ID, 0, 6);
 
         log.info("필터 페이징 조회 결과 개수 (Max 6): {}", result != null ? result.size() : "null");
         assertThat(result).isNotNull();
@@ -105,7 +106,7 @@ public class DisposalDAOTest {
         //카테고리와 사업장 ID 기준 폐기 목록 조회 테스트
     void getDisposalsByCategoryAndBId() {
         log.info("getDisposalsByCategoryAndBId 시작 - Category: 채소, B_ID: {}", B_ID);
-        List<Disposal> result = disposalDAO.getDisposalsByCategoryAndBId("채소", B_ID);
+        List<DisposalListResponse> result = disposalDAO.getDisposalsByCategoryAndBId("채소", B_ID);
 
         log.info("채소 카테고리 조회 결과 개수: {}", result != null ? result.size() : "null");
         assertThat(result).isNotNull();
@@ -116,7 +117,7 @@ public class DisposalDAOTest {
         //특정 사업장의 폐기 목록 페이징 테스트
     void getDisposalsPaging() {
         log.info("getDisposalsPaging 시작 - B_ID: {}", B_ID);
-        List<Disposal> result = disposalDAO.getDisposalsPaging(B_ID, 0, 6);
+        List<DisposalListResponse> result = disposalDAO.getDisposalsPaging(B_ID, 0, 6);
 
         log.info("기본 페이징 조회 결과 개수 (Max 6): {}", result != null ? result.size() : "null");
         assertThat(result).isNotNull();

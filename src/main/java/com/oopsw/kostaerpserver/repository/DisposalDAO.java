@@ -3,21 +3,23 @@ package com.oopsw.kostaerpserver.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.oopsw.kostaerpserver.vo.Disposal;
+import com.oopsw.kostaerpserver.dto.DisposalListResponse;
 
 @Mapper
 public interface DisposalDAO {
 
-    List<Disposal> getDisposals();
+    List<DisposalListResponse> getDisposals();
 
     List<String> getFoodMaterialNames();
 
     List<String> getCategories(@Param("bId") String bId);
 
-    List<Disposal> getDisposalsFilteredPaging(
+    List<DisposalListResponse> getDisposalsFilteredPaging(
             @Param("bId") String bId,
             @Param("offset") int offset,
             @Param("size") int size);
@@ -28,11 +30,11 @@ public interface DisposalDAO {
 
     List<String> getReasons();
 
-    List<Disposal> getDisposalsByCategoryAndBId(
+    List<DisposalListResponse> getDisposalsByCategoryAndBId(
             @Param("category") String category,
             @Param("bId") String bId);
 
-    List<Disposal> getDisposalsPaging(
+    List<DisposalListResponse> getDisposalsPaging(
             @Param("bId") String bId,
             @Param("offset") int offset,
             @Param("size") int size);
@@ -41,7 +43,7 @@ public interface DisposalDAO {
             @Param("disposalId") String disposalId,
             @Param("reasonId") String reasonId);
 
-    int insertDisposal(Disposal disposal);
+    int insertDisposal(DisposalCreateRequest request);
 
     List<String> getExpiredDisposalIds(@Param("bId") String bId);
 

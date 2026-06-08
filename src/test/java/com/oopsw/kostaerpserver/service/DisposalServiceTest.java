@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
 import com.oopsw.kostaerpserver.vo.Disposal;
+import com.oopsw.kostaerpserver.dto.DisposalListResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -36,10 +37,10 @@ public class DisposalServiceTest {
         //Service가 DAO의 전체 폐기 목록 조회 기능을 정상 호출하는지 테스트
     void getDisposalsTest() {
         log.info("getDisposalsTest 시작");
-        List<Disposal> disposals = List.of(new Disposal());
+        List<DisposalListResponse> disposals = List.of(new DisposalListResponse());
         when(disposalDAO.getDisposals()).thenReturn(disposals);
 
-        List<Disposal> result = disposalService.getDisposals();
+        List<DisposalListResponse> result = disposalService.getDisposals();
 
         log.info("Expected disposals size: {}, Result size: {}", disposals.size(), result.size());
         assertThat(result).isSameAs(disposals);
@@ -81,10 +82,10 @@ public class DisposalServiceTest {
         //페이지 번호를 offset으로 변환하는지 테스트
     void getDisposalsFilteredPaging_convertsPageToOffsetTest() {
         log.info("getDisposalsFilteredPaging_convertsPageToOffsetTest 시작");
-        List<Disposal> disposals = List.of(new Disposal());
+        List<DisposalListResponse> disposals = List.of(new DisposalListResponse());
         when(disposalDAO.getDisposalsFilteredPaging(B_ID, 6, 6)).thenReturn(disposals);
 
-        List<Disposal> result = disposalService.getDisposalsFilteredPaging(B_ID, 2, 6);
+        List<DisposalListResponse> result = disposalService.getDisposalsFilteredPaging(B_ID, 2, 6);
 
         log.info("Paging result count: {}", result.size());
         assertThat(result).isSameAs(disposals);
@@ -98,7 +99,7 @@ public class DisposalServiceTest {
         log.info("getDisposalsFilteredPaging_ZeroOffsetTest 시작");
         when(disposalDAO.getDisposalsFilteredPaging(B_ID, 0, 6)).thenReturn(List.of());
 
-        List<Disposal> result = disposalService.getDisposalsFilteredPaging(B_ID, 0, 6);
+        List<DisposalListResponse> result = disposalService.getDisposalsFilteredPaging(B_ID, 0, 6);
 
         log.info("Zero offset result isEmpty: {}", result.isEmpty());
         assertThat(result).isEmpty();
@@ -153,10 +154,10 @@ public class DisposalServiceTest {
         //카테고리 + 사업장 기준 폐기 목록 조회 기능 테스트
     void getDisposalsByCategoryAndBIdTest() {
         log.info("getDisposalsByCategoryAndBIdTest 시작");
-        List<Disposal> disposals = List.of(new Disposal());
+        List<DisposalListResponse> disposals = List.of(new DisposalListResponse());
         when(disposalDAO.getDisposalsByCategoryAndBId("채소", B_ID)).thenReturn(disposals);
 
-        List<Disposal> result = disposalService.getDisposalsByCategoryAndBId("채소", B_ID);
+        List<DisposalListResponse> result = disposalService.getDisposalsByCategoryAndBId("채소", B_ID);
 
         log.info("Category: 채소, B_ID: {}, Result count: {}", B_ID, result.size());
         assertThat(result).isSameAs(disposals);
@@ -168,10 +169,10 @@ public class DisposalServiceTest {
         //페이지 번호를 offset으로 변환하는 페이징 기능 테스트
     void getDisposalsPaging_convertsPageToOffsetTest() {
         log.info("getDisposalsPaging_convertsPageToOffsetTest 시작");
-        List<Disposal> disposals = List.of(new Disposal());
+        List<DisposalListResponse> disposals = List.of(new DisposalListResponse());
         when(disposalDAO.getDisposalsPaging(B_ID, 12, 6)).thenReturn(disposals);
 
-        List<Disposal> result = disposalService.getDisposalsPaging(B_ID, 3, 6);
+        List<DisposalListResponse> result = disposalService.getDisposalsPaging(B_ID, 3, 6);
 
         log.info("Paging result count: {}", result.size());
         assertThat(result).isSameAs(disposals);
