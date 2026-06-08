@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.controller;
 
+import com.oopsw.kostaerpserver.dto.addfoodmaterial.AddFoodMaterialRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
@@ -32,15 +33,7 @@ public class AddFoodMaterialController {
 
     @PostMapping("/foodmaterial/add")
     public String addFoodMaterial(
-            @RequestParam(value = "foodMaterialName") List<String>  foodMaterialName,
-            @RequestParam(value = "foodCategory_Id") List<String>  foodCategory_Id,
-            @RequestParam(value = "foodMaterialCount") List<String>  foodMaterialCount,
-            @RequestParam(value = "foodMaterialCountAll") List<String>  foodMaterialCountAll,
-            @RequestParam(value = "foodMaterialPrice") List<String>  foodMaterialPrice,
-            @RequestParam(value = "foodMaterialType") List<String>  foodMaterialType,
-            @RequestParam(value = "vender") List<String>  vender,
-            @RequestParam(value = "incomeDate") List<String>  incomeDate,
-            @RequestParam(value = "expirationDate") List<String>  expirationDate,
+            AddFoodMaterialRequest request,
             HttpSession session,
             RedirectAttributes redirectAttributes){
 
@@ -48,22 +41,7 @@ public class AddFoodMaterialController {
                 //(String) session.getAttribute("loginOK");
 
         try{
-            List<AddFoodMaterial> list = new ArrayList<>();
-            for(int i = 0; i < foodMaterialName.size(); i++){
-                AddFoodMaterial vo = new AddFoodMaterial();
-                vo.setFoodMaterialName(foodMaterialName.get(i));
-                vo.setFoodCategory_Id(foodCategory_Id.get(i));
-                vo.setFoodMaterialCount(Integer.parseInt(foodMaterialCount.get(i)));
-                vo.setFoodMaterialCountAll(Integer.parseInt(foodMaterialCountAll.get(i)));
-                vo.setFoodMaterialPrice(Integer.parseInt(foodMaterialPrice.get(i)));
-                vo.setFoodMaterialType(foodMaterialType.get(i));
-                vo.setVender(vender.get(i));
-                vo.setIncomeDate(Date.valueOf(incomeDate.get(i)));
-                vo.setExpirationDate(Date.valueOf(expirationDate.get(i)));
-                vo.setBId(bId);
-                list.add(vo);
-            }
-            System.out.println(list);
+            List<AddFoodMaterial> list = request.VOList(bId);
             for(AddFoodMaterial vo : list){
                 addFoodMaterialService.addFoodMaterial(vo);
             }
