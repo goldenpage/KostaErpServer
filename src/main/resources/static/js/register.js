@@ -44,7 +44,7 @@ const checkBid = async  () => {
 }
 
 const register = async () => {
-  const res = await fetch(`/api/auth/users`, {
+  const res = await fetch(`/api/auth/register`, {
     method:"post",
     body: JSON.stringify(user)
   })

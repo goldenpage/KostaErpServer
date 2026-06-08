@@ -1,4 +1,5 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.statistics;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MonthlyExpense {
-
-    private String expenseMonth;
-    private Long totalExpense;
+public class MonthlyRevenue {
+    private String revenueMonth;
+    private Long totalRevenuePrice;
 }

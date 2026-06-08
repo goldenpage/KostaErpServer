@@ -1,17 +1,16 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
-import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
-import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
-import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
-import com.oopsw.kostaerpserver.dto.MenuSalesRank;
-import com.oopsw.kostaerpserver.dto.MonthlyExpense;
-import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
-import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
-import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
-import com.oopsw.kostaerpserver.dto.SalesHistory;
+import com.oopsw.kostaerpserver.dto.statistics.DailyDisposalChart;
+import com.oopsw.kostaerpserver.dto.statistics.DisposalReasonRatio;
+import com.oopsw.kostaerpserver.dto.statistics.DisposalTopMaterialsResponse;
+import com.oopsw.kostaerpserver.dto.statistics.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyExpense;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyExpenseRankChart;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyFoodMaterialExpenseRank;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyRevenue;
+import com.oopsw.kostaerpserver.dto.statistics.SalesHistory;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 

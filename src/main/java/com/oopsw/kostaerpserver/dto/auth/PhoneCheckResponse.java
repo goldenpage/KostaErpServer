@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.auth;
 
 public record PhoneCheckResponse (
     boolean available,

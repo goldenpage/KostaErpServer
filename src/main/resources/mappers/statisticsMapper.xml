@@ -2,7 +2,7 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oopsw.kostaerpserver.repository.StatisticsDAO">
   <select id="getMonthlyFoodMaterialExpenseRank"
-    resultType="com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank">
+    resultType="com.oopsw.kostaerpserver.dto.statistics.MonthlyFoodMaterialExpenseRank">
     SELECT
       RANK() OVER (
       ORDER BY SUM(f.foodMaterialPrice * f.foodMaterialCount) DESC
@@ -23,7 +23,7 @@
   </select>
 
   <select id="getMonthlyExpense"
-    resultType="com.oopsw.kostaerpserver.dto.MonthlyExpense">
+    resultType="com.oopsw.kostaerpserver.dto.statistics.MonthlyExpense">
     SELECT
       DATE_FORMAT(f.incomeDate, '%Y-%m') AS expenseMonth,
       COALESCE(SUM(f.foodMaterialPrice * f.foodMaterialCount), 0) AS totalExpense
@@ -35,7 +35,7 @@
     ORDER BY expenseMonth
   </select>
 
-<select id="getMonthlyExpenseRankChart" resultType="com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart">
+<select id="getMonthlyExpenseRankChart" resultType="com.oopsw.kostaerpserver.dto.statistics.MonthlyExpenseRankChart">
   SELECT
     RANK() OVER (ORDER BY expense.totalExpense DESC) AS ranking,
     expense.foodMaterialName,
@@ -62,7 +62,7 @@
     AND f.incomeDate &lt; #{endDate}
   </select>
 
-  <select id="getSalesHistory" parameterType="map" resultType="com.oopsw.kostaerpserver.dto.SalesHistory">
+  <select id="getSalesHistory" parameterType="map" resultType="com.oopsw.kostaerpserver.dto.statistics.SalesHistory">
     SELECT
     s.sale_Id AS saleId,
     s.saleMenuCount AS saleMenuCount,
@@ -174,7 +174,7 @@
     LIMIT 3
   </select>
 
-  <select id="getDisposalReasonRatio" parameterType="map" resultType="com.oopsw.kostaerpserver.dto.DisposalReasonRatio">
+  <select id="getDisposalReasonRatio" parameterType="map" resultType="com.oopsw.kostaerpserver.dto.statistics.DisposalReasonRatio">
     SELECT
     r.reason_Id AS reasonId,
     r.reason AS reason,
@@ -197,7 +197,7 @@
     ORDER BY reasonRatio DESC
   </select>
 
-  <select id="getDailyDisposalChart" resultType="com.oopsw.kostaerpserver.dto.DailyDisposalChart">
+  <select id="getDailyDisposalChart" resultType="com.oopsw.kostaerpserver.dto.statistics.DailyDisposalChart">
     SELECT
     DATE(d.disposalDate) AS disposalDay,
     f.foodMaterialType AS foodMaterialType,
@@ -218,7 +218,7 @@
   </select>
 
   <select id="getMonthlyRevenue"
-    resultType="com.oopsw.kostaerpserver.dto.MonthlyRevenue">
+    resultType="com.oopsw.kostaerpserver.dto.statistics.MonthlyRevenue">
     SELECT
       DATE_FORMAT(r.revenueDate, '%Y-%m') AS revenueMonth,
       COALESCE(SUM(s.saleMenuCount * m.menuPrice), 0) AS totalRevenuePrice

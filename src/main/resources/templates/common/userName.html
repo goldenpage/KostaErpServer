@@ -8,10 +8,13 @@
 <body>
 
 <ul class="profile" th:fragment="userName">
-  <li><span th:text="${session.info != null ? session.info.name : '사용자'}"></span></li>
+  <li><span id="user"></span></li>
   <li th:onclick="|location.href='@{/login}'|">로그아웃</li>
   <li th:onclick="|location.href='@{/notice}'|">알림</li>
+  <script th:src="@{/js/userName.js}"></script>
 </ul>
+
+
 
 </body>
 </html>

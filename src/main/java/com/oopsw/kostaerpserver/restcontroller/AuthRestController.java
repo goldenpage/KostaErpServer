@@ -1,22 +1,33 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
 
-import com.oopsw.kostaerpserver.dto.ApiResponse;
-import com.oopsw.kostaerpserver.dto.LoginRequest;
-import com.oopsw.kostaerpserver.dto.RegisterRequest;
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.dto.auth.ApiResponse;
+import com.oopsw.kostaerpserver.dto.auth.LoginRequest;
+import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
+import com.oopsw.kostaerpserver.dto.auth.UserResponse;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
-import com.oopsw.kostaerpserver.vo.User;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 
 @Slf4j
 @RestController()
@@ -25,19 +36,33 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthRestController {
 
     private final LoginService loginService;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
     public ResponseEntity<Map> login(@RequestBody LoginRequest loginRequest,
-        HttpSession session)
+        HttpServletRequest request)
         throws BadRequestException {
-        User user = loginService.login(loginRequest.getBId(),
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+            loginRequest.getBId(),
             loginRequest.getPw());
-        session.setAttribute("info", user);
-        log.info("로그인처리");
+
+        Authentication authentication = authenticationManager.authenticate(
+            token);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
+        request.getSession(true).setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            context
+        );
+
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/users")
+    @PostMapping("/register")
     public ResponseEntity<Map> register(
         @RequestBody RegisterRequest registerRequest) {
 
@@ -52,5 +77,15 @@ public class AuthRestController {
 
         loginService.getPhoneCheck(registerRequest.getPhone());
         return ResponseEntity.ok(new ApiResponse(true, "인증번호가 발송됐습니다."));
+    }
+
+
+    @GetMapping("/userinfo")
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal
+        ErpUserDetails erpUserDetails) {
+        if (erpUserDetails == null) {
+            return null;
+        }
+        return ResponseEntity.ok(new UserResponse(erpUserDetails.getLoginUser().getName()));
     }
 }

@@ -1,25 +1,26 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
 
-import com.oopsw.kostaerpserver.dto.DailyDisposalChart;
-import com.oopsw.kostaerpserver.dto.DisposalRateResponse;
-import com.oopsw.kostaerpserver.dto.DisposalReasonRatio;
-import com.oopsw.kostaerpserver.dto.DisposalTopMaterialsResponse;
-import com.oopsw.kostaerpserver.dto.MenuSalesRank;
-import com.oopsw.kostaerpserver.dto.MonthlyExpense;
-import com.oopsw.kostaerpserver.dto.MonthlyExpenseRankChart;
-import com.oopsw.kostaerpserver.dto.MonthlyFoodMaterialExpenseRank;
-import com.oopsw.kostaerpserver.dto.MonthlyRevenue;
-import com.oopsw.kostaerpserver.dto.SalesHistory;
-import com.oopsw.kostaerpserver.dto.StatisticsRequest;
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.dto.statistics.DailyDisposalChart;
+import com.oopsw.kostaerpserver.dto.statistics.DisposalRateResponse;
+import com.oopsw.kostaerpserver.dto.statistics.DisposalReasonRatio;
+import com.oopsw.kostaerpserver.dto.statistics.DisposalTopMaterialsResponse;
+import com.oopsw.kostaerpserver.dto.statistics.MenuSalesRank;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyExpense;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyExpenseRankChart;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyFoodMaterialExpenseRank;
+import com.oopsw.kostaerpserver.dto.statistics.MonthlyRevenue;
+import com.oopsw.kostaerpserver.dto.statistics.SalesHistory;
+import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.StatisticsService;
 import com.oopsw.kostaerpserver.vo.User;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,18 +33,12 @@ public class StatisticsRestController {
 
     private final StatisticsService statisticsService;
 
-
     @GetMapping("/disposals/rate")
     public ResponseEntity<DisposalRateResponse> getDisposalRate(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails
     ) {
-        User user = (User) session.getAttribute("info");
-
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-        String bId = user.getBId();
+        String bId = erpUserDetails.getLoginUser().getBId();
         Double response = statisticsService.getDisposalRate(
             bId,
             statisticsRequest.getStartDate(),
@@ -55,13 +50,8 @@ public class StatisticsRestController {
     @GetMapping("/disposals/total-price")
     public ResponseEntity<Long> getTotalDisposalPrice(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-        String bId = user.getBId();
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         Long disposalTotalPrice =
             statisticsService.getTotalDisposalPrice(bId,
@@ -75,13 +65,9 @@ public class StatisticsRestController {
     @GetMapping("/disposals/top-materials")
     public ResponseEntity<List<DisposalTopMaterialsResponse>> getDisposalTopMaterials(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails
     ) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-        String bId = user.getBId();
+        String bId = erpUserDetails.getLoginUser().getBId();
         List<DisposalTopMaterialsResponse> response =
             statisticsService.getTopDisposalMaterials(
                 bId,
@@ -95,13 +81,8 @@ public class StatisticsRestController {
     @GetMapping("/disposals/reason-ratio")
     public ResponseEntity<List<DisposalReasonRatio>> getDisposalReasonRatio(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        String bId = user.getBId();
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         List<DisposalReasonRatio> list = statisticsService.getDisposalReasonRatio(
             bId,
@@ -115,14 +96,9 @@ public class StatisticsRestController {
     @GetMapping("/disposals/daily-chart")
     public ResponseEntity<List<DailyDisposalChart>> getDailyDisposalChart(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
 
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        String bId = user.getBId();
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         List<DailyDisposalChart> list =
             statisticsService.getDailyDisposalChart(
@@ -137,13 +113,9 @@ public class StatisticsRestController {
     @GetMapping("/revenue/total")
     public ResponseEntity<Long> getTotalSales(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
 
-        String bId = user.getBId();
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         Long result = statisticsService.getTotalSales(bId,
             statisticsRequest.getStartDate(),
@@ -156,13 +128,8 @@ public class StatisticsRestController {
     @GetMapping("/revenue/history")
     public ResponseEntity<List<SalesHistory>> getSalesHistory(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        String bId = user.getBId();
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         List<SalesHistory> list = statisticsService.getSalesHistory(
             bId,
@@ -176,13 +143,8 @@ public class StatisticsRestController {
     @GetMapping("/revenue/menu-rank")
     public ResponseEntity<List<MenuSalesRank>> getMenuSalesRank(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        String bId = user.getBId();
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         List<MenuSalesRank> list = statisticsService.getMenuSalesRank(
             bId,
@@ -196,13 +158,9 @@ public class StatisticsRestController {
     @GetMapping("/expenses/material-rank")
     public ResponseEntity<List<MonthlyFoodMaterialExpenseRank>> getMonthlyFoodMaterialExpenseRank(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
 
-        String bId = user.getBId();
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         List<MonthlyFoodMaterialExpenseRank> list = statisticsService.getMonthlyFoodMaterialExpenseRank(
             bId,
@@ -215,13 +173,8 @@ public class StatisticsRestController {
     @GetMapping("/expenses/total")
     public ResponseEntity<Long> getTotalExpense(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        String bId = user.getBId();
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         Long result = statisticsService.getTotalExpense(
             bId,
@@ -236,13 +189,10 @@ public class StatisticsRestController {
     @GetMapping("/expenses/material-rank/chart")
     public ResponseEntity<List<MonthlyExpenseRankChart>> getMonthlyExpenseRankChart(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        HttpSession session) {
-        User user = (User) session.getAttribute("info");
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
 
-        String bId = user.getBId();
+        String bId = erpUserDetails.getLoginUser().getBId();
+
         List<MonthlyExpenseRankChart> list = statisticsService.getMonthlyExpenseRankChart(
             bId,
             statisticsRequest.getStartDate(),
@@ -254,17 +204,13 @@ public class StatisticsRestController {
     @GetMapping("/revenue/monthly")
     public ResponseEntity<List<MonthlyRevenue>> getMonthlyRevenue(
         @ModelAttribute StatisticsRequest request,
-        HttpSession session
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails
     ) {
-        User user = (User) session.getAttribute("info");
-
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         return ResponseEntity.ok(
             statisticsService.getMonthlyRevenue(
-                user.getBId(),
+                bId,
                 request.getStartDate(),
                 request.getEndDate()
             )
@@ -274,17 +220,13 @@ public class StatisticsRestController {
     @GetMapping("/expenses/monthly")
     public ResponseEntity<List<MonthlyExpense>> getMonthlyExpense(
         @ModelAttribute StatisticsRequest request,
-        HttpSession session
+        @AuthenticationPrincipal ErpUserDetails erpUserDetails
     ) {
-        User user = (User) session.getAttribute("info");
-
-        if (user == null) {
-            return ResponseEntity.status(401).build();
-        }
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         return ResponseEntity.ok(
             statisticsService.getMonthlyExpense(
-                user.getBId(),
+                bId,
                 request.getStartDate(),
                 request.getEndDate()
             )

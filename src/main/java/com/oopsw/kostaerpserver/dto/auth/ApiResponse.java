@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.auth;
 
 
 import lombok.AllArgsConstructor;

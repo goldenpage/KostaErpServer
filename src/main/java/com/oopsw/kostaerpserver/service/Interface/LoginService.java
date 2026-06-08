@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
 
-import com.oopsw.kostaerpserver.dto.RegisterRequest;
+import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.vo.User;
 import org.apache.coyote.BadRequestException;
 
