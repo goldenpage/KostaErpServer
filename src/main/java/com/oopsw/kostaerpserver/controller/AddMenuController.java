@@ -37,43 +37,4 @@ public class AddMenuController {
 
         return "addMenu";
     }
-
-    @PostMapping("/menu/add")
-    @ResponseBody
-    public AddMenuResponse addMenu(
-            AddMenuRequest request,
-            HttpSession session,
-            RedirectAttributes redirectAttributes){
-
-        String bId = "0000000000";
-//                (String) session.getAttribute("loginOK");
-
-        try{
-            int menuCount = 0;
-
-            for(int i = 0; i < request.getMenuName().size(); i++){
-                AddMenu vo = new AddMenu();
-                vo.setMenuName(request.getMenuName().get(i));
-                vo.setMenuPrice(Integer.parseInt(request.getMenuPrice().get(i)));
-                vo.setMenuCategoryId(request.getMenuCategoryId().get(i));
-                addMenuService.addMenu(vo);
-
-                String menuId = addMenuService.getNewMenuId(vo);
-                int ingredientCount = Integer.parseInt((request.getMenuIngredientCount().get(i)));
-
-                for(int j = 0; j < ingredientCount; j++){
-                    Used used = new Used();
-                    used.setUsedCount(Integer.parseInt(request.getUsedCount().get(menuCount)));
-                    used.setFoodMaterialId(request.getFoodMaterialId().get(menuCount));
-                    used.setMenuId(menuId);
-                    addMenuService.addUsedMaterial(used);
-
-                    menuCount++;
-                }
-            }
-            return AddMenuResponse.success(request.getMenuName().size());
-        }catch (Exception e){
-            return AddMenuResponse.fail("메뉴 등록 실패");
-        }
-    }
 }
