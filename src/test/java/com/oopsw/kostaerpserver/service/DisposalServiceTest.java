@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,21 @@ public class DisposalServiceTest {
         assertThat(result).isSameAs(disposals);
         verify(disposalDAO).getDisposals();
         log.info("getDisposalsTest 성공 & 종료");
+    }
+
+    @Test
+        // 폐기 데이터 등록 기능 서비스 단위 테스트
+    void insertDisposalTest() {
+        log.info("insertDisposalTest 시작");
+        DisposalCreateRequest request = new DisposalCreateRequest();
+        when(disposalDAO.insertDisposal(request)).thenReturn(1);
+
+        boolean result = disposalService.insertDisposal(request);
+
+        log.info("Service insertDisposal result: {}", result);
+        assertThat(result).isTrue();
+        verify(disposalDAO).insertDisposal(request);
+        log.info("insertDisposalTest 성공 & 종료");
     }
 
     @Test

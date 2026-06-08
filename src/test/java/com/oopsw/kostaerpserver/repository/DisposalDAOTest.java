@@ -2,11 +2,13 @@ package com.oopsw.kostaerpserver.repository;
 
 import com.oopsw.kostaerpserver.vo.Disposal;
 import com.oopsw.kostaerpserver.dto.DisposalListResponse;
+import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
+@Transactional
 public class DisposalDAOTest {
     private static final String B_ID = "0000000000";
     private static final LocalDate START_DATE = LocalDate.of(2026, 4, 1);

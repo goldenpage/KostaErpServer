@@ -13,9 +13,7 @@
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
         JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
         JOIN REASON r ON d.reason_Id = r.reason_Id
-        WHERE f.bId = #{bId}
         ORDER BY d.disposal_Id DESC
-        LIMIT #{offset}, #{size}
     </select>
 
     <select id="getFoodMaterialNames" resultType="string">
@@ -45,12 +43,6 @@
         JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
         JOIN REASON r ON d.reason_Id = r.reason_Id
         WHERE f.bId = #{bId}
-        <if test="category != null and category != ''">
-            AND fc.foodCategory = #{category}
-        </if>
-        <if test="reason != null and reason != ''">
-            AND r.reason = #{reason}
-        </if>
         ORDER BY d.disposal_Id DESC
         LIMIT #{offset}, #{size}
     </select>
@@ -70,15 +62,7 @@
         SELECT COUNT(*)
         FROM DISPOSALS d
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
-        JOIN FOODC fc ON f.foodCategory_Id = fc.foodCategory_Id
-        JOIN REASON r ON d.reason_Id = r.reason_Id
         WHERE f.bId = #{bId}
-        <if test="category != null and category != ''">
-            AND fc.foodCategory = #{category}
-        </if>
-        <if test="reason != null and reason != ''">
-            AND r.reason = #{reason}
-        </if>
     </select>
 
     <select id="getTotalCount" resultType="int">
