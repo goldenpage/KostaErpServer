@@ -271,7 +271,7 @@ function registerAll() {
         formData.append('expirationDate', item.expirationDate);
     });
     console.log("2: " + pendingList)
-    fetch('/foodmaterial/add', {
+    fetch('/api/foodmaterial/add', {
         method: 'POST',
         body: formData
     }).then(res => {

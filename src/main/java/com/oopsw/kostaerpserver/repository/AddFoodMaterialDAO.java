@@ -4,6 +4,7 @@ import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface AddFoodMaterialDAO {
     int deleteFoodCategory(String foodCategory);
 
     // 6. 식자재 이름 검색
-    List<FoodMaterial> getFoodMaterialByName(Map<String, Object> params);
+    List<FoodMaterial> getFoodMaterialByName(@Param("foodMaterialName") String foodMaterialName, @Param("bId") String bId);
 
     // 7. 식자재 목록 조회
     List<FoodMaterial> getFoodMaterialList(Map<String, Object> params);
