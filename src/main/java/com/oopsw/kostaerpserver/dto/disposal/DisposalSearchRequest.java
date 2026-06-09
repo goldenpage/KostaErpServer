@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.disposal;
 
 import lombok.Getter;
 import lombok.Setter;

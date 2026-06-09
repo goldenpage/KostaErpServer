@@ -1,7 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
-import com.oopsw.kostaerpserver.dto.NoticeListResponse;
-import com.oopsw.kostaerpserver.vo.Notice;
+import com.oopsw.kostaerpserver.dto.notice.NoticeListResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

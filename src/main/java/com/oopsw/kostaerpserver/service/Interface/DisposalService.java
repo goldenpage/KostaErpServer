@@ -1,8 +1,8 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
-import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalCreateRequest;
 import com.oopsw.kostaerpserver.vo.Disposal;
-import com.oopsw.kostaerpserver.dto.DisposalListResponse;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 import java.time.LocalDate;
 import java.util.List;
 

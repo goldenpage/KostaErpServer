@@ -1,6 +1,5 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.disposal;
 
-import com.oopsw.kostaerpserver.vo.Disposal;
 import lombok.Data;
 
 import java.time.LocalDate;
