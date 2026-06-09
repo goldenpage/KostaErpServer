@@ -1,4 +1,3 @@
-let bId = "0000000000";
 let selectedMenuId = "";
 
 window.onload = function() {
@@ -63,7 +62,7 @@ function saleMenu() {
         return;
     }
 
-    fetch("/api/menus/" + encodeURIComponent(selectedMenuId) + "/sales?bId=" + encodeURIComponent(bId), {
+    fetch("/api/menus/" + encodeURIComponent(selectedMenuId) + "/sales", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
