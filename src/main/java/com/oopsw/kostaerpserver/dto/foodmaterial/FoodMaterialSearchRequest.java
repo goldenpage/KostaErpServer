@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FoodMaterialSearchRequest {
 
-    private String bId = "0000000000";
+    private String bId;
     private String sort = "idDesc";
     private int page = 1;
     private int size = 5;

@@ -1,4 +1,3 @@
-let bId = "0000000000";
 let currentSort = "idDesc";
 let pageSize = 5;
 let currentPage = 1;
@@ -8,7 +7,6 @@ window.onload = function() {
     const pageInfo = document.getElementById("foodMaterialPage");
 
     if (pageInfo !== null) {
-        bId = pageInfo.dataset.bId || "0000000000";
         currentSort = pageInfo.dataset.sort || "idDesc";
         pageSize = Number(pageInfo.dataset.size || 5);
         currentPage = Number(pageInfo.dataset.currentPage || 1);
@@ -76,8 +74,7 @@ function loadFoodMaterials(sort, page) {
     const keyword = document.getElementById("searchKeyword").value.trim();
 
     let url = "/api/foodmaterials"
-        + "?bId=" + encodeURIComponent(bId)
-        + "&sort=" + encodeURIComponent(sort)
+        + "?sort=" + encodeURIComponent(sort)
         + "&page=" + page
         + "&size=" + pageSize;
 
@@ -167,7 +164,7 @@ function deleteFoodMaterial(foodMaterialId) {
         return;
     }
 
-    fetch("/api/foodmaterials/" + encodeURIComponent(foodMaterialId) + "?bId=" + encodeURIComponent(bId), {
+    fetch("/api/foodmaterials/" + encodeURIComponent(foodMaterialId), {
         method: "DELETE"
     })
         .then(function(response) {
@@ -222,7 +219,7 @@ async function deleteSelectedFoodMaterials() {
     for (let i = 0; i < checkedBoxes.length; i++) {
         const foodMaterialId = checkedBoxes[i].value;
 
-        const response = await fetch("/api/foodmaterials/" + encodeURIComponent(foodMaterialId) + "?bId=" + encodeURIComponent(bId), {
+        const response = await fetch("/api/foodmaterials/" + encodeURIComponent(foodMaterialId), {
             method: "DELETE"
         });
 
