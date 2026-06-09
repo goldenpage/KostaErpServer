@@ -9,7 +9,7 @@ function checkPassword() {
 }
 
 const sendPhoneCode = async () => {
-  const res = await fetch(`http://127.0.0.1/api/users/phone/code`, {
+  const res = await fetch(`/api/users/phone/code`, {
     method:"post",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +20,7 @@ const sendPhoneCode = async () => {
 }
 
 const verifyPhoneCode = async  () => {
-  const res = fetch(`http://127.0.0.1:15000/api/users/phone/verify`, {
+  const res = fetch(`/api/users/phone/verify`, {
     method: "post",
     headers:{
       "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const verifyPhoneCode = async  () => {
 }
 
 const checkBid = async  () => {
-  const res = await fetch('http://127.0.0.1:15000/api/users/business/status',{
+  const res = await fetch('/api/users/business/status',{
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const checkBid = async  () => {
 }
 
 const register = async () => {
-  const res = await fetch(`http://127.0.0.1:15000/api/auth/users`, {
+  const res = await fetch(`/api/auth/register`, {
     method:"post",
     body: JSON.stringify(user)
   })

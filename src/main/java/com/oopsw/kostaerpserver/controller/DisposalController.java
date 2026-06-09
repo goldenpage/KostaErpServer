@@ -27,7 +27,6 @@ public class DisposalController {
             @RequestParam(required = false) String reason,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size,
-
             Model model){
 
         int totalCount = disposalService.getTotalCount(bId);

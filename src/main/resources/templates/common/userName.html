@@ -4,22 +4,17 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Insert title here</title>
   <link rel="stylesheet" th:href="@{/css/userName.css}">
-  <script>
-    function goBack() {
-      history.back();
-    }
-  </script>
 </head>
 <body>
 
 <ul class="profile" th:fragment="userName">
-  <li><span th:text="${session.info != null ? session.info.name : '사용자'}"></span></li>
+  <li><span id="user"></span></li>
   <li th:onclick="|location.href='@{/login}'|">로그아웃</li>
   <li th:onclick="|location.href='@{/notice}'|">알림</li>
-  <li onclick="goBack()">뒤로가기</li>
+  <script th:src="@{/js/userName.js}"></script>
 </ul>
 
 
-</body>
 
+</body>
 </html>

@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.statistics;
 
 
 import java.time.LocalDate;
