@@ -3,12 +3,12 @@ package com.oopsw.kostaerpserver.repository;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalCreateRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.oopsw.kostaerpserver.vo.Disposal;
-import com.oopsw.kostaerpserver.dto.DisposalListResponse;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 
 @Mapper
 public interface DisposalDAO {

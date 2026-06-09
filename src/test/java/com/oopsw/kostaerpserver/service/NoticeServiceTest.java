@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import com.oopsw.kostaerpserver.dto.NoticeListResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeListResponse;
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.oopsw.kostaerpserver.repository.NoticeDAO;
-import com.oopsw.kostaerpserver.vo.Notice;
 
 @Slf4j
 @ActiveProfiles("test")

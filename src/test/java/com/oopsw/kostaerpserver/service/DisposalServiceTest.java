@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalCreateRequest;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
 import com.oopsw.kostaerpserver.vo.Disposal;
-import com.oopsw.kostaerpserver.dto.DisposalListResponse;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 

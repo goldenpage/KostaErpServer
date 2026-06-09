@@ -1,7 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
-import com.oopsw.kostaerpserver.dto.NoticeListResponse;
-import com.oopsw.kostaerpserver.vo.Notice;
+import com.oopsw.kostaerpserver.dto.notice.NoticeListResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -3,7 +3,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oopsw.kostaerpserver.repository.DisposalDAO">
 
-    <select id="getDisposals" resultType="com.oopsw.kostaerpserver.dto.DisposalListResponse">
+    <select id="getDisposals" resultType="com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse">
         SELECT d.disposal_Id, d.foodMaterial_Id,
         f.foodMaterialName, f.foodMaterialType,
         fc.foodCategory,
@@ -29,7 +29,7 @@
         WHERE f.bId = #{bId}
     </select>
 
-    <select id="getDisposalsFilteredPaging" resultType="com.oopsw.kostaerpserver.dto.DisposalListResponse">
+    <select id="getDisposalsFilteredPaging" resultType="com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse">
         SELECT d.disposal_Id AS disposalId,
         f.foodMaterialName,
         fc.foodCategory,
@@ -47,7 +47,7 @@
         LIMIT #{offset}, #{size}
     </select>
 
-    <select id="getDisposalsPaging" resultType="com.oopsw.kostaerpserver.dto.DisposalListResponse">
+    <select id="getDisposalsPaging" resultType="com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse">
         SELECT d.*, f.foodMaterialName, fc.foodCategory, f.foodMaterialType, r.reason
         FROM DISPOSALS d
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id
@@ -78,7 +78,7 @@
         SELECT reason FROM REASON
     </select>
 
-    <select id="getDisposalsByCategoryAndBId" resultType="com.oopsw.kostaerpserver.dto.DisposalListResponse">
+    <select id="getDisposalsByCategoryAndBId" resultType="com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse">
         SELECT d.disposal_Id, f.foodMaterialName, fc.foodCategory, f.foodMaterialType,
         d.disposalCountAll, d.disposalPrice, d.disposalDate, r.reason
         FROM DISPOSALS d
@@ -95,7 +95,7 @@
         WHERE disposal_Id = #{disposalId}
     </update>
 
-    <insert id="insertDisposal" parameterType="com.oopsw.kostaerpserver.dto.DisposalCreateRequest">
+    <insert id="insertDisposal" parameterType="com.oopsw.kostaerpserver.dto.disposal.DisposalCreateRequest">
         INSERT INTO DISPOSALS (
         disposalCountAll, disposalPrice, disposalDate,
         foodMaterial_Id, reason_Id

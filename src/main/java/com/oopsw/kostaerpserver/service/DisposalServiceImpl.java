@@ -1,10 +1,10 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalCreateRequest;
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
-import com.oopsw.kostaerpserver.dto.DisposalListResponse;
+import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

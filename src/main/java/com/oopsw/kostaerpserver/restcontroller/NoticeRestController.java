@@ -1,14 +1,13 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
-import com.oopsw.kostaerpserver.dto.NoticeExpiredCountResponse;
-import com.oopsw.kostaerpserver.dto.NoticeReadUpdateResponse;
-import com.oopsw.kostaerpserver.dto.NoticeSearchRequest;
-import com.oopsw.kostaerpserver.dto.NoticeListResponse;
-import com.oopsw.kostaerpserver.dto.NoticeSolidTotalResponse;
-import com.oopsw.kostaerpserver.dto.NoticeLiquidTotal;
-import com.oopsw.kostaerpserver.dto.NoticeMaxOverDayResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeExpiredCountResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeReadUpdateResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeSearchRequest;
+import com.oopsw.kostaerpserver.dto.notice.NoticeListResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeSolidTotalResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeLiquidTotal;
+import com.oopsw.kostaerpserver.dto.notice.NoticeMaxOverDayResponse;
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
-import com.oopsw.kostaerpserver.vo.Notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
