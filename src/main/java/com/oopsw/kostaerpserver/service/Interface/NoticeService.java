@@ -1,12 +1,13 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
+import com.oopsw.kostaerpserver.dto.NoticeListResponse;
 import com.oopsw.kostaerpserver.vo.Notice;
 import java.util.List;
 
 public interface NoticeService {
     boolean insertNotice(String disposalId);
 
-    List<Notice> getNoticeList(String bId);
+    List<NoticeListResponse> getNoticeList(String bId);
 
     int deleteNoticeAll();
 

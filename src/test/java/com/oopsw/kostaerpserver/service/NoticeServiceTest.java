@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import com.oopsw.kostaerpserver.dto.NoticeListResponse;
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -63,10 +64,10 @@ public class NoticeServiceTest {
     //알림 목록 조회 서비스 테스트
     void getNoticeList() {
         log.info("getNoticeList - B_ID: {}", B_ID);
-        List<Notice> notices = List.of(new Notice());
+        List<NoticeListResponse> notices = List.of(new NoticeListResponse());
         when(noticeDAO.getNoticeList(B_ID)).thenReturn(notices);
 
-        List<Notice> result = noticeService.getNoticeList(B_ID);
+        List<NoticeListResponse> result = noticeService.getNoticeList(B_ID);
 
         log.info("조회된 알림 리스트 객체 동일 여부: {}, 개수: {}", (result == notices), result.size());
         assertThat(result).isSameAs(notices);

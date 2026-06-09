@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.dto.NoticeListResponse;
 import com.oopsw.kostaerpserver.repository.NoticeDAO;
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
 import com.oopsw.kostaerpserver.vo.Notice;
@@ -23,7 +24,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<Notice> getNoticeList(String bId) {
+    public List<NoticeListResponse> getNoticeList(String bId) {
         return noticeDAO.getNoticeList(bId);
     }
 
