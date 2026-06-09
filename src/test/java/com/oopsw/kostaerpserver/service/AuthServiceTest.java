@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.dto.RegisterRequest;
+import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.vo.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

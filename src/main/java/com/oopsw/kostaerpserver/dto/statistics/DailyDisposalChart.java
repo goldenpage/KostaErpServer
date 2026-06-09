@@ -1,20 +1,21 @@
-package com.oopsw.kostaerpserver.dto;
-
-
+package com.oopsw.kostaerpserver.dto.statistics;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class DisposalTopMaterialsResponse {
-    private String foodMaterialId;
-    private String foodMaterialName;
+@Builder
+public class DailyDisposalChart {
+    private String foodMaterialType;
+    private String disposalDay;
     private int disposalCount;
     private int totalDisposalPrice;
+
+
 }

@@ -1,19 +1,22 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.dto.RegisterRequest;
+import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.repository.UserInfoDAO;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
 import com.oopsw.kostaerpserver.vo.User;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
-    @Autowired
-    UserInfoDAO userInfoDAO;
+    private final UserInfoDAO userInfoDAO;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public User login(String bId, String pw) throws BadRequestException {
@@ -39,10 +42,10 @@ public class LoginServiceImpl implements LoginService {
         if (request != null) {
 
         }
-
+        String encode = passwordEncoder.encode(request.getPw());
         User user = User.builder()
             .bId(request.getBId())
-            .pw(request.getPw())
+            .pw(encode)
             .phone(request.getPhone())
             .name(request.getName())
             .email(request.getEmail())
@@ -83,4 +86,7 @@ public class LoginServiceImpl implements LoginService {
     public int checkPwFindUser(String bId, String name, String phone) {
         return userInfoDAO.checkPwFindUser(bId, name, phone);
     }
+
+
+
 }
