@@ -28,31 +28,16 @@ public class DisposalController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size,
             Model model){
-
         int totalCount = disposalService.getTotalCount(bId);
         int totalPages = (int) Math.ceil((double) totalCount / size);
-
-        List<DisposalListResponse> list;
-
-        if (category != null && !category.isBlank()) {
-            list = disposalService.getDisposalsByCategoryAndBId(category, bId);
-        } else {
-            list = disposalService.getDisposalsPaging(bId, page, size);
-        }
-
-        if (reason != null && !reason.isBlank()) {
-            list = list.stream()
-                    .filter(disposal -> reason.equals(disposal.getReason())).toList();
-        }
+        if (totalPages < 1) totalPages = 1;
 
         model.addAttribute("bId", bId);
-        model.addAttribute("selectedCategory", category);
-        model.addAttribute("selectedReason", reason);
-        model.addAttribute("list", list);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("reasons", disposalService.getReasons());
         model.addAttribute("categories", disposalService.getCategories(bId));
+        model.addAttribute("reasons", disposalService.getReasons());
+
         return "disposalItems";
     }
 }

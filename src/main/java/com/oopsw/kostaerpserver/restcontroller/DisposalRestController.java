@@ -16,52 +16,30 @@ public class DisposalRestController {
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
     }
-    @GetMapping
-    public List<DisposalListResponse> getDisposalItems(
-            DisposalSearchRequest request
-    ){
-        List<DisposalListResponse> list;
 
-        if(hasText(request.getCategory())) {
+    @GetMapping
+    public List<DisposalListResponse> getDisposalItems(DisposalSearchRequest request) {
+        List<DisposalListResponse> list = null;
+
+        if (hasText(request.getCategory())) {
             list = disposalService.getDisposalsByCategoryAndBId(request.getCategory(), request.getBId());
-        }else{
+        } else {
             list = disposalService.getDisposalsFilteredPaging(
                     request.getBId(),
                     request.getPage(),
                     request.getSize());
         }
-
-        if(hasText(request.getType())) {
+        if (list != null && hasText(request.getType())) {
             list = list.stream()
                     .filter(disposal -> request.getType().equals(disposal.getFoodMaterialType()))
                     .toList();
         }
-
-        if(hasText(request.getReason())) {
+        if (list != null && hasText(request.getReason())) {
             list = list.stream()
                     .filter(disposal -> request.getReason().equals(disposal.getReason()))
                     .toList();
         }
         return list;
-    }
-
-    @GetMapping(params = "category")
-    public List<DisposalListResponse> getByCategory(
-            DisposalCategoryRequest request
-    ) {
-        return disposalService.getDisposalsByCategoryAndBId(
-                request.getCategory(),
-                request.getBId()
-        );
-    }
-
-    @GetMapping(params = "type")
-    public List<DisposalListResponse> getByType(
-            DisposalTypeRequest request
-    ){
-        List<DisposalListResponse> list = disposalService.getDisposalsPaging(request.getBId(), 1, 1000);
-
-        return list.stream().filter(disposal -> request.getType().equals(disposal.getFoodMaterialType())).toList();
     }
 
     @PatchMapping("/{id}/reason")
