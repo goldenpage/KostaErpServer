@@ -24,7 +24,7 @@ public interface AddFoodMaterialService {
     int deleteFoodCategory(String foodCategory);
 
     // 6. 식자재 이름 검색
-    List<FoodMaterial> getFoodMaterialByName(Map<String, Object> params);
+    List<FoodMaterial> getFoodMaterialByName(String foodMaterialName, String bId);
 
     // 7. 식자재 목록 조회
     List<FoodMaterial> getFoodMaterialList(Map<String, Object> params);

@@ -297,7 +297,7 @@ function registerAllMenus() {
         });
     });
 
-    fetch('/menu/add',{
+    fetch('/api/menu/add',{
         method:'POST',
         body: formData
     }).then(res => res.json())

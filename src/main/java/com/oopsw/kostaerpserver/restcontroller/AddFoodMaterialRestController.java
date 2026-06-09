@@ -1,15 +1,15 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.dto.addfoodmaterial.*;
+import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
-import com.oopsw.kostaerpserver.vo.FoodCategory;
-import com.oopsw.kostaerpserver.vo.FoodMaterial;
-import jakarta.servlet.http.HttpSession;
+import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -18,63 +18,65 @@ public class AddFoodMaterialRestController {
     private final AddFoodMaterialService addFoodMaterialService;
 
     @PostMapping("/foodmaterial/foodcategory/add")
-    public Map<String, Object> addFoodCategory(@RequestBody Map<String, String> body) {
-        String foodCategory = body.get("foodCategory");
-        Map<String, Object> response = new HashMap<>();
+    public AddFoodCategoryResponse  addFoodCategory(@RequestBody AddFoodCategoryRequest request) {
         try {
-            int result = addFoodMaterialService.checkFoodCategoryExists(foodCategory);
+            int result = addFoodMaterialService.checkFoodCategoryExists(request.getFoodCategory());
             if (result > 0) {
-                response.put("result", "fail");
-                response.put("message", "이미 존재하는 카테고리");
-                return response;
+                return AddFoodCategoryResponse.fail("이미 존재하는 카테고리");
             }
 
-            FoodCategory vo = new FoodCategory();
-            vo.setFoodCategory(foodCategory);
-            addFoodMaterialService.addFoodCategory(vo);
+            addFoodMaterialService.addFoodCategory(request.toVO());
+            String categoryId = addFoodMaterialService.getCategoryId(request.getFoodCategory());
 
-            String categoryId = addFoodMaterialService.getCategoryId(foodCategory);
-
-            response.put("result", "success");
-            response.put("foodCategoryId", categoryId);
-            response.put("foodCategory", foodCategory);
+            return AddFoodCategoryResponse.success(categoryId, request.getFoodCategory());
 
         } catch (Exception e) {
-            response.put("result", "fail");
-            response.put("message", "카테고리 추가 실패");
+            return AddFoodCategoryResponse.fail("카테고리 추가 실패");
         }
-        return response;
     }
 
     @DeleteMapping("/foodmaterial/foodcategory/delete")
-    public Map<String, Object> deleteFoodCategory(@RequestBody Map<String, String> body) {
-        String foodCategory = body.get("foodCategory");
-        Map<String, Object> response = new HashMap<>();
-
+    public DeleteFoodCategoryResponse  deleteFoodCategory(@RequestBody DeleteFoodCategoryRequest request) {
         try{
-            int exist = addFoodMaterialService.hasFoodMaterialByCategory(foodCategory);
+            int exist = addFoodMaterialService.hasFoodMaterialByCategory(request.getFoodCategory());
             if (exist > 0) {
-                response.put("result", "fail");
-                response.put("message", "해당 카테고리가 사용중입니다.");
-                return response;
+                return DeleteFoodCategoryResponse.fail("해당 카테고리가 사용중입니다.");
             }
 
-            int result = addFoodMaterialService.deleteFoodCategory(foodCategory);
-            response.put("result", "success");
-            response.put("foodCategoryId", foodCategory + "가 삭제되었습니다.");
+            addFoodMaterialService.deleteFoodCategory(request.getFoodCategory());
+            return DeleteFoodCategoryResponse.success(request.getFoodCategory());
+
         }catch (Exception e){
-            response.put("result", "fail");
-            response.put("message", "카테고리 삭제 오류");
+            return DeleteFoodCategoryResponse.fail("카테고리 삭제 오류");
         }
-        return response;
     }
 
     @GetMapping("/foodmaterial/search/add/{foodMaterialName}")
-    public List<FoodMaterial> searchFoodMaterial(
-            @PathVariable String foodMaterialName, HttpSession session){
-        Map<String, Object> response = new HashMap<>();
-        response.put("foodMaterialName", foodMaterialName);
-        response.put("bId", "0000000000");
-        return addFoodMaterialService.getFoodMaterialByName(response);
+    public List<SearchFoodMaterialResponse> searchFoodMaterial(
+            @PathVariable String foodMaterialName,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
+        String bId = erpUserDetails.getLoginUser().getBId();
+        return SearchFoodMaterialResponse.fromList(addFoodMaterialService.getFoodMaterialByName(foodMaterialName, bId));
+    }
+
+    @PostMapping("/foodmaterial/add")
+    public AddFoodMaterialResponse addFoodMaterial(
+            AddFoodMaterialRequest request,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
+
+        String bId = erpUserDetails.getLoginUser().getBId();
+
+        try{
+            List<AddFoodMaterial> list = request.VOList(bId);
+            for(AddFoodMaterial vo : list) {
+                addFoodMaterialService.addFoodMaterial(vo);
+            }
+            return AddFoodMaterialResponse.success(list.size());
+
+        } catch (Exception e){
+            return AddFoodMaterialResponse.fail("식자재 등록 실패");
+        }
     }
 }

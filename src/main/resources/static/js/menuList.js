@@ -25,10 +25,6 @@ window.onload = function() {
             selectMenuRadio(menuId);
             loadMenuMaterials(menuId);
         }
-
-        if (event.target.classList.contains("backBtn")) {
-            history.back();
-        }
     });
 };
 
@@ -41,8 +37,8 @@ function loadMenuMaterials(menuId) {
 
             return response.json();
         })
-        .then(function(detailList) {
-            drawIngredientTable(detailList);
+        .then(function(data) {
+            drawIngredientTable(data.materialList);
         })
         .catch(function(error) {
             console.log(error);
@@ -81,10 +77,10 @@ function saleMenu() {
                 throw new Error("판매 처리 실패");
             }
 
-            return response.text();
+            return response.json();
         })
-        .then(function(message) {
-            alert(message);
+        .then(function(data) {
+            alert(data.message);
             loadMenuMaterials(selectedMenuId);
         })
         .catch(function(error) {
@@ -132,4 +128,8 @@ function checkNull(value) {
     }
 
     return value;
+}
+
+function goBack() {
+    history.back();
 }
