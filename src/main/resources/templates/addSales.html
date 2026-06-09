@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>판매 기록 추가</title>
+    <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+    <link rel="stylesheet" th:href="@{/css/userName.css}">
+    <link rel="stylesheet" th:href="@{/css/addSales.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+
+    <div class="main">
+        <div th:replace="~{common/userName :: userName}"></div>
+        <h2>판매 기록 추가</h2>
+
+        <div class="sale-layout">
+            <div class="menu-list-area">
+                <div class="search-box">
+                    <input type="text" placeholder="메뉴명 검색" onkeyup="filterMenu()">
+                    <select><option>전체 카테고리</option></select>
+                </div>
+                <table class="menu-table">
+                    <thead>
+                    <tr>
+                        <th>메뉴명</th>
+                        <th>카테고리</th>
+                        <th>가격</th>
+                        <th>수량</th>
+                        <th>선택</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>치즈김밥</td>
+                        <td>김밥류</td>
+                        <td>4,000</td>
+                        <td class="qty-control">
+                            <button class="btn-sm" onclick="changeQty(this, -1)">-</button>
+                            <span>1</span>
+                            <button class="btn-sm" onclick="changeQty(this, 1)">+</button>
+                        </td>
+                        <td><button onclick="addOrder(this)">추가</button></td>
+                    </tr>
+                    <tr>
+                        <td>참치김밥</td>
+                        <td>김밥류</td>
+                        <td>4,000</td>
+                        <td class="qty-control">
+                            <button class="btn-sm" onclick="changeQty(this, -1)">-</button>
+                            <span>1</span>
+                            <button class="btn-sm" onclick="changeQty(this, 1)">+</button>
+                        </td>
+                        <td><button onclick="addOrder(this)">추가</button></td>
+                    </tr>
+                    <tr>
+                        <td>원조김밥</td>
+                        <td>김밥류</td>
+                        <td>3,000</td>
+                        <td class="qty-control">
+                            <button class="btn-sm" onclick="changeQty(this, -1)">-</button>
+                            <span>1</span>
+                            <button class="btn-sm" onclick="changeQty(this, 1)">+</button>
+                        </td>
+                        <td><button onclick="addOrder(this)">추가</button></td>
+                    </tr>
+                    <tr>
+                        <td>야채김밥</td>
+                        <td>김밥류</td>
+                        <td>3,000</td>
+                        <td class="qty-control">
+                            <button class="btn-sm" onclick="changeQty(this, -1)">-</button>
+                            <span>1</span>
+                            <button class="btn-sm" onclick="changeQty(this, 1)">+</button>
+                        </td>
+                        <td><button onclick="addOrder(this)">추가</button></td>
+                    </tr>
+                    <tr>
+                        <td>라멘</td>
+                        <td>라멘류</td>
+                        <td>9,000</td>
+                        <td class="qty-control">
+                            <button class="btn-sm" onclick="changeQty(this, -1)">-</button>
+                            <span>1</span>
+                            <button class="btn-sm" onclick="changeQty(this, 1)">+</button>
+                        </td>
+                        <td><button onclick="addOrder(this)">추가</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order-list-area">
+                <h3>주문 내역</h3>
+                <table class="list_container">
+                    <thead>
+                    <tr><th>메뉴</th><th>수량</th><th>가격</th><th>삭제</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>치즈김밥</td><td>2</td><td>8,000</td>
+                        <td><button onclick="removeOrder(this)">X</button></td></tr>
+                    </tbody>
+                </table>
+
+                <div class="total-price">
+                    총 결제 금액: <span id="totalAmount">8,000</span>원
+                </div>
+
+                <button class="btn-primary" onclick="processSale()">판매</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/addSales.js}"></script>
+</body>
+</html>
