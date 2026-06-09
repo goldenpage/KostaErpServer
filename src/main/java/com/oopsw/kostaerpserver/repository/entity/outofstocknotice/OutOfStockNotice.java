@@ -18,9 +18,12 @@ public class OutOfStockNotice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int noticeId;
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     private LocalDateTime noticeDate;
+    @Column(nullable = false)
     private String noticeContent;
+    @Column(nullable = false)
     private String foodMaterialName;
+    @Column(nullable = false)
     private int remainStockAmount;
 }
