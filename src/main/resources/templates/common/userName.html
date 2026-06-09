@@ -12,9 +12,15 @@
   <li th:onclick="|location.href='@{/login}'|">로그아웃</li>
   <li th:onclick="|location.href='@{/notice}'|">알림</li>
   <script th:src="@{/js/userName.js}"></script>
+
+  <li class="dropdown">
+    <ul class="dropdown-btn">알림 드롭다운</ul>
+    <ul class="dropdown-submenu">
+      <li th:onclick="|location.href='@{/foodmaterialadd}'|">식자재 부족 알림</li>
+      <li th:onclick="|location.href='@{/foodmaterials}'|">유통기한 임박 알림</li>
+      <li th:onclick="|location.href='@{/disposal-items}'|">유통기한 지남 알림</li>
+    </ul>
+  </li>
 </ul>
-
-
-
 </body>
 </html>
