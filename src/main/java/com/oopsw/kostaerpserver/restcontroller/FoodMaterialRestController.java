@@ -1,12 +1,12 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
+import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialDeleteResponse;
+import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialPageResponse;
+import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialSearchRequest;
 import com.oopsw.kostaerpserver.service.Interface.FoodMaterialService;
-import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,27 +16,21 @@ public class FoodMaterialRestController {
     private final FoodMaterialService foodMaterialService;
 
     @GetMapping
-    public List<FoodMaterial> getFoodMaterials(
-            @RequestParam(defaultValue = "0000000000") String bId,
-            @RequestParam(defaultValue = "idDesc") String sort,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(required = false) String keyword
+    public ResponseEntity<FoodMaterialPageResponse> getFoodMaterials(
+            @ModelAttribute FoodMaterialSearchRequest request
     ) {
-        if (keyword != null && !keyword.isBlank()) {
-            return foodMaterialService.searchFoodMaterial(bId, keyword);
-        }
-
-        return foodMaterialService.getFoodMaterialList(bId, sort, page, size);
+        return ResponseEntity.ok(foodMaterialService.getFoodMaterialPage(request));
     }
 
     @DeleteMapping("/{foodMaterialId}")
-    public ResponseEntity<String> deleteFoodMaterial(
+    public ResponseEntity<FoodMaterialDeleteResponse> deleteFoodMaterial(
             @PathVariable String foodMaterialId,
             @RequestParam(defaultValue = "0000000000") String bId
     ) {
         foodMaterialService.deleteFoodMaterial(foodMaterialId, bId);
 
-        return ResponseEntity.ok("삭제 완료");
+        return ResponseEntity.ok(
+                new FoodMaterialDeleteResponse("삭제 완료", foodMaterialId)
+        );
     }
 }

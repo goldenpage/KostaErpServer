@@ -53,10 +53,6 @@ window.onload = function() {
             const foodMaterialId = event.target.value;
             deleteFoodMaterial(foodMaterialId);
         }
-
-        if (event.target.classList.contains("backBtn")) {
-            history.back();
-        }
     });
 
     document.getElementById("prevPageBtn").onclick = function() {
@@ -96,8 +92,11 @@ function loadFoodMaterials(sort, page) {
             }
             return response.json();
         })
-        .then(function(foodList) {
-            drawFoodTable(foodList);
+        .then(function(data) {
+            currentPage = data.currentPage;
+            totalPage = data.totalPage;
+
+            drawFoodTable(data.foodList);
             filterCategory();
             updatePageButtons();
         })
@@ -175,10 +174,10 @@ function deleteFoodMaterial(foodMaterialId) {
             if (!response.ok) {
                 throw new Error("삭제 실패");
             }
-            return response.text();
+            return response.json();
         })
-        .then(function() {
-            alert("삭제 완료");
+        .then(function(data) {
+            alert(data.message);
             loadFoodMaterials(currentSort, 1);
         })
         .catch(function(error) {
@@ -270,4 +269,8 @@ function formatDate(value) {
     }
 
     return String(value).substring(0, 10);
+}
+
+function goBack() {
+    history.back();
 }

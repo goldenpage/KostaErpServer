@@ -1,5 +1,7 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
+import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialPageResponse;
+import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialSearchRequest;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 
 import java.util.List;
@@ -13,4 +15,6 @@ public interface FoodMaterialService {
     List<FoodMaterial> searchFoodMaterial(String bId, String foodMaterialName);
 
     void deleteFoodMaterial(String foodMaterialId, String bId);
+
+    FoodMaterialPageResponse getFoodMaterialPage(FoodMaterialSearchRequest request);
 }
