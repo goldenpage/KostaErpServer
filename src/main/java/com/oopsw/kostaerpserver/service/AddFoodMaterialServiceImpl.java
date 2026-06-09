@@ -42,8 +42,8 @@ public class AddFoodMaterialServiceImpl implements AddFoodMaterialService {
     }
 
     // 6. 식자재 이름 검색
-    public List<FoodMaterial> getFoodMaterialByName(Map<String, Object> params){
-        return addFoodMaterialDAO.getFoodMaterialByName(params);
+    public List<FoodMaterial> getFoodMaterialByName(String foodMaterialName, String bId){
+        return addFoodMaterialDAO.getFoodMaterialByName(foodMaterialName, bId);
     }
 
     // 7. 식자재 목록 조회

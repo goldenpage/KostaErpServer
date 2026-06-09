@@ -116,11 +116,7 @@ public class AddFoodMaterialDAOTest {
 
     @Test
     void getFoodMaterialByName() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("foodMaterialName", "양");
-        params.put("bId", "0000000000");
-
-        List<FoodMaterial> list = addFoodMaterialDAO.getFoodMaterialByName(params);
+        List<FoodMaterial> list = addFoodMaterialDAO.getFoodMaterialByName("양", "0000000000");
         log.info("getFoodMaterialByName: {}", list);
         Assertions.assertNotNull(list);
     }
