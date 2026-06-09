@@ -1,18 +1,15 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.addfoodmaterial.*;
+import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
-import com.oopsw.kostaerpserver.vo.FoodCategory;
-import com.oopsw.kostaerpserver.vo.FoodMaterial;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -56,18 +53,20 @@ public class AddFoodMaterialRestController {
 
     @GetMapping("/foodmaterial/search/add/{foodMaterialName}")
     public List<SearchFoodMaterialResponse> searchFoodMaterial(
-            @PathVariable String foodMaterialName, HttpSession session){
-        return SearchFoodMaterialResponse.fromList(addFoodMaterialService.getFoodMaterialByName(foodMaterialName, "0000000000"));
+            @PathVariable String foodMaterialName,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
+        String bId = erpUserDetails.getLoginUser().getBId();
+        return SearchFoodMaterialResponse.fromList(addFoodMaterialService.getFoodMaterialByName(foodMaterialName, bId));
     }
 
     @PostMapping("/foodmaterial/add")
     public AddFoodMaterialResponse addFoodMaterial(
             AddFoodMaterialRequest request,
-            HttpSession session,
-            RedirectAttributes redirectAttributes){
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
 
-        String bId = "0000000000";
-        //(String) session.getAttribute("loginOK");
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         try{
             List<AddFoodMaterial> list = request.VOList(bId);

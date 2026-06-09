@@ -1,20 +1,18 @@
 package com.oopsw.kostaerpserver.restcontroller;
 
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.addmenu.*;
+import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.service.Interface.AddMenuService;
 import com.oopsw.kostaerpserver.vo.AddMenu;
-import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -24,10 +22,12 @@ public class AddMenuRestController {
     private final AddFoodMaterialService addFoodMaterialService;
 
     @PostMapping("/menu/menucategory/add")
-    public AddMenuCategoryResponse addMenuCategory(@RequestBody AddMenuCategoryRequest request, HttpSession session) {
+    public AddMenuCategoryResponse addMenuCategory(
+            @RequestBody AddMenuCategoryRequest request,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
 
-        String bId = "0000000000";
-        // (String) session.getAttribute("loginOK");
+        String bId = erpUserDetails.getLoginUser().getBId();
 
         try{
             MenuCategory vo = request.toVO(bId);
@@ -65,19 +65,20 @@ public class AddMenuRestController {
     }
 
     @GetMapping("/menu/foodmaterial/list")
-    public List<GetFoodMaterialListResponse> getFoodMaterialList(HttpSession session) {
-        String bId = "0000000000";
+    public List<GetFoodMaterialListResponse> getFoodMaterialList(
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 
     @PostMapping("/menu/add")
     public AddMenuResponse addMenu(
             AddMenuRequest request,
-            HttpSession session,
-            RedirectAttributes redirectAttributes){
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
 
-        String bId = "0000000000";
-//                (String) session.getAttribute("loginOK");
+//        String bId = erpUserDetails.getLoginUser().getBId();
 
         try{
             int menuCount = 0;
