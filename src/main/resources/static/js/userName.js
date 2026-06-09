@@ -1,5 +1,5 @@
 const loadEvent = async () =>{
-  const res = await fetch(`api/auth/userinfo`, {
+  const res = await fetch(`/api/auth/userinfo`, {
     method: "GET",
     headers:{
       "Content-Type": "application/json"
