@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class DisposalTopMaterialsResponse {
     private String foodMaterialId;
     private String foodMaterialName;

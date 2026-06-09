@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.controller;
 
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.addfoodmaterial.AddFoodMaterialRequest;
 import com.oopsw.kostaerpserver.dto.addfoodmaterial.AddFoodMaterialResponse;
 import com.oopsw.kostaerpserver.dto.addfoodmaterial.GetFoodCategoryListResponse;
@@ -8,6 +9,7 @@ import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,7 @@ import java.util.List;
 public class AddFoodMaterialController {
     private final AddFoodMaterialService addFoodMaterialService;
 
-    @GetMapping("/foodmaterial/add")
+    @GetMapping("/foodmaterialadd")
     public String addFoodMaterial(Model model, HttpSession session) {
 
         List<FoodCategory> categoryList = addFoodMaterialService.getFoodCategoryList();

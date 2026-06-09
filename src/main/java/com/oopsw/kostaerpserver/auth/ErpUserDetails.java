@@ -7,21 +7,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 public class ErpUserDetails implements UserDetails {
 
     private final LoginUser loginUser;
-
-    public ErpUserDetails(LoginUser loginUser) {
-        this.loginUser = loginUser;
-    }
 
     public LoginUser getLoginUser() {
         return loginUser;
     }
 
-    @Override
+    public ErpUserDetails(LoginUser loginUser) {
+        this.loginUser = loginUser;
+    }
 
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(loginUser.getRole()));
     }
