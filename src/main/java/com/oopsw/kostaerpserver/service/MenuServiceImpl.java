@@ -1,5 +1,11 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.dto.menu.MenuDetailResponse;
+import com.oopsw.kostaerpserver.dto.menu.MenuListRequest;
+import com.oopsw.kostaerpserver.dto.menu.MenuListResponse;
+import com.oopsw.kostaerpserver.dto.menu.MenuMaterialListResponse;
+import com.oopsw.kostaerpserver.dto.menu.MenuMaterialResponse;
+import com.oopsw.kostaerpserver.dto.menu.MenuResponse;
 import com.oopsw.kostaerpserver.repository.MenuDAO;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import com.oopsw.kostaerpserver.vo.Menu;
@@ -41,5 +47,47 @@ public class MenuServiceImpl implements MenuService {
         if (result == 0) {
             throw new RuntimeException("판매 처리할 식자재가 없습니다.");
         }
+    }
+
+    @Override
+    public MenuListResponse getMenuListResponse(MenuListRequest request) {
+        String bId = request.getBId();
+
+        if (bId == null || bId.isBlank()) {
+            bId = "0000000000";
+        }
+
+        List<MenuResponse> menuList = getMenuList(bId).stream()
+                .map(MenuResponse::from)
+                .toList();
+
+        return MenuListResponse.builder()
+                .menuList(menuList)
+                .totalCount(menuList.size())
+                .bId(bId)
+                .build();
+    }
+
+    @Override
+    public MenuDetailResponse getMenuDetailResponse(String menuId) {
+        List<Menu> detailList = getMenuDetail(menuId);
+
+        if (detailList.isEmpty()) {
+            throw new RuntimeException("메뉴 정보를 찾을 수 없습니다.");
+        }
+        return MenuDetailResponse.from(detailList.get(0));
+    }
+
+    @Override
+    public MenuMaterialListResponse getMenuMaterialListResponse(String menuId) {
+        List<MenuMaterialResponse> materialList = getMenuDetail(menuId).stream()
+                .map(MenuMaterialResponse::from)
+                .toList();
+
+        return MenuMaterialListResponse.builder()
+                .menuId(menuId)
+                .materialList(materialList)
+                .totalCount(materialList.size())
+                .build();
     }
 }
