@@ -1,8 +1,10 @@
 package com.oopsw.kostaerpserver.controller;
 
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.service.Interface.FoodMaterialService;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +20,17 @@ public class FoodMaterialController {
 
     @GetMapping("/foodmaterials")
     public String getFoodMaterials(
-            @RequestParam(defaultValue = "0000000000") String bId,
             @RequestParam(defaultValue = "idDesc") String sort,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size,
+            @AuthenticationPrincipal ErpUserDetails userDetails,
             Model model
     ) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        String bId = userDetails.getUsername();
 
         List<FoodMaterial> foodList =
                 foodMaterialService.getFoodMaterialList(bId, sort, page, size);
@@ -40,7 +47,6 @@ public class FoodMaterialController {
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("sort", sort);
         model.addAttribute("size", size);
-        model.addAttribute("bId", bId);
 
         return "foodMaterials";
     }

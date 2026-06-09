@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MenuListRequest {
-    private String bId = "0000000000";
+    private String bId;
 }
