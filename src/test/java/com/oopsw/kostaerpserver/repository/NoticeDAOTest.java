@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.dto.NoticeListResponse;
 import com.oopsw.kostaerpserver.vo.Notice;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class NoticeDAOTest {
     //특정 사업장의 알림 목록 조회 테스트
     void getNoticeList() {
         log.info("getNoticeList 시작 - B_ID: {}", B_ID);
-        List<Notice> result = noticeDAO.getNoticeList(B_ID);
+        List<NoticeListResponse> result = noticeDAO.getNoticeList(B_ID);
 
         log.info("조회된 알림 목록 수: {}", result != null ? result.size() : "null");
         assertThat(result).isNotNull();
@@ -90,7 +91,7 @@ public class NoticeDAOTest {
     @Test
     //폐기 알림 데이터 추가 테스트
     void insertNotice() {
-        String disposalId = "DIS011";
+        String disposalId = "DIS012";
         log.info("insertNotice 시작 - DisposalID: {}", disposalId);
 
         int result = noticeDAO.insertNotice(disposalId);
@@ -103,29 +104,28 @@ public class NoticeDAOTest {
 
     @Transactional
     @Test
-    //알림 읽음 여부 수정 테스트
     void updateReadYn() {
-        String noticeId = "N007";
+        String noticeId = "N008";
         String bId = "0000000000";
-        log.info("updateReadYn 시작 - NoticeID: {} 종료", noticeId);
+
+        log.info("updateReadYn 시작 - noticeId: {}", noticeId);
 
         int result = noticeDAO.updateReadYn(noticeId);
         assertThat(result).isEqualTo(1);
 
-        List<Notice> list = noticeDAO.getNoticeList(bId);
-        Notice ndata = null;
-        for(Notice notice : list) {
-            if(noticeId.equals(notice.getNoticeId())) {
+        List<NoticeListResponse> list = noticeDAO.getNoticeList(bId);
+
+        NoticeListResponse ndata = null;
+        for (NoticeListResponse notice : list) {
+            if (noticeId.equals(notice.getNoticeId())) {
                 ndata = notice;
                 break;
             }
         }
 
-        assertThat(ndata).isNotNull();
-        assertThat(ndata.getReadYn()).isEqualTo("Y");
+        assertThat(ndata).isNull();
 
-        log.info("알림 읽음 여부 수정 테스트 성공 -> 수정된 noticeId: {}, 현재 read_yn 값: {} 종료",
-                noticeId, ndata.getReadYn());
+        log.info("알림 읽음 여부 수정 테스트 성공 - 읽음 처리된 noticeId는 미확인 목록에서 제외됨: {}", noticeId);
     }
 
     @Transactional

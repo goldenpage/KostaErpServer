@@ -4,16 +4,15 @@
 <mapper namespace="com.oopsw.kostaerpserver.repository.NoticeDAO">
 
     <insert id="insertNotice">
-        INSERT INTO DISPOSAL_NOTICE (disposal_id, notice_date, read_yn)
-        SELECT #{disposalId}, CURDATE(), 'N'
-        WHERE NOT EXISTS (
-        SELECT 1 FROM DISPOSAL_NOTICE
-        WHERE disposal_id = #{disposalId}
-        )
+        INSERT INTO DISPOSAL_NOTICE
+        (disposal_id, notice_date, read_yn)
+        VALUES
+        (#{disposalId}, CURDATE(), 'N')
     </insert>
 
-    <select id="getNoticeList" resultType="com.oopsw.kostaerpserver.vo.Notice">
-        SELECT f.foodMaterialName,
+    <select id="getNoticeList" resultType="com.oopsw.kostaerpserver.dto.NoticeListResponse">
+        SELECT
+        f.foodMaterialName,
         fc.foodCategory,
         IFNULL(d.disposalCountAll, 0) AS disposalCountAll,
         f.foodMaterialType,

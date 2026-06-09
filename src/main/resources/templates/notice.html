@@ -8,8 +8,12 @@
 </head>
 <body>
 <div class="container">
+    <section>
+        <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+    </section>
 
-    <main class="main">
+    <div class="main">
+        <div th:replace="~{common/userName :: userName}"></div>
         <h2>알림 내역</h2>
 
         <div class="summary_box">
@@ -53,7 +57,7 @@
             </table>
         </div>
     </main>
-
+</div>
 </div>
 </body>
 </html>

@@ -1,8 +1,10 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.dto.DisposalCreateRequest;
 import com.oopsw.kostaerpserver.repository.DisposalDAO;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
+import com.oopsw.kostaerpserver.dto.DisposalListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +20,7 @@ public class DisposalServiceImpl implements DisposalService {
     private final DisposalDAO disposalDAO;
 
     @Override
-    public List<Disposal> getDisposals() {
+    public List<DisposalListResponse> getDisposals() {
         return disposalDAO.getDisposals();
     }
 
@@ -28,12 +30,12 @@ public class DisposalServiceImpl implements DisposalService {
     }
 
     @Override
-    public List<String> getCategories() {
-        return disposalDAO.getCategories();
+    public List<String> getCategories(String bId) {
+        return disposalDAO.getCategories(bId);
     }
 
     @Override
-    public List<Disposal> getDisposalsFilteredPaging(String bId, int page, int size) {
+    public List<DisposalListResponse> getDisposalsFilteredPaging(String bId, int page, int size) {
         return disposalDAO.getDisposalsFilteredPaging(bId, toOffset(page, size), size);
     }
 
@@ -53,12 +55,12 @@ public class DisposalServiceImpl implements DisposalService {
     }
 
     @Override
-    public List<Disposal> getDisposalsByCategoryAndBId(String category, String bId) {
+    public List<DisposalListResponse> getDisposalsByCategoryAndBId(String category, String bId) {
         return disposalDAO.getDisposalsByCategoryAndBId(category, bId);
     }
 
     @Override
-    public List<Disposal> getDisposalsPaging(String bId, int page, int size) {
+    public List<DisposalListResponse> getDisposalsPaging(String bId, int page, int size) {
         return disposalDAO.getDisposalsPaging(bId, toOffset(page, size), size);
     }
 
@@ -70,8 +72,8 @@ public class DisposalServiceImpl implements DisposalService {
 
     @Override
     @Transactional
-    public boolean insertDisposal(Disposal disposal) {
-        return disposalDAO.insertDisposal(disposal) == 1;
+    public boolean insertDisposal(DisposalCreateRequest request) {
+        return disposalDAO.insertDisposal(request) == 1;
     }
 
     @Override
