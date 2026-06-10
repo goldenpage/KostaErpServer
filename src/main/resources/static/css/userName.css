@@ -33,7 +33,6 @@
   color: #2563eb;
 }
 
-/* li 패딩 제거 후 trigger에서 직접 관리 */
 .stock-notice-wrapper {
   position: relative;
   padding: 0 !important;
@@ -55,7 +54,6 @@
   color: #2563eb;
 }
 
-/* 읽지 않은 알림 수 배지 */
 .stock-badge {
   display: inline-flex;
   align-items: center;
@@ -75,7 +73,6 @@
   display: none !important;
 }
 
-/* 드롭박스 본체 */
 .stock-dropdown {
   position: absolute;
   top: calc(100% + 6px);
@@ -89,7 +86,6 @@
   overflow: hidden;
 }
 
-/* 드롭박스 헤더 */
 .stock-dropdown-header {
   display: flex;
   justify-content: space-between;
@@ -115,7 +111,6 @@
   background-color: #eff6ff;
 }
 
-/* 알림 목록 */
 .stock-list {
   list-style: none;
   margin: 0;
@@ -124,7 +119,6 @@
   overflow-y: auto;
 }
 
-/* 알림 항목 */
 .stock-item {
   display: flex;
   align-items: center;
@@ -165,7 +159,6 @@
   color: #94a3b8;
 }
 
-/* 확인 버튼 */
 .stock-read-btn {
   background: none;
   border: 1px solid #cbd5e1;
@@ -184,7 +177,6 @@
   border-color: #2563eb;
 }
 
-/* 빈 상태 / 로딩 */
 .stock-empty {
   padding: 20px 14px;
   text-align: center;
