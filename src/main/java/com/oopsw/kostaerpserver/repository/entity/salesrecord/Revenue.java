@@ -17,9 +17,12 @@ import java.time.LocalDate;
 public class Revenue {
 
     @Id
-    @Column(name = "revenue_Id")
+    @Column(name = "revenue_Id", insertable = false, updatable = false)
     private String revenueId;
 
     @Column(name = "revenueDate")
     private LocalDate revenueDate;
+
+    @Column(name = "payment")
+    private String payment;
 }

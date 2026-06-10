@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service.entity;
 
+import com.oopsw.kostaerpserver.dto.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;
 
 import java.util.List;

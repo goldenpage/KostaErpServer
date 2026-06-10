@@ -23,4 +23,8 @@ public class Menu {
 
     @Column(name = "menuPrice")
     private int menuPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menuCategory_Id")
+    private MenuCategory menuCategory;
 }
