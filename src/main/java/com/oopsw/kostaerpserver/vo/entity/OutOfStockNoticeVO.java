@@ -14,4 +14,5 @@ public class OutOfStockNoticeVO {
     private String foodMaterialName;
     private int remainStockAmount;
     private String bId;
+    private String readYn;
 }
