@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
-public class OutOfStockNoticeServiceTest {
+public class OutOfStockNoticeServiceImplTest {
     @Autowired
-    OutOfStockNoticeService outOfStockNoticeService;
+    OutOfStockNoticeServiceImpl outOfStockNoticeServiceImpl;
 
     @Test
     public void addOutOfStockNoticeTest() {
-        Assertions.assertTrue(outOfStockNoticeService.addOutOfStockNotice(OutOfStockNoticeVO.builder().
+        Assertions.assertTrue(outOfStockNoticeServiceImpl.addOutOfStockNotice(OutOfStockNoticeVO.builder().
                 noticeDate(String.valueOf(LocalDateTime.now())).
                 noticeContent(" 모두 소진됨").
                 foodMaterialName("닭가슴살").
