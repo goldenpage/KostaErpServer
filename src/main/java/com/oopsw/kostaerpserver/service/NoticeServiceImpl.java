@@ -1,9 +1,8 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.dto.NoticeListResponse;
+import com.oopsw.kostaerpserver.dto.notice.NoticeListResponse;
 import com.oopsw.kostaerpserver.repository.NoticeDAO;
 import com.oopsw.kostaerpserver.service.Interface.NoticeService;
-import com.oopsw.kostaerpserver.vo.Notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

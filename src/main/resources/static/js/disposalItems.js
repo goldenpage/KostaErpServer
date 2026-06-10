@@ -5,7 +5,7 @@ function updateReason(disposalId) {
         reasonId: select.value
     };
 
-    fetch(`http://127.0.0.1:15000/api/disposal-items/${disposalId}/reason`, {
+    fetch(`/api/disposal-items/${disposalId}/reason`, {
         method: "PATCH",
         headers: {
             "Accept": "application/json",
@@ -29,7 +29,7 @@ function loadDisposalData(page = 1, isPopState = false) {
     const bId = document.querySelector('input[name="bId"]').value;
     const category = document.getElementById('category').value;
     const reason = document.getElementById('reason').value;
-    const url = `http://127.0.0.1:15000/api/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}&size=5`;
+    const url = `/api/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}&size=5`;
 
     fetch(url, {
         method: "GET",
@@ -44,11 +44,11 @@ function loadDisposalData(page = 1, isPopState = false) {
             }
             return response.json();
         }).then(data => {
+        const itemList = data.list;
         let htmlContent = "";
 
-        if (data && data.length > 0) {
-            data.forEach((item, index) => {
-                const displayNum = item.disposalId;
+        if (itemList && itemList.length > 0) {
+            itemList.forEach((item) => {
                 const isBroken = (item.reason === '파손' || item.reason === 'B');
                 const isOther = (item.reason === '기타' || item.reason === 'BETC');
                 const isSpoiled = (item.reason === '변질' || item.reason === 'D');
@@ -56,7 +56,7 @@ function loadDisposalData(page = 1, isPopState = false) {
 
                 htmlContent += `
                     <tr>
-                        <td class="center">${displayNum}</td>
+                        <td class="center">${item.disposalId}</td>
                         <td class="center">${item.foodMaterialName || ''}</td>
                         <td class="center">${item.foodCategory || ''}</td>
                         <td class="center">${item.foodMaterialType || ''}</td>
@@ -64,8 +64,7 @@ function loadDisposalData(page = 1, isPopState = false) {
                         <td class="center">${item.disposalPrice || 0}원</td>
                         <td class="center">${item.disposalDate || ''}</td>
                         <td class="center">
-                            <select id="reason_${item.disposalId}" onchange="updateReason('${item.disposalId}')" style="display: block; margin: 0 auto; text-align: center;">
-                                <option value="">선택</option>
+                            <select id="reason_${item.disposalId}" onchange="updateReason('${item.disposalId}')">
                                 <option value="B" ${isBroken ? 'selected' : ''}>파손</option>
                                 <option value="BETC" ${isOther ? 'selected' : ''}>기타</option>
                                 <option value="D" ${isSpoiled ? 'selected' : ''}>변질</option>
@@ -75,47 +74,41 @@ function loadDisposalData(page = 1, isPopState = false) {
                     </tr>
                 `;
             });
-            renderPagination(page, data.length);
         } else {
             htmlContent = `<tr><td colspan="8" style="text-align:center;">조회된 폐기 품목이 없습니다.</td></tr>`;
-            document.getElementById('disposalPagination').innerHTML = "";
         }
-
         document.getElementById('disposalTableBody').innerHTML = htmlContent;
 
-        if(!isPopState){
-            const displayUrl = `http://127.0.0.1:15000/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}`;
+        const pageContainer = document.getElementById('paginationContainer');
+        pageContainer.innerHTML = '';
+        if (itemList && itemList.length > 0 && data.totalPages > 1) {
+            // 페이지네이션이 필요한 경우에만 보이게 설정 (CSS display 속성 사용)
+            pageContainer.style.display = 'block';
+
+            if (data.currentPage > 1) {
+                pageContainer.innerHTML += `<a href="javascript:void(0);" onclick="loadDisposalData(${data.currentPage - 1})">이전</a>`;
+            }
+
+            for (let i = 1; i <= data.totalPages; i++) {
+                pageContainer.innerHTML += `<a href="javascript:void(0);" onclick="loadDisposalData(${i})" class="${i === data.currentPage ? 'active' : ''}">${i}</a>`;
+            }
+
+            if (data.currentPage < data.totalPages) {
+                pageContainer.innerHTML += `<a href="javascript:void(0);" onclick="loadDisposalData(${data.currentPage + 1})">다음</a>`;
+            }
+        } else {
+            // 데이터가 없거나 페이지가 1개뿐이면 영역을 숨김
+            pageContainer.style.display = 'none';
+        }
+
+        if (!isPopState) {
+            const displayUrl = `/disposal-items?bId=${bId}&category=${category}&reason=${reason}&page=${page}`;
             history.pushState({ bId, category, reason, page }, '', displayUrl);
         }
-    }).catch(error => {
-        console.error("Error:", error);
-        alert("데이터 조회 중 오류 발생");
-    });
-}
-
-function renderPagination(currentPage, currentDataLength) {
-    const container = document.getElementById("disposalPagination");
-    if(!container) return;
-
-    let html = "";
-
-    if (currentPage > 1) {
-        html += `<a href="javascript:void(0);" onclick="loadDisposalData(${currentPage - 1})">이전</a>`;
-    }
-
-    const totalPages = 3;
-
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === currentPage) {
-            html += `<a href="javascript:void(0);" class="active">${i}</a>`;
-        } else {
-            html += `<a href="javascript:void(0);" onclick="loadDisposalData(${i})">${i}</a>`;
-        }
-    }
-    if (currentPage < totalPages && currentDataLength === 5) {
-        html += `<a href="javascript:void(0);" onclick="loadDisposalData(${currentPage + 1})">다음</a>`;
-    }
-    container.innerHTML = html;
+    })
+        .catch(error => {
+            console.error("Error:", error);
+        });
 }
 
 document.addEventListener('DOMContentLoaded', function (){
@@ -126,14 +119,10 @@ document.addEventListener('DOMContentLoaded', function (){
             loadDisposalData(1);
         });
     }
-    const bId = document.querySelector('input[name="bId"]').value;
-    const category = document.getElementById('category')?.value || '';
-    const reason = document.getElementById('reason')?.value || '';
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialPage = parseInt(urlParams.get('page')) || 1;
 
-    if(bId){
-        history.replaceState({bId, category, reason, page: 1}, '', window.location.href);
-    }
-    loadDisposalData(1);
+    loadDisposalData(initialPage);
 });
 
 window.addEventListener('popstate', function (event){

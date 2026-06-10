@@ -10,7 +10,7 @@
         (#{disposalId}, CURDATE(), 'N')
     </insert>
 
-    <select id="getNoticeList" resultType="com.oopsw.kostaerpserver.dto.NoticeListResponse">
+    <select id="getNoticeList" resultType="com.oopsw.kostaerpserver.dto.notice.NoticeListResponse">
         SELECT
         f.foodMaterialName,
         fc.foodCategory,

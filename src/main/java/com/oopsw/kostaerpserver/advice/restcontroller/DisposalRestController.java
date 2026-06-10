@@ -1,9 +1,11 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.dto.*;
+import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.dto.disposal.*;
+import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
-import com.oopsw.kostaerpserver.vo.Disposal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,14 +20,18 @@ public class DisposalRestController {
     }
 
     @GetMapping
-    public List<DisposalListResponse> getDisposalItems(DisposalSearchRequest request) {
+    public DisposalPageResponse getDisposalItems(
+            DisposalSearchRequest request,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
         List<DisposalListResponse> list = null;
 
         if (hasText(request.getCategory())) {
-            list = disposalService.getDisposalsByCategoryAndBId(request.getCategory(), request.getBId());
+            list = disposalService.getDisposalsByCategoryAndBId(request.getCategory(), bId);
         } else {
             list = disposalService.getDisposalsFilteredPaging(
-                    request.getBId(),
+                    bId,
                     request.getPage(),
                     request.getSize());
         }
@@ -39,7 +45,12 @@ public class DisposalRestController {
                     .filter(disposal -> request.getReason().equals(disposal.getReason()))
                     .toList();
         }
-        return list;
+
+        int totalCount = disposalService.getTotalCount(bId);
+        int totalPages = (int) Math.ceil((double) totalCount / request.getSize());
+        if (totalPages < 1) totalPages = 1;
+
+        return new DisposalPageResponse(list, request.getPage(), totalPages);
     }
 
     @PatchMapping("/{id}/reason")

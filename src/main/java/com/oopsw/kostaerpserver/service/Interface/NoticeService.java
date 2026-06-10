@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
-import com.oopsw.kostaerpserver.dto.NoticeListResponse;
-import com.oopsw.kostaerpserver.vo.Notice;
+import com.oopsw.kostaerpserver.dto.notice.NoticeListResponse;
+
 import java.util.List;
 
 public interface NoticeService {

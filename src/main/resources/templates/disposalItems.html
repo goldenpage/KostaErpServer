@@ -58,35 +58,11 @@
                     </tr>
                     </thead>
                     <tbody id="disposalTableBody">
-                    <tr th:if="${#lists.isEmpty(list)}">
-                        <td class="center" colspan="8">조회된 폐기 품목이 없습니다.</td>
-                    </tr>
+
                     </tbody>
                 </table>
 
-                <div class="page" id="disposalPagination">
-                    <a th:if="${currentPage > 1}"
-                       href="javascript:void(0);"
-                       th:onclick="|loadDisposalData(${currentPage - 1})|">
-                        이전
-                    </a>
-
-                    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                        <a th:if="${i != currentPage}"
-                           href="javascript:void(0);"
-                           th:text="${i}"
-                           th:onclick="|loadDisposalData(${i})|">
-                        </a>
-                        <strong th:if="${i == currentPage}"
-                                th:text="${i}">
-                        </strong>
-                    </span>
-
-                    <a th:if="${currentPage < totalPages}"
-                       href="javascript:void(0);"
-                       th:onclick="|loadDisposalData(${currentPage + 1})|">
-                        다음
-                    </a>
+                <div class="page" id="paginationContainer">
                 </div>
             </div>
         </div> </div> </div> <script th:src="@{/js/disposalItems.js}"></script>

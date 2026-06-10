@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.dto;
+package com.oopsw.kostaerpserver.dto.notice;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
