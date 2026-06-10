@@ -78,7 +78,6 @@ public class AddMenuRestController {
             @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal ErpUserDetails erpUserDetails){
 
-//        String bId = erpUserDetails.getLoginUser().getBId();
 
         try{
             int menuCount = 0;

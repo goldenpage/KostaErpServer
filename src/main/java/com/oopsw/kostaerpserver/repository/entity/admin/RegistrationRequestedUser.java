@@ -8,8 +8,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 public class RegistrationRequestedUser {
 
     @Id
@@ -20,11 +29,13 @@ public class RegistrationRequestedUser {
     private String bId;
 
     @Column(nullable = false)
-    private String hasPw;
+    private String pwHash;
 
     private String name;
+    private String email;
     private String phone;
-    private String StoreType;
+    private String storeName;
+    private String storeType;
     private String storeCategory;
     private boolean marketingAgree;
 
@@ -32,10 +43,21 @@ public class RegistrationRequestedUser {
     private String documentPath;
 
     private String ocrConfidence;
+    @Column(length = 1000)
     private String reason;
-    private String reviewDate;
+    private String reviewedBy;
+    @Builder.Default
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime requestedAt = LocalDateTime.now();
+    private LocalDateTime reviewDate;
 
     @Enumerated(EnumType.STRING)
-    private String reviewStatus;
+    @Column(nullable = false)
+    private ReviewStatus reviewStatus;
 
+    public void approve(String adminName) {
+        reviewStatus = ReviewStatus.APPROVED;
+        reviewedBy = adminName;
+        reviewDate = LocalDateTime.now();
+    }
 }

@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.auth;
 
-import com.oopsw.kostaerpserver.repository.LoginSecurityDAO;
+import com.oopsw.kostaerpserver.repository.dao.LoginSecurityDAO;
 import com.oopsw.kostaerpserver.repository.entity.admin.AdminUser;
 import com.oopsw.kostaerpserver.repository.entity.admin.AdminUserRepository;
 import com.oopsw.kostaerpserver.vo.LoginUser;

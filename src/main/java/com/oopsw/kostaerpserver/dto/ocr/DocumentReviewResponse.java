@@ -6,6 +6,13 @@ public record DocumentReviewResponse(
     String status,
     List<String> reasons,
     String extractedText
-)
-{
+) {
+
+    public boolean isApproved() {
+        return "APPROVED".equals(status);
+    }
+
+    public boolean needsReview() {
+        return "NEED_REVIEW".equals(status);
+    }
 }

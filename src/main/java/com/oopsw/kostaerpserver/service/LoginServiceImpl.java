@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
-import com.oopsw.kostaerpserver.repository.UserInfoDAO;
+import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
 import com.oopsw.kostaerpserver.vo.User;
 import java.time.LocalDateTime;

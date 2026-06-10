@@ -21,12 +21,12 @@ public class DocumentReviewServiceImpl implements DocumentReviewService {
 
 
     @Override
-    public DocumentReviewResponse review(MultipartFile multipartFile) {
+    public DocumentReviewResponse review(String expectedBid, MultipartFile multipartFile) {
         OcrResponse ocrResponse = ocrService.requestOcr(multipartFile);
         String fullText = extractFullText(ocrResponse);
 
         DocumentReviewResult reviewResult =
-            validationService.validateBusinessLicense(fullText, ocrResponse);
+            validationService.validateBusinessLicense(expectedBid, fullText, ocrResponse);
 
         return new DocumentReviewResponse(
             reviewResult.status(),

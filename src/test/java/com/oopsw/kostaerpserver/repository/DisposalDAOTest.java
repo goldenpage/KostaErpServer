@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.repository.dao.DisposalDAO;
 import com.oopsw.kostaerpserver.vo.Disposal;
 import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 import lombok.extern.slf4j.Slf4j;

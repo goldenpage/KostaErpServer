@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.repository;
+package com.oopsw.kostaerpserver.repository.dao;
 
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import org.apache.ibatis.annotations.Mapper;

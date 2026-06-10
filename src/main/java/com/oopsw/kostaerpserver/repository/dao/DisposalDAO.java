@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.repository;
+package com.oopsw.kostaerpserver.repository.dao;
 
 import java.time.LocalDate;
 import java.util.List;

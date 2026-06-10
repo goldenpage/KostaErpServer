@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO;
+import com.oopsw.kostaerpserver.repository.dao.AddFoodMaterialDAO;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;

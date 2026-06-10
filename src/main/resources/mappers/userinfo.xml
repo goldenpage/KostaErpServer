@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.oopsw.kostaerpserver.repository.UserInfoDAO">
+<mapper namespace="com.oopsw.kostaerpserver.repository.dao.UserInfoDAO">
   <insert id="register" parameterType="com.oopsw.kostaerpserver.vo.User">
     INSERT INTO USERINFO (
       bid,
@@ -49,7 +49,7 @@
   <select id = "getPhoneCheck" resultType="int">
     SELECT COUNT(*)
     FROM USERINFO
-    WHERE phone = #{phone}
+    WHERE REPLACE(REPLACE(phone, '-', ''), ' ', '') = #{phone}
   </select>
 
   <select id="getBidCheck" resultType="int">

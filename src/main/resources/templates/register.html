@@ -3,22 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>회원가입</title>
+  <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
-<script src="
-https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js"></script>
-<link rel="stylesheet" th:href="@{/css/register.css}">
-
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <body>
-<div onsubmit="return checkPassword()" class="signup-box">
+<form id="registerForm" class="signup-box">
 
   <h1 class="main-title">회원가입</h1>
 
   <div class="form-group">
     <div class="section-title">사업자번호</div>
-    <input type="text" id="bId" name="bId" class="inputbutton" maxlength=10
-           minlength=10 placeholder="사업자번호 입력해주세요" required>
+    <input type="text" id="bId" name="bId" class="inputbutton" maxlength="12"
+           inputmode="numeric" placeholder="사업자번호 입력해주세요" required>
   </div>
 
   <div class="form-group">
@@ -43,20 +41,23 @@ https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js"></script>
     <div class="section-title">휴대폰인증</div>
     <div class="phone-auth-group">
       <input type="text" id="phone" name="phone" class="phone-input"
+             maxlength="11" inputmode="numeric"
              placeholder="휴대폰 번호 입력 (숫자만)" required>
-      <button  id="sendBtn" class="auth-send-btn">인증발송
+      <button type="button" id="sendBtn" class="auth-send-btn">인증발송
       </button>
-      <div id="phoneMessage"></div>
     </div>
-
+    <div id="phoneMessage" class="message" aria-live="polite"></div>
   </div>
 
   <div class="form-group">
-    <input type="text" id="phoneCode" name="phoneCode"
+    <div class="phone-auth-group">
+      <input type="text" id="phoneCode" name="phoneCode" maxlength="6"
+           inputmode="numeric"
            class="phone-input" placeholder="인증번호 입력">
 
-    <button id="verifyBtn" class="auth-send-btn">확인
-    </button>
+      <button type="button" id="verifyBtn" class="auth-send-btn">확인
+      </button>
+    </div>
   </div>
 
   <div class="form-group">
@@ -100,10 +101,12 @@ https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js"></script>
   </div>
 
   <div class="form-group">
-    <div class="section-title">소상공인 증명</div>
+    <div class="section-title">소상공인 증명(jpg,png,pdf만 가능)</div>
     <div>
-      <button type="button" onclick="checkBid()">인증하기</button>
-      <div id="businessMessage" th:text="${errorMessage}"></div>
+      <input type="file" name="document" id="documentFile"
+             accept="image/png,image/jpeg,image/pdf" required>
+      <div id="businessMessage" class="message" aria-live="polite"
+           th:text="${errorMessage}"></div>
     </div>
   </div>
 
@@ -120,14 +123,85 @@ https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js"></script>
   </div>
 
   <div class="btn-group">
-    <button id="registerBtn"  class="submitbutton">회원가입 완료</button>
-    <button  class="submitbutton"
-            onclick="location.href='login'">기존
+    <button type="submit" id="registerBtn" class="submitbutton">회원가입 완료</button>
+    <button type="button" class="submitbutton"
+            onclick="location.href='/login'">기존
       계정으로 로그인
     </button>
   </div>
-</div>
+</form>
+
+<input type="file" id="file" accept="image/*">
+<button id="ocrBtn">사업자번호 인식</button>
 <script th:src="@{/js/register.js}"></script>
+
+<script>
+
+  document.querySelector("#ocrBtn").addEventListener("click", async () => {
+
+    const file = document.querySelector("#file").files[0];
+
+    if (!file) {
+
+      alert("파일을 선택하세요.");
+
+      return;
+
+    }
+
+    const worker = await Tesseract.createWorker("eng");
+    await worker.setParameters({
+      tessedit_char_whitelist: "0123456789-",
+      tessedit_pageseg_mode: Tesseract.PSM.SINGLE_LINE
+    });
+
+    const { data } = await worker.recognize(file, {
+
+      rectangle: {
+        left: 250,
+
+        top: 500,
+
+        width: 360,
+
+        height: 70
+
+      }
+
+    });
+
+    await worker.terminate();
+    console.log("OCR 원문:", data.text);
+    const businessNumber = extractBusinessNumber(data.text);
+
+    if (!businessNumber) {
+      alert("사업자등록번호를 찾지 못했습니다.");
+      return;
+
+    }
+
+    console.log("사업자번호:", businessNumber);
+
+  });
+
+  function extractBusinessNumber(text) {
+
+    const normalized = text.replace(/\s+/g, "");
+    const match = normalized.match(/\d{3}-?\d{2}-?\d{5}/);
+    if (!match) {
+      return null;
+    }
+
+    const digits = match[0].replace(/\D/g, "");
+    if (digits.length !== 10) {
+      return null;
+    }
+
+    return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+
+  }
+
+</script>
 </body>
 
 </html>

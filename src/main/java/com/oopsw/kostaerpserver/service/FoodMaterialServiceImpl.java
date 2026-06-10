@@ -3,9 +3,8 @@ package com.oopsw.kostaerpserver.service;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialPageResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialSearchRequest;
-import com.oopsw.kostaerpserver.repository.FoodMaterialDAO;
+import com.oopsw.kostaerpserver.repository.dao.FoodMaterialDAO;
 import com.oopsw.kostaerpserver.service.Interface.FoodMaterialService;
-import com.oopsw.kostaerpserver.service.Interface.RegistrationService;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -153,11 +152,4 @@ public class FoodMaterialServiceImpl implements FoodMaterialService {
         return totalPage;
     }
 
-    public static class RegistrationServiceImpl implements RegistrationService {
-
-        @Override
-        public String approve() {
-            return "";
-        }
-    }
 }

@@ -9,13 +9,19 @@ import com.oopsw.kostaerpserver.advice.restcontroller.OcrRestController;
 import com.oopsw.kostaerpserver.dto.ocr.OcrResponse;
 import com.oopsw.kostaerpserver.service.OcrServiceImpl;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
+@ActiveProfiles("test")
+@SpringBootTest
 class OcrRestControllerTest {
 
     @Test

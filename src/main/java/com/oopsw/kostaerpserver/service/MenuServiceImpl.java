@@ -6,7 +6,7 @@ import com.oopsw.kostaerpserver.dto.menu.MenuListResponse;
 import com.oopsw.kostaerpserver.dto.menu.MenuMaterialListResponse;
 import com.oopsw.kostaerpserver.dto.menu.MenuMaterialResponse;
 import com.oopsw.kostaerpserver.dto.menu.MenuResponse;
-import com.oopsw.kostaerpserver.repository.MenuDAO;
+import com.oopsw.kostaerpserver.repository.dao.MenuDAO;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import com.oopsw.kostaerpserver.vo.Menu;
 import lombok.RequiredArgsConstructor;

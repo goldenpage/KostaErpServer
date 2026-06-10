@@ -85,11 +85,11 @@ public class OcrServiceImpl {
 
     private void validateFile(MultipartFile multipartFile) {
         if (multipartFile == null || multipartFile.isEmpty()) {
-            throw new RuntimeException("파일이 비어있습니다.");
+            throw new IllegalArgumentException("파일이 비어있습니다.");
         }
 
         if (multipartFile.getSize() > 10 * 1024 * 1024) {
-            throw new RuntimeException("파일 크기는 10mb를 초과할 수 없습니다.");
+            throw new IllegalArgumentException("파일 크기는 10MB를 초과할 수 없습니다.");
         }
     }
 
