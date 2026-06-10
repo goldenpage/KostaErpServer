@@ -19,7 +19,7 @@ public class OutOfStockNoticeRestController {
     @GetMapping
     public ResponseEntity<List<OutOfStockNoticeResponse>> getUnreadList(
             @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = getBId(erpUserDetails);
         return ResponseEntity.ok(outOfStockNoticeServiceImpl.getUnreadList(bId));
     }
 
@@ -27,7 +27,7 @@ public class OutOfStockNoticeRestController {
     public ResponseEntity<Integer> getUnreadCount(
             @AuthenticationPrincipal ErpUserDetails erpUserDetails
     ) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = getBId(erpUserDetails);
         return ResponseEntity.ok(outOfStockNoticeServiceImpl.getUnreadCount(bId));
     }
 
@@ -35,5 +35,13 @@ public class OutOfStockNoticeRestController {
     public ResponseEntity<Void> markAsRead(@PathVariable int noticeId) {
         boolean success = outOfStockNoticeServiceImpl.markAsRead(noticeId);
         return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    private String getBId(ErpUserDetails userDetails) {
+        if (userDetails == null) {
+            throw new IllegalStateException("로그인 정보가 없습니다.");
+        }
+
+        return userDetails.getUsername();
     }
 }
