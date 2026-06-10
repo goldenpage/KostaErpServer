@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -41,9 +42,18 @@ public class SecurityConfig {
             res.getWriter().write("{\"message\":\"login fail\"}");
         });
 
-
-
-
+        http.exceptionHandling(exception ->
+            exception.authenticationEntryPoint(
+                (request, response, authException) -> {
+                    if (request.getRequestURI().startsWith("/api/")) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.getWriter()
+                            .write("{\"message\":\"authentication required\"}");
+                        return;
+                    }
+                    response.sendRedirect("/login");
+                }));
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(auth -> auth

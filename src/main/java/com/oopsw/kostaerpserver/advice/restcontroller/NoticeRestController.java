@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.restcontroller;
+package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.dto.NoticeExpiredCountResponse;
 import com.oopsw.kostaerpserver.dto.NoticeReadUpdateResponse;
