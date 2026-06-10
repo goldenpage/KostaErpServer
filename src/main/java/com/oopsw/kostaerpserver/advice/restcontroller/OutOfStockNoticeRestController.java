@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.restcontroller;
+package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
@@ -35,6 +35,13 @@ public class OutOfStockNoticeRestController {
     public ResponseEntity<Void> markAsRead(@PathVariable int noticeId) {
         boolean success = outOfStockNoticeServiceImpl.markAsRead(noticeId);
         return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/read-all")  // 추가
+    public ResponseEntity<Void> markAllAsRead(
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        outOfStockNoticeServiceImpl.markAllAsRead(getBId(erpUserDetails));
+        return ResponseEntity.ok().build();
     }
 
     private String getBId(ErpUserDetails userDetails) {

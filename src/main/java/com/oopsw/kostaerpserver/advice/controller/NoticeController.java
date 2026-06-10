@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.controller;
+package com.oopsw.kostaerpserver.advice.controller;
 
 import java.time.LocalDate;
 
