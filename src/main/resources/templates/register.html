@@ -131,77 +131,8 @@
   </div>
 </form>
 
-<input type="file" id="file" accept="image/*">
-<button id="ocrBtn">사업자번호 인식</button>
 <script th:src="@{/js/register.js}"></script>
 
-<script>
-
-  document.querySelector("#ocrBtn").addEventListener("click", async () => {
-
-    const file = document.querySelector("#file").files[0];
-
-    if (!file) {
-
-      alert("파일을 선택하세요.");
-
-      return;
-
-    }
-
-    const worker = await Tesseract.createWorker("eng");
-    await worker.setParameters({
-      tessedit_char_whitelist: "0123456789-",
-      tessedit_pageseg_mode: Tesseract.PSM.SINGLE_LINE
-    });
-
-    const { data } = await worker.recognize(file, {
-
-      rectangle: {
-        left: 250,
-
-        top: 500,
-
-        width: 360,
-
-        height: 70
-
-      }
-
-    });
-
-    await worker.terminate();
-    console.log("OCR 원문:", data.text);
-    const businessNumber = extractBusinessNumber(data.text);
-
-    if (!businessNumber) {
-      alert("사업자등록번호를 찾지 못했습니다.");
-      return;
-
-    }
-
-    console.log("사업자번호:", businessNumber);
-
-  });
-
-  function extractBusinessNumber(text) {
-
-    const normalized = text.replace(/\s+/g, "");
-    const match = normalized.match(/\d{3}-?\d{2}-?\d{5}/);
-    if (!match) {
-      return null;
-    }
-
-    const digits = match[0].replace(/\D/g, "");
-    if (digits.length !== 10) {
-      return null;
-    }
-
-    return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
-
-  }
-
-</script>
 </body>
 
 </html>

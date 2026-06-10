@@ -2,12 +2,10 @@ package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegistrationResponse;
-import com.oopsw.kostaerpserver.dto.ocr.DocumentReviewResponse;
 import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.repository.entity.admin.RegistrationRequestedUser;
 import com.oopsw.kostaerpserver.repository.entity.admin.RegistrationRequestedUserRepository;
 import com.oopsw.kostaerpserver.repository.entity.admin.ReviewStatus;
-import com.oopsw.kostaerpserver.service.Interface.DocumentReviewService;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
 import com.oopsw.kostaerpserver.service.Interface.RegistrationService;
 import com.oopsw.kostaerpserver.vo.User;
@@ -25,7 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final RegistrationRequestedUserRepository repository;
     private final UserInfoDAO userInfoDAO;
-    private final DocumentReviewService documentReviewService;
     private final LoginService loginService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RegistrationDocumentStorageService documentStorageService;
@@ -63,20 +60,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         String normalizedBid = validateNewRegistration(request);
         request.setBId(normalizedBid);
 
-        DocumentReviewResponse result =
-            documentReviewService.review(normalizedBid, file);
+        createPendingReview(
+            request,
+            file,
+            "외부 사업자등록번호 검증 연동 전 관리자 심사 대기"
+        );
 
-        if (result.isApproved()) {
-            loginService.register(request);
-            return new RegistrationResponse("APPROVED", "회원가입이 완료되었습니다.");
-        }
-
-        if (result.needsReview()) {
-            createPendingReview(request, file, result);
-            return new RegistrationResponse("PENDING", "관리자 심사중입니다.");
-        }
-
-        throw new IllegalArgumentException(String.join(" ", result.reasons()));
+        return new RegistrationResponse(
+            "PENDING",
+            "회원가입 신청이 접수되었습니다. 관리자 심사중입니다."
+        );
     }
 
     private String validateNewRegistration(RegisterRequest request) {
@@ -102,7 +95,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void createPendingReview(
         RegisterRequest request,
         MultipartFile file,
-        DocumentReviewResponse result
+        String reason
     ) {
         String documentPath = documentStorageService.store(request.getBId(), file);
 
@@ -117,7 +110,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             .storeCategory(request.getStoreCategory())
             .marketingAgree(request.isMarketingAgree())
             .documentPath(documentPath)
-            .reason(String.join(" ", result.reasons()))
+            .reason(reason)
             .reviewStatus(ReviewStatus.PENDING)
             .build());
     }

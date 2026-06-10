@@ -5,10 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.vo.User;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-class PhoneVerificationServiceTest {
+
+@Slf4j
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
+public class PhoneVerificationServiceTest {
 
     @Test
     void verifiesGeneratedCodeAndRequiresSamePhone() {
