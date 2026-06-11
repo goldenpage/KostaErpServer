@@ -155,6 +155,10 @@ const register = async () => {
       location.href = "/login";
       return;
     }
+
+    if (result.status === "REJECTED" || result.status === "RETRY") {
+      throw new Error(result.message);
+    }
     throw new Error("알 수 없는 회원가입 처리 상태입니다.");
   } catch (error) {
     setMessage(businessMessage, error.message);
