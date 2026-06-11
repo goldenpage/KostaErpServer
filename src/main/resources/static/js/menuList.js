@@ -24,6 +24,12 @@ window.onload = function() {
             selectMenuRadio(menuId);
             loadMenuMaterials(menuId);
         }
+
+        // 추가
+        if (event.target.classList.contains("deleteBtn")) {
+            const menuId = event.target.value;
+            deleteMenu(menuId)
+        }
     });
 };
 
@@ -120,6 +126,32 @@ function selectMenuRadio(menuId) {
         radio.checked = radio.value === menuId;
     });
 }
+
+function deleteMenu(menuId) {
+    if (!confirm("삭제하시겠습니까?")) {
+        return;
+    }
+
+    fetch("/api/menus/" + encodeURIComponent(menuId), {
+        method: "DELETE"
+    })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error("삭제 실패");
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            alert(data.message);
+            loadMenuMaterials(menuId);
+        })
+        .catch(function(error) {
+            console.log(error);
+            alert("삭제 중 오류가 발생했습니다.");
+        });
+}
+
+
 
 function checkNull(value) {
     if (value === null || value === undefined) {
