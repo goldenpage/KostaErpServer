@@ -28,4 +28,8 @@ public interface MenuDAO {
             @Param("menuId") String menuId,
             @Param("bId") String bId
     );
+
+    int deleteMenu(
+            @Param("menuId") String menuId
+    );
 }

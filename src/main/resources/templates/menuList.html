@@ -30,22 +30,15 @@
           <table>
             <thead>
             <tr>
-              <th>선택</th>
               <th>판매가능 메뉴</th>
               <th>가격(원)</th>
               <th>카테고리</th>
+              <th>삭제</th>
             </tr>
             </thead>
 
             <tbody>
             <tr th:each="menu : ${menuList}">
-              <td>
-                <input type="radio"
-                       name="menuSelect"
-                       th:value="${menu.menuId}"
-                       th:checked="${menu.menuId == selectedMenuId}">
-              </td>
-
               <td>
                 <button type="button"
                         class="menuBtn"
@@ -57,6 +50,14 @@
 
               <td th:text="${menu.menuPrice}">0</td>
               <td th:text="${menu.menuCategory}">카테고리</td>
+
+              <td>
+                <button type="button"
+                        class="deleteBtn"
+                        th:value="${menu.menuId}">
+                  X
+                </button>
+              </td>
             </tr>
 
             <tr th:if="${#lists.isEmpty(menuList)}">

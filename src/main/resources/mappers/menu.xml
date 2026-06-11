@@ -88,4 +88,9 @@
           AND f.foodMaterialCountAll &lt;= 500
         GROUP BY f.foodMaterial_Id, f.foodMaterialName, f.foodMaterialCountAll
     </select>
+
+    <delete id="deleteMenu">
+        DELETE FROM MENUS
+        WHERE menu_Id = #{menuId}
+    </delete>
 </mapper>

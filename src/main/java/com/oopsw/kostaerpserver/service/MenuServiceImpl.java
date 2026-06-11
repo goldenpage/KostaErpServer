@@ -119,4 +119,14 @@ public class MenuServiceImpl implements MenuService {
             );
         }
     }
+
+    @Override
+    @Transactional
+    public void deleteMenu(String menuId) {
+        int result = menuDAO.deleteMenu(menuId);
+
+        if (result == 0) {
+            throw new RuntimeException("삭제 실패");
+        }
+    }
 }

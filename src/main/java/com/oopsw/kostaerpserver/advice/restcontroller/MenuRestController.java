@@ -1,12 +1,8 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
-import com.oopsw.kostaerpserver.dto.menu.MenuDetailResponse;
-import com.oopsw.kostaerpserver.dto.menu.MenuListRequest;
-import com.oopsw.kostaerpserver.dto.menu.MenuListResponse;
-import com.oopsw.kostaerpserver.dto.menu.MenuMaterialListResponse;
-import com.oopsw.kostaerpserver.dto.menu.SaleRequest;
-import com.oopsw.kostaerpserver.dto.menu.SaleResponse;
+import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialDeleteResponse;
+import com.oopsw.kostaerpserver.dto.menu.*;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -74,5 +70,15 @@ public class MenuRestController {
         }
 
         return userDetails.getUsername();
+    }
+
+    @DeleteMapping("/{menuId}")
+    public ResponseEntity<MenuDeleteResponse> deleteMenu(
+            @PathVariable String menuId
+    ) {
+        menuService.deleteMenu(menuId);
+
+        return ResponseEntity.ok(new MenuDeleteResponse("삭제 완료", menuId)
+        );
     }
 }
