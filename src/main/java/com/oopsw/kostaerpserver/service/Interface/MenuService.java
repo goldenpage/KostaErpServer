@@ -12,7 +12,7 @@ public interface MenuService {
 
     List<Menu> getMenuList(String bId);
     List<Menu> getMenuDetail(String menuId);
-    void saleMenu(String menuId, int saleCount, String bId);
+    void saleMenu(String menuId, int saleCount, String bId, String payment);
     MenuListResponse getMenuListResponse(MenuListRequest request);
     MenuDetailResponse getMenuDetailResponse(String menuId);
     MenuMaterialListResponse getMenuMaterialListResponse(String menuId);

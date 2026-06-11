@@ -52,13 +52,14 @@ function saleMenu() {
     }
 
     const saleCount = Number(document.getElementById("saleCount").value);
+    const payment = document.querySelector('input[name="payment"]:checked').value;
 
     if (saleCount < 1) {
         alert("판매 수량은 1 이상이어야 합니다.");
         return;
     }
 
-    if (!confirm(saleCount + "개 판매 처리하시겠습니까?")) {
+    if (!confirm(saleCount + "개(" + payment + ") 판매 처리하시겠습니까?")) {
         return;
     }
 
@@ -68,7 +69,8 @@ function saleMenu() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            saleCount: saleCount
+            saleCount: saleCount,
+            payment: payment
         })
     })
         .then(function(response) {

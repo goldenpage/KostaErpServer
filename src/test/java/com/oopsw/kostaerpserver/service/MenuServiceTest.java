@@ -43,7 +43,7 @@ public class MenuServiceTest {
     @Test
     @Transactional
     void saleMenuTest() {
-        menuService.saleMenu("MI001", 1, bId);
+        menuService.saleMenu("MI001", 1, bId, "카드");
 
         log.info("판매 차감 테스트 완료");
     }
@@ -51,7 +51,7 @@ public class MenuServiceTest {
     @Test
     void saleMenuInvalidCountTest() {
         assertThrows(RuntimeException.class, () -> {
-            menuService.saleMenu("MI001", 0, bId);
+            menuService.saleMenu("MI001", 0, bId, "카드");
         });
     }
 }

@@ -22,4 +22,8 @@ public interface SalesRecordService {
             String startDate,
             String endDate
     );
+
+    void deleteSale(String saleId);
+    SalesRecordResponse getSalesById(String id);
+    void updateSale(String salesId, String menuId, int saleMenuCount, String payment);
 }

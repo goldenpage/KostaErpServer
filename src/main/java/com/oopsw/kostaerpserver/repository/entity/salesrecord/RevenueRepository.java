@@ -8,7 +8,7 @@ public interface RevenueRepository
         extends JpaRepository<Revenue, String> {
     @Query(value = """
             SELECT CONCAT('RV',
-            LPAD(COALESCE(MAX(CAST(SUBSTRING(revenue_id,3) AS UNSIGNED)),0)+1,3,'0'))
+            LPAD(COALESCE(MAX(CAST(SUBSTRING(revenue_Id,3) AS UNSIGNED)),0)+1,3,'0'))
             FROM REVENUE
         """, nativeQuery = true)
     String getNextRevenueId();

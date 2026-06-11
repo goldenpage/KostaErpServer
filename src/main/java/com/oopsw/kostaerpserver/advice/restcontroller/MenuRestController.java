@@ -61,7 +61,7 @@ public class MenuRestController {
             @AuthenticationPrincipal ErpUserDetails userDetails
     ) {
         String bId = getBId(userDetails);
-        menuService.saleMenu(menuId, request.getSaleCount(), bId);
+        menuService.saleMenu(menuId, request.getSaleCount(), bId, request.getPayment());
 
         return ResponseEntity.ok(
                 new SaleResponse("판매 처리 완료", menuId, request.getSaleCount())

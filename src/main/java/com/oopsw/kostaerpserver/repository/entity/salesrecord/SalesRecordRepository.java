@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.repository.entity.salesrecord;
 import com.oopsw.kostaerpserver.repository.entity.salesrecord.SalesRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,8 +12,8 @@ public interface SalesRecordRepository
         extends JpaRepository<SalesRecord, String> {
 
     List<SalesRecord> findByRevenue_RevenueDateBetween(
-            LocalDate startDate,
-            LocalDate endDate
+            LocalDate start,
+            LocalDate end
     );
 
     @Query(value = """
@@ -25,23 +26,18 @@ public interface SalesRecordRepository
         """, nativeQuery = true)
     String getNextSaleId();
 
-    @Query("""
-            select s
-            from SalesRecord s
-            join fetch s.menu
-            join fetch s.revenue
-        """)
+    @Query("SELECT s FROM SalesRecord s JOIN FETCH s.menu JOIN FETCH s.revenue ORDER BY s.saleId ASC")
     List<SalesRecord> findAllWithFetch();
 
     @Query("""
-    select s
-    from SalesRecord s
-    join fetch s.menu
-    join fetch s.revenue
-    where s.revenue.revenueDate between :start and :end
+select s
+from SalesRecord s
+join s.revenue r
+where r.revenueDate >= :start
+and r.revenueDate <= :end
 """)
-    List<SalesRecord> findByDateWithFetch(
-            @org.springframework.data.repository.query.Param("start") LocalDate start,
-            @org.springframework.data.repository.query.Param("end") LocalDate end
+    List<SalesRecord> findByDateWith(
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end
     );
 }

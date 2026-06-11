@@ -19,11 +19,16 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
+        hbm2ddl:
+          auto: none
         show_sql: true
         format_sql: true
+        globally_quoted_identifiers: true
 
 kind: Application
 logging:

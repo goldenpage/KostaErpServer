@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Menu {
 
     @Id
-    @Column(name = "menu_Id")
+    @Column(name = "menu_Id", nullable = false, insertable = true, updatable = true)
     private String menuId;
 
     @Column(name = "menuName")

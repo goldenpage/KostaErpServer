@@ -63,4 +63,17 @@
           AND f.foodMaterialCountAll >= u.requiredCount
     </update>
 
+    <insert id="insertSaleRecord">
+        INSERT INTO SALES (menu_Id, saleMenuCount, revenue_Id)
+        VALUES (#{menuId}, #{saleCount}, #{revenueId})
+    </insert>
+
+    <insert id="insertRevenue">
+        INSERT INTO REVENUE (revenue_Id, bId, revenueDate, payment)
+        VALUES (#{revenueId}, #{bId}, NOW(), #{payment})
+    </insert>
+
+    <select id="getLastRevenueId" resultType="string">
+        SELECT revenue_Id FROM REVENUE ORDER BY revenue_Id DESC LIMIT 1;
+    </select>
 </mapper>

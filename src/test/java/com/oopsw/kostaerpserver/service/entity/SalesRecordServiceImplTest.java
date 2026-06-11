@@ -70,7 +70,7 @@ public class SalesRecordServiceImplTest {
     void addSale_test() {
 
         doNothing().when(menuService)
-                .saleMenu(anyString(), anyInt(), anyString());
+                .saleMenu(anyString(), anyInt(), anyString(), anyString());
 
         createMenu();
 
