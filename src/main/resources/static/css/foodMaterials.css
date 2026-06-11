@@ -99,3 +99,11 @@ a {
 button {
     cursor: pointer;
 }
+
+.warningCell {
+    box-shadow: 0 0 0 5px darkgoldenrod inset;
+}
+
+.dangerCell {
+    box-shadow: 0 0 0 5px darkred inset;
+}

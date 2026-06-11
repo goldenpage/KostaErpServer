@@ -34,7 +34,7 @@
         DELETE FROM FOODC WHERE foodCategory = #{foodCategory}
     </delete>
 
-    <select id="getFoodMaterialByName" resultType="com.oopsw.kostaerpserver.vo.AddFoodMaterial">
+    <select id="getFoodMaterialByName" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
         SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
                c.foodCategory, f.vender, f.foodMaterialType
         FROM FOODM f

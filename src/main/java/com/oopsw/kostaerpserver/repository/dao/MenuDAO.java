@@ -23,4 +23,13 @@ public interface MenuDAO {
             @Param("saleCount") int saleCount,
             @Param("bId") String bId
     );
+
+    List<Menu> getLowStockMaterialList(
+            @Param("menuId") String menuId,
+            @Param("bId") String bId
+    );
+
+    int deleteMenu(
+            @Param("menuId") String menuId
+    );
 }

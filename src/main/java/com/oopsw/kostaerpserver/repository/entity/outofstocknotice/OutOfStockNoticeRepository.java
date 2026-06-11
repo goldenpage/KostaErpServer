@@ -16,4 +16,10 @@ public interface OutOfStockNoticeRepository extends JpaRepository<OutOfStockNoti
 
     @Query("SELECT COUNT(o) FROM OutOfStockNotice o WHERE o.bId = :bId AND o.readYn = :readYn")
     int countByBIdAndReadYn(@Param("bId") String bId, @Param("readYn") String readYn);
+
+    @Query("SELECT COUNT(o) > 0 FROM OutOfStockNotice o " +
+            "WHERE o.bId = :bId " +
+            "AND o.foodMaterialName = :foodMaterialName " +
+            "AND FUNCTION('DATE', o.noticeDate) = FUNCTION('DATE', CURRENT_TIMESTAMP)")
+    boolean existsTodayNotice(@Param("bId") String bId, @Param("foodMaterialName") String foodMaterialName);
 }

@@ -37,6 +37,13 @@ public class OutOfStockNoticeRestController {
         return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
+    @PatchMapping("/read-all")  // 추가
+    public ResponseEntity<Void> markAllAsRead(
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        outOfStockNoticeServiceImpl.markAllAsRead(getBId(erpUserDetails));
+        return ResponseEntity.ok().build();
+    }
+
     private String getBId(ErpUserDetails userDetails) {
         if (userDetails == null) {
             throw new IllegalStateException("로그인 정보가 없습니다.");

@@ -14,4 +14,8 @@ public interface OutOfStockNotice {
     int getUnreadCount(String bId);
 
     boolean markAsRead(int noticeId);
+
+    void markAllAsRead(String bId);
+
+    boolean checkTodayNoticeExists(String bId, String foodMaterialName);
 }
