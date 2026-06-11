@@ -20,7 +20,7 @@ function stockNoticeToggle() {
 
   if (isHidden) {
     dropdown.classList.remove("hidden");
-    stockLoadList();    // 열 때마다 최신 목록 fetch
+    stockLoadList();
   } else {
     dropdown.classList.add("hidden");
   }
@@ -46,26 +46,24 @@ function stockRenderList(notices) {
   const listEl = document.getElementById("stockList");
 
   if (!notices || notices.length === 0) {
-    listEl.innerHTML = '<li class="stock-empty">재고 부족 알림이 없습니다.</li>';
+    listEl.innerHTML = '<li class="stock-empty">알림이 없습니다.</li>';
     stockUpdateBadge(0);
     return;
   }
 
   listEl.innerHTML = notices.map(n => `
-        <li class="stock-item" data-id="${n.noticeId}">
+        <li class="stock-item" data-id="${n.noticeId}" onclick="stockMarkAsReadAndMove(${n.noticeId})">
             <div class="stock-item-info">
-                <span class="stock-item-name">${n.foodMaterialName}</span>
-                <span class="stock-item-content">${n.noticeContent}</span>
+                <span class="stock-item-name">${n.foodMaterialName} 재고 부족</span>
                 <span class="stock-item-remain">잔여: ${n.remainStockAmount}</span>
             </div>
-            <button class="stock-read-btn" onclick="stockMarkAsRead(${n.noticeId})">확인</button>
         </li>
     `).join("");
 
   stockUpdateBadge(notices.length);
 }
 
-async function stockMarkAsRead(noticeId) {
+async function stockMarkAsReadAndMove(noticeId) {
   try {
     const res = await fetch(`/api/out-of-stock-notice/${noticeId}/read`, {
       method: "PATCH"
@@ -73,18 +71,7 @@ async function stockMarkAsRead(noticeId) {
 
     if (!res.ok) return;
 
-    const item = document.querySelector(`[data-id="${noticeId}"]`);
-    if (item) item.remove();
-
-    const listEl = document.getElementById("stockList");
-    const remaining = listEl.querySelectorAll(".stock-item").length;
-
-    if (remaining === 0) {
-      listEl.innerHTML = '<li class="stock-empty">재고 부족 알림이 없습니다.</li>';
-      stockUpdateBadge(0);
-    } else {
-      stockUpdateBadge(remaining);
-    }
+    location.href = "/foodmaterialadd";
   } catch (e) {
     console.error("읽음 처리 실패", e);
   }
@@ -138,5 +125,5 @@ document.addEventListener("click", (e) => {
 
 window.addEventListener("DOMContentLoaded", ()=>{
   loadEvent();
-  StockInitBadge();
+  stockInitBadge();
 })

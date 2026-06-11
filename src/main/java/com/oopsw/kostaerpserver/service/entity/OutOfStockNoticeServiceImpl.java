@@ -21,7 +21,6 @@ public class OutOfStockNoticeServiceImpl implements com.oopsw.kostaerpserver.ser
     @Transactional
     public boolean addOutOfStockNotice(OutOfStockNoticeVO vo) {
         OutOfStockNotice notice = outOfStockNoticeRepository.save(OutOfStockNotice.builder().
-                noticeDate(LocalDateTime.parse(vo.getNoticeDate())).
                 noticeContent(vo.getNoticeContent()).
                 foodMaterialName(vo.getFoodMaterialName()).
                 remainStockAmount(vo.getRemainStockAmount()).
@@ -54,5 +53,18 @@ public class OutOfStockNoticeServiceImpl implements com.oopsw.kostaerpserver.ser
                     return true;
                 }).
                 orElse(false);
+    }
+
+    @Override
+    @Transactional
+    public void markAllAsRead(String bId) {
+        outOfStockNoticeRepository
+                .findByBIdAndReadYnOrderByNoticeDateDesc(bId, "N")
+                .forEach(OutOfStockNotice::markAsRead);
+    }
+
+    @Override
+    public boolean checkTodayNoticeExists(String bId, String foodMaterialName) {
+        return outOfStockNoticeRepository.existsTodayNotice(bId, foodMaterialName);
     }
 }

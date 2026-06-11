@@ -63,4 +63,29 @@
           AND f.foodMaterialCountAll >= u.requiredCount
     </update>
 
+    <select id="getZeroStockMaterialList" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT
+            f.foodMaterial_Id      AS foodMaterialId,
+            f.foodMaterialName     AS foodMaterialName,
+            f.foodMaterialCountAll AS foodMaterialCountAll
+        FROM USED u
+                 JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+        WHERE u.menu_Id = #{menuId}
+          AND f.bId = #{bId}
+          AND f.foodMaterialCountAll &lt;= 0
+        GROUP BY f.foodMaterial_Id, f.foodMaterialName, f.foodMaterialCountAll
+    </select>
+
+    <select id="getLowStockMaterialList" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT
+            f.foodMaterial_Id      AS foodMaterialId,
+            f.foodMaterialName     AS foodMaterialName,
+            f.foodMaterialCountAll AS foodMaterialCountAll
+        FROM USED u
+                 JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+        WHERE u.menu_Id = #{menuId}
+          AND f.bId = #{bId}
+          AND f.foodMaterialCountAll &lt;= 500
+        GROUP BY f.foodMaterial_Id, f.foodMaterialName, f.foodMaterialCountAll
+    </select>
 </mapper>
