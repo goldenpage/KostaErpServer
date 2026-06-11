@@ -36,4 +36,13 @@ public interface MenuDAO {
             @Param("payment") String payment
     );
     String getLastRevenueId();
+
+    List<Menu> getLowStockMaterialList(
+            @Param("menuId") String menuId,
+            @Param("bId") String bId
+    );
+
+    int deleteMenu(
+            @Param("menuId") String menuId
+    );
 }

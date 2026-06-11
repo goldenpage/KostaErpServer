@@ -11,16 +11,25 @@
   <li><span id="user"></span></li>
   <li th:onclick="|location.href='@{/login}'|">로그아웃</li>
   <li th:onclick="|location.href='@{/notice}'|">알림</li>
-  <script th:src="@{/js/userName.js}"></script>
 
-  <li class="dropdown">
-    <ul class="dropdown-btn">알림 드롭다운</ul>
-    <ul class="dropdown-submenu">
-      <li th:onclick="|location.href='@{/foodmaterialadd}'|">식자재 부족 알림</li>
-      <li th:onclick="|location.href='@{/foodmaterials}'|">유통기한 임박 알림</li>
-      <li th:onclick="|location.href='@{/disposal-items}'|">유통기한 지남 알림</li>
-    </ul>
+  <li class="stock-notice-wrapper" id="stockNoticeWrapper">
+    <span class="stock-notice-trigger" onclick="stockNoticeToggle()">
+      재고 알림
+      <span class="stock-badge hidden" id="stockBadge">0</span>
+    </span>
+
+    <div class="stock-dropdown hidden" id="stockDropdown">
+      <div class="stock-dropdown-header">
+        <span>식자재 부족 알림</span>
+        <button class="stock-read-all-btn" onclick="stockMarkAllAsRead()">전체 확인</button>
+      </div>
+      <ul class="stock-list" id="stockList">
+        <li class="stock-empty">불러오는 중...</li>
+      </ul>
+    </div>
   </li>
+  <script th:src="@{/js/userName.js}"></script>
 </ul>
+
 </body>
 </html>

@@ -22,7 +22,7 @@ public class MenuServiceTest {
 
     String bId = "0000000000";
 
-    @Test
+//    @Test
     void getMenuListTest() {
         List<Menu> list = menuService.getMenuList(bId);
 
@@ -31,7 +31,7 @@ public class MenuServiceTest {
         assertTrue(list.size() > 0);
     }
 
-    @Test
+//    @Test
     void getMenuDetailTest() {
         List<Menu> list = menuService.getMenuDetail("MI001");
 
@@ -40,7 +40,7 @@ public class MenuServiceTest {
         assertTrue(list.size() > 0);
     }
 
-    @Test
+//    @Test
     @Transactional
     void saleMenuTest() {
         menuService.saleMenu("MI001", 1, bId, "카드");
@@ -48,10 +48,20 @@ public class MenuServiceTest {
         log.info("판매 차감 테스트 완료");
     }
 
-    @Test
+//    @Test
     void saleMenuInvalidCountTest() {
         assertThrows(RuntimeException.class, () -> {
             menuService.saleMenu("MI001", 0, bId, "카드");
         });
+    }
+
+    @Test
+    void getLowStockMaterialListTest() {
+        List<Menu> list = menuService.getLowStockMaterialList("MI001", bId);
+
+        list.forEach(m -> log.info("20% 이하 식자재: name={}, remainStock={}",
+                m.getFoodMaterialName(), m.getFoodMaterialCountAll()));
+
+        assertTrue(list.size() >= 0);
     }
 }

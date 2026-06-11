@@ -6,9 +6,13 @@ import com.oopsw.kostaerpserver.dto.menu.MenuListResponse;
 import com.oopsw.kostaerpserver.dto.menu.MenuMaterialListResponse;
 import com.oopsw.kostaerpserver.dto.menu.MenuMaterialResponse;
 import com.oopsw.kostaerpserver.dto.menu.MenuResponse;
+import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.MenuDAO;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
+import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
+import com.oopsw.kostaerpserver.service.entity.OutOfStockNoticeServiceImpl;
 import com.oopsw.kostaerpserver.vo.Menu;
+import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,8 @@ import java.util.List;
 public class MenuServiceImpl implements MenuService {
 
     private final MenuDAO menuDAO;
+    private final OutOfStockNoticeServiceImpl outOfStockNoticeServiceImpl;
+    private final StockNoticeSettingService stockNoticeSettingService;
 
     @Override
     public List<Menu> getMenuList(String bId) {
@@ -47,6 +53,8 @@ public class MenuServiceImpl implements MenuService {
         if (result == 0) {
             throw new RuntimeException("판매 처리할 식자재가 없습니다.");
         }
+
+        generateLowStockNotices(menuId, bId);
 
         String lastId = menuDAO.getLastRevenueId();
         String revenueId;
@@ -106,5 +114,36 @@ public class MenuServiceImpl implements MenuService {
                 .materialList(materialList)
                 .totalCount(materialList.size())
                 .build();
+    }
+
+
+    @Override
+    public List<Menu> getLowStockMaterialList(String menuId, String bId) {
+        return menuDAO.getLowStockMaterialList(menuId, bId);
+    }
+
+    private void generateLowStockNotices(String menuId, String bId) {
+        List<Menu> lowStockList = getLowStockMaterialList(menuId, bId);
+
+        for (Menu material : lowStockList) {
+            outOfStockNoticeServiceImpl.addOutOfStockNotice(
+                    OutOfStockNoticeVO.builder()
+                            .noticeContent(material.getFoodMaterialName() + " 재고 부족")
+                            .foodMaterialName(material.getFoodMaterialName())
+                            .remainStockAmount(material.getFoodMaterialCountAll())
+                            .bId(bId)
+                            .build()
+            );
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteMenu(String menuId) {
+        int result = menuDAO.deleteMenu(menuId);
+
+        if (result == 0) {
+            throw new RuntimeException("삭제 실패");
+        }
     }
 }

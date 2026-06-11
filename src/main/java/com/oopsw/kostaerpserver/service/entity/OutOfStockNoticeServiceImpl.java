@@ -1,11 +1,12 @@
 package com.oopsw.kostaerpserver.service.entity;
 
-import com.oopsw.kostaerpserver.dto.OutOfStockNoticeResponse;
+import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNoticeRepository;
 import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,12 +14,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OutOfStockNoticeServiceImpl {
+public class OutOfStockNoticeServiceImpl implements com.oopsw.kostaerpserver.service.entity.OutOfStockNotice {
     private final OutOfStockNoticeRepository outOfStockNoticeRepository;
 
+    @Override
+    @Transactional
     public boolean addOutOfStockNotice(OutOfStockNoticeVO vo) {
         OutOfStockNotice notice = outOfStockNoticeRepository.save(OutOfStockNotice.builder().
-                noticeDate(LocalDateTime.parse(vo.getNoticeDate())).
                 noticeContent(vo.getNoticeContent()).
                 foodMaterialName(vo.getFoodMaterialName()).
                 remainStockAmount(vo.getRemainStockAmount()).
@@ -28,6 +30,7 @@ public class OutOfStockNoticeServiceImpl {
         return notice != null;
     }
 
+    @Override
     public List<OutOfStockNoticeResponse> getUnreadList(String bId){
         return outOfStockNoticeRepository.
                 findByBIdAndReadYnOrderByNoticeDateDesc(bId,"N").
@@ -36,19 +39,32 @@ public class OutOfStockNoticeServiceImpl {
                 collect(Collectors.toList());
     }
 
-    // 읽지 않은 알림 개수 (헤더 배지용)
+    @Override
     public int getUnreadCount(String bId){
-        return 1;
+        return outOfStockNoticeRepository.countByBIdAndReadYn(bId, "N");
     }
 
-    // 단건 읽음 처리
+    @Override
+    @Transactional
     public boolean markAsRead(int noticeId){
-        return false;
+        return outOfStockNoticeRepository.findById(noticeId).
+                map(notice ->{
+                    notice.markAsRead();
+                    return true;
+                }).
+                orElse(false);
     }
 
-    // 전체 읽음 처리
-    public int markAllAsRead(String bId){
-        return 1;
+    @Override
+    @Transactional
+    public void markAllAsRead(String bId) {
+        outOfStockNoticeRepository
+                .findByBIdAndReadYnOrderByNoticeDateDesc(bId, "N")
+                .forEach(OutOfStockNotice::markAsRead);
     }
 
+    @Override
+    public boolean checkTodayNoticeExists(String bId, String foodMaterialName) {
+        return outOfStockNoticeRepository.existsTodayNotice(bId, foodMaterialName);
+    }
 }

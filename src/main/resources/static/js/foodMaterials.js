@@ -65,6 +65,7 @@ window.onload = function() {
         }
     };
     updatePageButtons();
+    loadNoticeSettings();
 };
 
 function loadFoodMaterials(sort, page) {
@@ -96,6 +97,7 @@ function loadFoodMaterials(sort, page) {
             drawFoodTable(data.foodList);
             filterCategory();
             updatePageButtons();
+            applyColorToCurrentTable();
         })
         .catch(function(error) {
             console.log(error);
@@ -119,16 +121,19 @@ function drawFoodTable(foodList) {
         const tr = document.createElement("tr");
         tr.className = "foodRow";
 
+        const stockClass = getStockClass(food.foodMaterialCountAll);
+        const expClass = getExpirationClass(food.expirationDate);
+
         tr.innerHTML =
             "<td>" + checkNull(food.foodMaterialId) + "</td>" +
             "<td>" + checkNull(food.foodMaterialName) + "</td>" +
             "<td>" + checkNull(food.foodCategory) + "</td>" +
             "<td>" + checkNull(food.foodMaterialCount) + "</td>" +
-            "<td>" + checkNull(food.foodMaterialCountAll) + "</td>" +
+            "<td class='" + stockClass + "'>" + checkNull(food.foodMaterialCountAll) + "</td>" +
             "<td>" + checkNull(food.foodMaterialPrice) + "</td>" +
             "<td>" + checkNull(food.vender) + "</td>" +
             "<td>" + formatDate(food.incomeDate) + "</td>" +
-            "<td>" + formatDate(food.expirationDate) + "</td>" +
+            "<td class='" + expClass + "'>" + formatDate(food.expirationDate) + "</td>" +
             "<td>" + checkNull(food.foodMaterialType) + "</td>" +
             "<td>폐기수정</td>" +
             "<td><input type='checkbox' name='foodMaterialId' value='" + checkNull(food.foodMaterialId) + "'></td>" +
@@ -270,4 +275,127 @@ function formatDate(value) {
 
 function goBack() {
     history.back();
+}
+
+function loadNoticeSettings() {
+    fetch("/api/notice/exp")
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error("유통기한 알림 설정 조회 실패");
+            }
+
+            return response.json();
+        })
+        .then(function(data) {
+            expAlert = data.expAlert;
+            expDays = data.expDays;
+
+            applyColorToCurrentTable();
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+    fetch("/api/notice/stock")
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error("재고 부족 알림 설정 조회 실패");
+            }
+
+            return response.json();
+        })
+        .then(function(data) {
+            foodmAlert = data.foodmAlert;
+            foodmLimit = data.foodmLimit;
+
+            applyColorToCurrentTable();
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+}
+
+function getExpirationClass(expirationDate) {
+    if (expAlert === false) {
+        return "";
+    }
+
+    if (expirationDate === null || expirationDate === undefined || expirationDate === "") {
+        return "";
+    }
+
+    const today = new Date();
+    const expDate = new Date(formatDate(expirationDate));
+
+    today.setHours(0, 0, 0, 0);
+    expDate.setHours(0, 0, 0, 0);
+
+    const differTime = expDate.getTime() - today.getTime();
+    const differDays = Math.ceil(differTime / (1000 * 60 * 60 * 24));
+
+    if (differDays <= 0) {
+        return "dangerCell";
+    }
+
+    if (differDays <= expDays) {
+        return "warningCell";
+    }
+
+    return "";
+}
+
+function getStockClass(stockCount) {
+    if (foodmAlert === false) {
+        return "";
+    }
+
+    const count = Number(stockCount);
+
+    if (isNaN(count)) {
+        return "";
+    }
+
+    if (count <= 0) {
+        return "dangerCell";
+    }
+
+    if (count <= foodmLimit) {
+        return "warningCell";
+    }
+
+    return "";
+}
+
+function applyColorToCurrentTable() {
+    const rows = document.querySelectorAll("#foodTableBody tr.foodRow");
+
+    rows.forEach(function(row) {
+        const cells = row.querySelectorAll("td");
+
+        if (cells.length < 9) {
+            return;
+        }
+
+        const stockCell = cells[4];
+        const expCell = cells[8];
+
+        const stockValue = stockCell.innerText.trim();
+        const expValue = expCell.innerText.trim();
+
+        stockCell.classList.remove("warningCell");
+        stockCell.classList.remove("dangerCell");
+        expCell.classList.remove("warningCell");
+        expCell.classList.remove("dangerCell");
+
+        const stockClass = getStockClass(stockValue);
+        const expClass = getExpirationClass(expValue);
+
+        if (stockClass !== "") {
+            stockCell.classList.add(stockClass);
+        }
+
+        if (expClass !== "") {
+            expCell.classList.add(expClass);
+        }
+    });
 }
