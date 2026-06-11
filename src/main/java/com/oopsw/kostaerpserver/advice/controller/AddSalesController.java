@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.controller;
+package com.oopsw.kostaerpserver.advice.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

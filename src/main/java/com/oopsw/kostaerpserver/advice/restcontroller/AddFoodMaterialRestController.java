@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.restcontroller;
+package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.addfoodmaterial.*;
@@ -54,7 +54,6 @@ public class AddFoodMaterialRestController {
     @GetMapping("/foodmaterial/search/add/{foodMaterialName}")
     public List<SearchFoodMaterialResponse> searchFoodMaterial(
             @PathVariable String foodMaterialName,
-            @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal ErpUserDetails erpUserDetails){
         String bId = erpUserDetails.getLoginUser().getBId();
         return SearchFoodMaterialResponse.fromList(addFoodMaterialService.getFoodMaterialByName(foodMaterialName, bId));
@@ -63,7 +62,6 @@ public class AddFoodMaterialRestController {
     @PostMapping("/foodmaterial/add")
     public AddFoodMaterialResponse addFoodMaterial(
             AddFoodMaterialRequest request,
-            @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal ErpUserDetails erpUserDetails){
 
         String bId = erpUserDetails.getLoginUser().getBId();

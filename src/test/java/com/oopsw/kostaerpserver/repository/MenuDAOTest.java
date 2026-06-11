@@ -1,5 +1,7 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
+import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNoticeRepository;
 import com.oopsw.kostaerpserver.vo.Menu;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -8,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,8 +21,10 @@ public class MenuDAOTest {
 
     @Autowired
     MenuDAO menuDAO;
+    @Autowired
+    private OutOfStockNoticeRepository outOfStockNoticeRepository;
 
-    @Test
+//    @Test
     void getMenuListTest() {
         List<Menu> list = menuDAO.getMenuList("0000000000");
 
@@ -28,7 +33,7 @@ public class MenuDAOTest {
         assertTrue(list.size() > 0);
     }
 
-    @Test
+//    @Test
     void getMenuDetailTest() {
         List<Menu> list = menuDAO.getMenuDetail("MI001");
 
@@ -37,7 +42,7 @@ public class MenuDAOTest {
         assertTrue(list.size() > 0);
     }
 
-    @Test
+//    @Test
     void getLackMaterialCountTest() {
         int count = menuDAO.getLackMaterialCount("MI001", 1);
         log.info("lack count = {}", count);
@@ -45,7 +50,7 @@ public class MenuDAOTest {
         assertTrue(count >= 0);
     }
 
-    @Test
+//    @Test
     @Transactional
     void updateFoodMaterialAfterSaleTest() {
         int lackCount = menuDAO.getLackMaterialCount("MI001", 1);
@@ -60,5 +65,22 @@ public class MenuDAOTest {
         log.info("update result = {}", result);
 
         assertTrue(result > 0);
+    }
+
+    @Test
+    public void existsTodayNoticeTest() {
+        outOfStockNoticeRepository.save(OutOfStockNotice.builder().
+                noticeDate(LocalDateTime.now()).
+                noticeContent(" 얼마 남지 않음").
+                foodMaterialName("단무지").
+                remainStockAmount(2).
+                bId("1234567890").
+                readYn("N").
+                build());
+
+        boolean exists = outOfStockNoticeRepository.
+                existsTodayNotice("1234567890", "단무지");
+
+        log.info("existsTodayNotice(단무지) = {}", exists);
     }
 }

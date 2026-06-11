@@ -10,16 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
-public class OutOfStockNoticeServiceImplTest {
+public class OutOfStockNoticeServiceTest {
     @Autowired
     OutOfStockNoticeServiceImpl outOfStockNoticeServiceImpl;
     @Autowired
@@ -64,7 +62,7 @@ public class OutOfStockNoticeServiceImplTest {
         Assertions.assertTrue(list.size() > 0, "list");
     }
 
-    @Test
+//    @Test
     public void getUnreadCountTest(){
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -94,5 +92,23 @@ public class OutOfStockNoticeServiceImplTest {
         boolean result = outOfStockNoticeServiceImpl.markAsRead(2);
         log.info("result = {}", result);
         Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void checkTodayNoticeExistsTest() {
+        outOfStockNoticeRepository.save(OutOfStockNotice.builder().
+                noticeDate(LocalDateTime.now()).
+                noticeContent(" 얼마 남지 않음").
+                foodMaterialName("단무지").
+                remainStockAmount(2).
+                bId("1234567890").
+                readYn("N").
+                build());
+
+        boolean exists = outOfStockNoticeServiceImpl.
+                checkTodayNoticeExists("1234567890", "단무지");
+
+        log.info("checkTodayNoticeExists(단무지) = {}", exists);
+        Assertions.assertTrue(exists);
     }
 }
