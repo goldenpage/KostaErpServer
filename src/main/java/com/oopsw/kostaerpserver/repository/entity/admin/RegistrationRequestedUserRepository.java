@@ -13,6 +13,10 @@ public interface RegistrationRequestedUserRepository extends JpaRepository<Regis
         select (count(review) > 0)
         from RegistrationRequestedUser review
         where review.bId = :bId
+          and review.reviewStatus = :reviewStatus
         """)
-    boolean existsByBusinessId(@Param("bId") String bId);
+    boolean existsByBusinessIdAndReviewStatus(
+        @Param("bId") String bId,
+        @Param("reviewStatus") ReviewStatus reviewStatus
+    );
 }

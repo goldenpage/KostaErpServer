@@ -44,7 +44,7 @@ public class AuthRestController {
     ) {
         request.setPhone(phoneVerificationService.requireVerified(request.getPhone(), session));
         RegistrationResponse response = registrationService.register(request, document);
-        if ("APPROVED".equals(response.status())) {
+        if ("APPROVED".equals(response.status()) || "PENDING".equals(response.status())) {
             phoneVerificationService.clear(session);
         }
         return ResponseEntity.ok(response);

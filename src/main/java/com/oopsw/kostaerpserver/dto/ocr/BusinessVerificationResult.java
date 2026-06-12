@@ -8,7 +8,8 @@ public record BusinessVerificationResult(
     public enum Status {
         APPROVED,
         REJECTED,
-        NEED_REVIEW
+        NEED_REVIEW,
+        RETRY
     }
 
     public static BusinessVerificationResult approved(String number) {
@@ -23,5 +24,9 @@ public record BusinessVerificationResult(
 
     public static BusinessVerificationResult needReview(String number, String message) {
         return new BusinessVerificationResult(Status.NEED_REVIEW, number, message);
+    }
+
+    public static BusinessVerificationResult retry(String number, String message) {
+        return new BusinessVerificationResult(Status.RETRY, number, message);
     }
 }

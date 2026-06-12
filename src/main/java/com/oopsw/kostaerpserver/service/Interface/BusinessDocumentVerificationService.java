@@ -5,6 +5,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BusinessDocumentVerificationService {
 
-     BusinessVerificationResult verify(String expectedBusinessNumber,
-        MultipartFile document);
+    BusinessVerificationResult verify(
+        String expectedBusinessNumber,
+        String representativeName,
+        String companyName,
+        MultipartFile document
+    );
 }

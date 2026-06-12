@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
-
+import com.oopsw.kostaerpserver.dto.ocr.BusinessRegistrationValidationResult;
 import com.oopsw.kostaerpserver.dto.ocr.BusinessVerificationResult;
 import com.oopsw.kostaerpserver.dto.ocr.PythonOcrResponse;
 import com.oopsw.kostaerpserver.service.Interface.BusinessDocumentVerificationService;
@@ -19,25 +19,37 @@ public class BusinessDocumentVerificationServiceImpl implements
     private final BusinessRegistrationClient businessRegistrationClient;
 
     @Override
-    public BusinessVerificationResult verify(String expectedBusinessNumber,
-        MultipartFile document) {
+    public BusinessVerificationResult verify(
+        String expectedBusinessNumber,
+        String representativeName,
+        String companyName,
+        MultipartFile document
+    ) {
         String expected = normalize(expectedBusinessNumber);
+        String requestedRepresentativeName = normalizeText(representativeName);
+        String requestedCompanyName = normalizeText(companyName);
 
         PythonOcrResponse ocrResponse;
-
         try {
             ocrResponse = pythonOcrClient.extractBusinessNumber(document);
         } catch (Exception exception) {
-            return BusinessVerificationResult.needReview(
+            return BusinessVerificationResult.retry(
                 null, "OCR 서버 요청에 실패했습니다."
             );
         }
 
-        String extracted = normalizeOrNull(ocrResponse.bId());
+        if (ocrResponse == null) {
+            return BusinessVerificationResult.retry(
+                null, "OCR 응답이 없습니다."
+            );
+        }
+
+        String extracted = getCandidateNumber(ocrResponse, expected);
 
         if (extracted == null) {
             return BusinessVerificationResult.needReview(
-                null, "서류에서 사업자등록번호를 인식하지 못했습니다."
+                null,
+                "서류에서 사업자등록번호를 확정하지 못했습니다."
             );
         }
 
@@ -47,19 +59,101 @@ public class BusinessDocumentVerificationServiceImpl implements
             );
         }
 
+        String startDate = normalizeDate(ocrResponse.validityStartDate());
+
+        if (startDate == null) {
+            return BusinessVerificationResult.needReview(
+                extracted,
+                "OCR에서 사업자등록정보 검증에 필요한 개업일자를 확인하지 못했습니다."
+            );
+        }
+
         try {
-            if (!businessRegistrationClient.exists(extracted)) {
+            BusinessRegistrationValidationResult result =
+                businessRegistrationClient.validate(
+                    extracted,
+                    startDate,
+                    requestedRepresentativeName,
+                    requestedCompanyName
+                );
+            if (!result.valid()) {
+                if (!isAutoAccepted(ocrResponse)) {
+                    return BusinessVerificationResult.needReview(
+                        extracted,
+                        "OCR 인식 정보와 사업자등록정보가 일치하지 않아 관리자 확인이 필요합니다."
+                    );
+                }
                 return BusinessVerificationResult.rejected(
-                    extracted, "등록되지 않은 사업자등록번호입니다."
+                    extracted, result.message()
                 );
             }
         } catch (Exception exception) {
-            return BusinessVerificationResult.needReview(
+            return BusinessVerificationResult.retry(
                 extracted, "사업자등록번호 검증 서버 요청에 실패했습니다."
             );
         }
 
         return BusinessVerificationResult.approved(extracted);
+    }
+
+    private boolean isAutoAccepted(PythonOcrResponse response) {
+        return "AUTO_ACCEPTED".equalsIgnoreCase(response.status());
+    }
+
+    private String getCandidateNumber(PythonOcrResponse response, String expected) {
+        String confirmed = normalizeOrNull(response.businessRegistrationNumber());
+        if (confirmed != null) {
+            return confirmed;
+        }
+
+        String matchingCandidate = findMatchingCandidate(response, expected);
+        if (matchingCandidate != null) {
+            return matchingCandidate;
+        }
+
+        if (response.selectedCandidate() != null) {
+            return normalizeOrNull(response.selectedCandidate().number());
+        }
+
+        if (response.candidates() == null || response.candidates().isEmpty()) {
+            return null;
+        }
+
+        return normalizeOrNull(response.candidates().get(0).number());
+    }
+
+    private String findMatchingCandidate(PythonOcrResponse response, String expected) {
+        if (response.selectedCandidate() != null
+            && expected.equals(normalizeOrNull(response.selectedCandidate().number()))) {
+            return expected;
+        }
+
+        if (response.candidates() == null) {
+            return null;
+        }
+
+        return response.candidates().stream()
+            .map(PythonOcrResponse.OcrCandidate::number)
+            .map(this::normalizeOrNull)
+            .filter(expected::equals)
+            .findFirst()
+            .orElse(null);
+    }
+
+    private String normalizeDate(String date) {
+        if (date == null || date.isBlank()) {
+            return null;
+        }
+
+        String normalized = date.replaceAll("\\D", "");
+        return normalized.length() == 8 ? normalized : null;
+    }
+
+    private String normalizeText(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim();
     }
 
     private String normalize(String number) {
@@ -81,5 +175,3 @@ public class BusinessDocumentVerificationServiceImpl implements
         return normalized.length() == 10 ? normalized : null;
     }
 }
-
-

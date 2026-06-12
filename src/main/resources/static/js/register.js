@@ -40,6 +40,7 @@ const requestJson = async (url, payload) => {
   return data;
 };
 
+
 const sendPhoneCode = async () => {
   const phone = normalizeDigits(phoneInput.value);
   if (!/^010\d{8}$/.test(phone)) {
