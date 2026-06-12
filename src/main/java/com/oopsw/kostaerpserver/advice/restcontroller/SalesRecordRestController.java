@@ -17,26 +17,6 @@ import java.util.List;
 public class SalesRecordRestController {
     private final SalesRecordService salesRecordService;
 
-    @GetMapping
-    public Page<SalesRecordResponse> getSales(
-
-            @RequestParam(
-                    defaultValue = "1"
-            )
-            int page,
-
-            @RequestParam(
-                    defaultValue = "5"
-            )
-            int size
-    ) {
-
-        return salesRecordService.getSalesList(
-                page,
-                size
-        );
-    }
-
     @GetMapping("/search")
     public List<SalesRecordResponse> getSalesByDate(
 
@@ -88,5 +68,13 @@ public class SalesRecordRestController {
                 request.getPayment()
         );
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/list")
+    public Page<SalesRecordResponse> getSalesList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        int pageNum = (page < 0) ? 0 : page;
+        return salesRecordService.getSalesList(pageNum, size);
     }
 }

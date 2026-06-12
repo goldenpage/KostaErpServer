@@ -13,8 +13,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,25 +25,24 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     private final RevenueRepository revenueRepository;
     private final MenuService menuService;
     private final DataSource dataSource;
+
     @Autowired
     private EntityManager entityManager;
 
     @Override
     public Page<SalesRecordResponse> getSalesList(int page, int size){
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("saleId").ascending());
+        int safePage = Math.max(0, page);
+
+        Pageable pageable = PageRequest.of(safePage, size, Sort.by("saleId").ascending());
         List<SalesRecord> content = salesRecordRepository.findAllWithFetch();
+        List<SalesRecordResponse> dtoList = content.stream().map(this::toDTO).toList();
 
-        List<SalesRecordResponse> dtoList =
-                content.stream().map(this::toDTO).toList();
-
-        return new PageImpl<>(dtoList, pageable, content.size());
+        return new PageImpl<>(dtoList, pageable, dtoList.size());
     }
 
     @Override
     @Transactional
     public void addSale(String menuId, int saleMenuCount, String bId, String payment){
-
-
         try (Connection conn = dataSource.getConnection()) {
             System.out.println(">>> 현재 접속된 DB URL: " + conn.getMetaData().getURL());
             System.out.println(">>> 현재 접속된 DB 이름: " + conn.getCatalog());
@@ -53,22 +50,11 @@ public class SalesRecordServiceImpl implements SalesRecordService {
             e.printStackTrace();
         }
         String trimmedMenuId = (menuId != null) ? menuId.trim() : "";
-
-        // 2. 로그를 찍어서 실제 어떤 값이 들어오는지 확인합니다 (디버깅용)
-        System.out.println(">>> 조회 시도할 ID: [" + trimmedMenuId + "]");
-
         Menu menu = menuRepository.findById(trimmedMenuId).
                 orElseThrow(
                         () -> {
-                            // 3. 에러 발생 시 어떤 ID로 찾다가 실패했는지 명시하면 원인 파악이 쉽습니다.
-                            System.out.println(">>> 메뉴 조회 실패: ID [" + trimmedMenuId + "]");
                             return new RuntimeException("메뉴를 찾을 수 없습니다: " + trimmedMenuId);
                         });
-
-        String rawId = revenueRepository.getNextRevenueId();
-        String finalId = (rawId != null) ? rawId.trim() : null;
-
-        System.out.println(">>> 생성된 Revenue ID: [" + finalId + "]");
 
         Revenue revenue = new Revenue();
         String newId = revenueRepository.getNextRevenueId();
@@ -93,25 +79,16 @@ public class SalesRecordServiceImpl implements SalesRecordService {
         menuService.saleMenu(menuId, saleMenuCount, bId, payment);
     }
 
-    public void checkTableNames() {
-        try (Connection conn = dataSource.getConnection()) {
-            DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
-            while (tables.next()) {
-                System.out.println("발견된 테이블: " + tables.getString("TABLE_NAME"));
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
     @Override
     public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate){
-        System.out.println("DB 호출 직전");
+        if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
+            return salesRecordRepository.findAllWithFetch().stream().map(this::toDTO).toList();
+        }
+
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
-        List<SalesRecord> result = salesRecordRepository.findByDateWith(start, end);
-        System.out.println("DB 결과 size = " + result.size());
-        System.out.println(salesRecordRepository.findAll().size());
-        return result
+
+        return salesRecordRepository.findByDateWith(start, end)
                 .stream()
                 .map(this::toDTO)
                 .toList();
@@ -133,7 +110,11 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     @Override
     public SalesRecordResponse getSalesById(String id) {
         SalesRecord record = salesRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 판매 기록이 없습니다."));
+                .orElse(null);
+        if (record == null) {
+            return new SalesRecordResponse();
+        }
+
         return toDTO(record);
     }
 
@@ -148,24 +129,38 @@ public class SalesRecordServiceImpl implements SalesRecordService {
         }
     }
 
+    @Override
+    public int getTotalRevenue() {
+        Integer total = salesRecordRepository.getTotalRevenue();
+        return total != null ? total : 0;
+    }
+
     //Entity > DTO 변환 메서드
     private SalesRecordResponse toDTO(SalesRecord salesRecord) {
-
         SalesRecordResponse dto = new SalesRecordResponse();
-
         dto.setSaleId(salesRecord.getSaleId());
 
-        dto.setRevenueId(salesRecord.getRevenue().getRevenueId());
-        dto.setSaleDate(salesRecord.getRevenue().getRevenueDate().toString());
-        dto.setPaymentMethod(salesRecord.getRevenue().getPayment());
+        if (salesRecord.getRevenue() != null) {
+            try {
+                dto.setRevenueId(salesRecord.getRevenue().getRevenueId());
+                if (salesRecord.getRevenue().getRevenueDate() != null) {
+                    dto.setSaleDate(salesRecord.getRevenue().getRevenueDate().toString());
+                }
+                dto.setPaymentMethod(salesRecord.getRevenue().getPayment());
+            } catch (Exception e) {
+                dto.setSaleDate("데이터없음");
+            }
+        }
 
-        dto.setMenuName(salesRecord.getMenu().getMenuName());
-        dto.setCategory(salesRecord.getMenu().getMenuCategory() != null
-                ? salesRecord.getMenu().getMenuCategory().getMenuCategory() : null);
-        dto.setPrice(salesRecord.getMenu().getMenuPrice());
+        if (salesRecord.getMenu() != null) {
+            dto.setMenuName(salesRecord.getMenu().getMenuName());
+            dto.setCategory(salesRecord.getMenu().getMenuCategory() != null
+                    ? salesRecord.getMenu().getMenuCategory().getMenuCategory() : null);
+            dto.setPrice(salesRecord.getMenu().getMenuPrice());
+        }
 
         dto.setQty(salesRecord.getSaleMenuCount());
-        dto.setTotalPrice(salesRecord.getSaleMenuCount() * salesRecord.getMenu().getMenuPrice());
+        dto.setTotalPrice(salesRecord.getSaleMenuCount() * (salesRecord.getMenu() != null ? salesRecord.getMenu().getMenuPrice() : 0));
 
         return dto;
     }

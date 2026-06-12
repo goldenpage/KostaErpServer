@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SalesController {
     private final SalesRecordService salesRecordService;
+
     @GetMapping("/sales-list")
     public String salesList(@RequestParam(value = "page", defaultValue = "1") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,

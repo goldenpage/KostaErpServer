@@ -125,6 +125,7 @@ public class SalesRecordServiceImplTest {
         assertThat(result.getContent().get(0).getMenuName()).isEqualTo("아메리카노");
     }
 
+
     //날짜 검색 테스트
     @Test
     void getSalesByDate_test() {

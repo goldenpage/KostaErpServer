@@ -25,23 +25,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class StockNoticeSetting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "stock_notice_setting_id")
     private int stockNoticeSettingId;
 
-    @Column(name = "bId", unique = true, nullable = false, length = 10)
+    @Column(name = "b_id", unique = true, nullable = false, length = 10)
     private String bId;
 
-    @Column(name = "foodmAlert", nullable = false)
+    @Column(name = "foodm_alert", nullable = false)
     private boolean foodmAlert;
 
-    @Column(name = "foodmLimit", nullable = false)
+    @Column(name = "foodm_limit", nullable = false)
     private int foodmLimit;
 
     @CreationTimestamp
-    @Column(name = "createdAt", updatable = false, nullable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     public void update(boolean foodmAlert, int foodmLimit) {

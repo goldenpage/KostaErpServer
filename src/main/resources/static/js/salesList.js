@@ -1,16 +1,25 @@
+let globalSalesData = [];
+
 function updateTableAndTotal(data) {
-    console.log("서버에서 받은 데이터:", data);
+    if (data) globalSalesData = data;
     const tbody = document.getElementById('salesTableBody');
     const totalSpan = document.getElementById('totalRevenue');
 
     tbody.innerHTML = "";
-    initFilters(data);
+
+    if (!globalSalesData || globalSalesData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">조회된 데이터가 없습니다.</td></tr>`;
+        totalSpan.innerText = "0원";
+        initFilters([]);
+        return;
+    }
+
+    renderTable(globalSalesData)
     let total = 0;
 
-
-    data.forEach((sale) => {
+    globalSalesData.forEach((sale) => {
         const subtotal = sale.qty * sale.price;
-        total += sale.totalPrice;
+        total += subtotal;
         const row = `<tr>
             <td>${sale.saleId}</td>
             <td>${sale.saleDate}</td>
@@ -31,14 +40,6 @@ function updateTableAndTotal(data) {
     totalSpan.innerText = total.toLocaleString() + "원";
 }
 
-// window.onload = function() {
-//     const initialData = /*[[${salesList}]]*/ [];
-//     console.log(initialData);
-//     if (initialData && initialData.length > 0) {
-//         updateTableAndTotal(initialData);
-//     }
-// };
-
 function searchSales() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
@@ -46,21 +47,11 @@ function searchSales() {
     fetch(`/api/sales/search?startDate=${startDate}&endDate=${endDate}`)
         .then(response => response.json())
         .then(data => {
-            updateTableAndTotal(data);
+            globalSalesData = data;
+            filterSales();
         })
         .catch(error => console.error("조회 실패:", error));
 }
-
-document.addEventListener("click", function(e) {
-    if (e.target.classList.contains("btn-delete")) {
-        const id = e.target.getAttribute("data-id");
-        deleteSale(id);
-    }
-    if (e.target.classList.contains("btn-edit")) {
-        const id = e.target.getAttribute("data-id");
-        editSale(id);
-    }
-});
 
 function deleteSale(id) {
     if (!confirm("판매 기록을 삭제하시겠습니까?")) return;
@@ -115,22 +106,18 @@ function closeModal() {
 }
 
 function initFilters(data) {
-    // 1. 드롭박스 요소 찾기
     const categorySelect = document.getElementById('categorySelect');
     const paymentSelect = document.getElementById('paymentSelect');
     const menuSelect = document.getElementById('menuSelect');
 
-    // 2. 기존 옵션 비우기 (기본값 "카테고리", "결제수단", "메뉴명"만 남김)
     categorySelect.innerHTML = '<option value="">카테고리</option>';
     paymentSelect.innerHTML = '<option value="">결제수단</option>';
     menuSelect.innerHTML = '<option value="">메뉴명</option>';
 
-    // 3. Set을 사용해 중복 없는 고유 목록 추출
     const categories = [...new Set(data.map(item => item.category))];
-    const payments = [...new Set(data.map(item => item.paymentMethod).filter(Boolean))]; // 빈 값 제외
+    const payments = [...new Set(data.map(item => item.paymentMethod).filter(Boolean))];
     const menus = [...new Set(data.map(item => item.menuName))];
 
-    // 4. 드롭박스에 추가
     categories.forEach(c => {
         categorySelect.add(new Option(c, c));
     });
@@ -142,50 +129,79 @@ function initFilters(data) {
     });
 }
 
-// 2. 통합 필터링 함수
 function filterSales() {
     const category = document.getElementById('categorySelect').value;
     const payment = document.getElementById('paymentSelect').value;
     const menu = document.getElementById('menuSelect').value;
 
-    const rows = document.querySelectorAll("#salesTableBody tr");
-    let total = 0;
-
-    rows.forEach(row => {
-        const rowCategory = row.cells[3].innerText;
-        const rowPayment = row.cells[7].innerText;
-        const rowMenu = row.cells[2].innerText;
-
-        const matchCategory = (category === "" || rowCategory === category);
-        const matchPayment = (payment === "" || rowPayment === payment);
-        const matchMenu = (menu === "" || rowMenu === menu);
-
-        if (matchCategory && matchPayment && matchMenu) {
-            row.style.display = "";
-            const subtotalText = row.cells[6].innerText.replace(/,/g, '');
-            total += parseInt(subtotalText || 0);
-        } else {
-            row.style.display = "none";
-        }
+    const filteredData = globalSalesData.filter(item => {
+        return (category === "" || item.category === category) &&
+            (payment === "" || item.paymentMethod === payment) &&
+            (menu === "" || item.menuName === menu);
     });
 
-    document.getElementById('totalRevenue').innerText = total.toLocaleString() + "원";
+    renderTable(filteredData);
 }
 
 function resetFilters() {
+    document.getElementById('startDate').value = "";
+    document.getElementById('endDate').value = "";
     document.getElementById('categorySelect').value = "";
     document.getElementById('paymentSelect').value = "";
     document.getElementById('menuSelect').value = "";
 
-    const rows = document.querySelectorAll("#salesTableBody tr");
+    fetch(`/api/sales/list?page=0&size=20`)
+        .then(response => response.json())
+        .then(data => {
+            globalSalesData = data.content;
+            renderTable(data);
+        })
+        .catch(error => console.error("초기화 실패:", error));
+}
+
+function loadSalesList() {
+    fetch('/api/sales/list')
+        .then(res => res.json())
+        .then(data => {
+            renderTable(data);
+        })
+        .catch(err => console.error("데이터 로드 실패:", err));
+}
+
+function renderTable(data) {
+    const listToRender = (data && data.content) ? data.content : (Array.isArray(data) ? data : []);
+
+    const tbody = document.getElementById('salesTableBody');
+    const totalSpan = document.getElementById('totalRevenue');
+
+    tbody.innerHTML = "";
+
+    if (listToRender.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">조회된 데이터가 없습니다.</td></tr>`;
+        totalSpan.innerText = "0원";
+        return;
+    }
+
     let total = 0;
+    listToRender.forEach((sale) => {
+        const subtotal = sale.qty * sale.price;
+        total += subtotal;
 
-    rows.forEach(row => {
-        row.style.display = "";
-
-        const subtotalText = row.cells[6].innerText.replace(/,/g, '');
-        total += parseInt(subtotalText || 0);
+        const row = `<tr>
+            <td>${sale.saleId}</td>
+            <td>${sale.saleDate}</td>
+            <td>${sale.menuName}</td>
+            <td>${sale.category}</td>
+            <td>${sale.qty}</td>
+            <td>${sale.price.toLocaleString()}</td>
+            <td>${subtotal.toLocaleString()}</td>
+            <td>${sale.paymentMethod || ''}</td>
+            <td>
+                <button type="button" class="btn-edit" onclick="editSale('${sale.saleId}')">수정</button>
+                <button type="button" class="btn-delete" onclick="deleteSale('${sale.saleId}')">삭제</button>
+            </td>
+        </tr>`;
+        tbody.innerHTML += row;
     });
-
-    document.getElementById('totalRevenue').innerText = total.toLocaleString() + "원";
+    totalSpan.innerText = total.toLocaleString() + "원";
 }

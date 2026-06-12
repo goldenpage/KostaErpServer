@@ -15,18 +15,27 @@
         <div th:replace="~{common/userName :: userName}"></div>
 
         <h2>판매 기록 조회</h2>
+        <form class="search_filter_area" onsubmit="event.preventDefault(); searchSales();">
+            <input type="date" id="startDate" name="startDate">
+            <span>~</span>
+            <input type="date" id="endDate" name="endDate">
 
-        <div class="search-filter-box">
-            <input type="date" id="startDate"> ~ <input type="date" id="endDate">
-            <select id="categorySelect" onchange="filterSales()"><option value="">카테고리</option></select>
-            <select id="paymentSelect" onchange="filterSales()"><option value="">결제수단</option></select>
-            <select id="menuSelect" onchange="filterSales()"><option value="">메뉴명</option></select>
-            <button class="btn-primary" onclick="searchSales()">조회하기</button>
-            <button class="btn-secondary" onclick="resetFilters()">초기화</button>
-        </div>
+            <select id="categorySelect">
+                <option value="">카테고리</option>
+            </select>
+            <select id="paymentSelect">
+                <option value="">결제수단</option>
+            </select>
+            <select id="menuSelect">
+                <option value="">메뉴명</option>
+            </select>
+
+            <button type="submit">조회</button>
+            <button type="button" onclick="resetFilters()">초기화</button>
+        </form>
 
         <div class="summary-box">
-            조회 기간 총 매출: <span id="totalRevenue" th:text="${#numbers.formatInteger(totalSum, 3, 'COMMA') + '원'}">0원</span>
+            총 매출액 : <span id="totalRevenue" th:text="${totalSum != null ? #numbers.formatInteger(totalSum, 0, 'COMMA') + '원' : '0원'}"></span>
         </div>
 
         <table class="list_container">
@@ -68,19 +77,16 @@
     </div>
 </div>
 <script th:inline="javascript">
-    /*<![CDATA[*/
-    window.onload = function() {
-        // 서버에서 전달받은 salesList를 자바스크립트 변수로 안전하게 가져옴
-        const initialData = /*[[${salesList}]]*/ [];
-        console.log("전달받은 데이터:", initialData);
+    const initialData = /*[[${salesList}]]*/ [];
 
+    window.onload = function() {
+        console.log("초기 로드 데이터:", initialData);
         if (initialData && initialData.length > 0) {
-            updateTableAndTotal(initialData);
-        } else {
-            console.log("데이터가 없습니다.");
+            globalSalesData = initialData;
+            initFilters(initialData);
+            renderTable(initialData);
         }
     };
-    /*]]>*/
 </script>
 <script th:src="@{/js/salesList.js}"></script>
 </body>
