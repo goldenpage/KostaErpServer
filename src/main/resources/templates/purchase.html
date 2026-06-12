@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>식자재 구매 내역</title>
+    <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+    <link rel="stylesheet" th:href="@{/css/userName.css}">
+    <link rel="stylesheet" th:href="@{/css/purchase.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+
+    <div class="main">
+        <div th:replace="~{common/userName :: userName}"></div>
+
+        <h2>전체 구매 기록</h2>
+
+        <div class="search-filter-box">
+            <input type="date"> ~ <input type="date">
+            <select><option>전체 카테고리</option></select>
+            <button class="btn-primary" onclick="searchSales()">조회하기</button>
+        </div>
+
+        <div class="summary-box">
+            조회 기간 총 매출: <span>0원</span>
+        </div>
+
+        <table class="list_container">
+            <thead>
+            <tr>
+                <th>구매내역id</th>
+                <th>식자재 이름</th>
+                <th>구매 수량</th>
+                <th>중량</th>
+                <th>총 중량</th>
+                <th>개당 가격</th>
+                <th>총 구매가격</th>
+                <th>구매처</th>
+                <th>매입 날짜</th>
+                <th>유통기한</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(salesList)}">
+                <td colspan="8" style="text-align:center; padding:20px;">조회된 데이터가 없습니다.</td>
+            </tr>
+            <tr th:each="sale : ${salesList}">
+                <td th:text="${sale.id}">105</td>
+                <td th:text="${sale.saleDate}">2026-06-09</td>
+                <td th:text="${sale.menuName}">치즈김밥</td>
+                <td th:text="${sale.category}">김밥류</td>
+                <td th:text="${sale.qty}">2</td>
+                <td th:text="${#numbers.formatInteger(sale.price, 3, 'COMMA')}">8,000</td>
+                <td th:text="${sale.paymentMethod}">카드</td>
+                <td>
+                    <button th:onclick="'deleteSale(' + ${sale.id} + ')'">삭제</button>
+                    <button th:onclick="'editSale(' + ${sale.id} + ')'">수정</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script th:src="@{/js/salesList.js}"></script>
+</body>
+</html>
