@@ -39,7 +39,8 @@ public interface MenuDAO {
 
     List<Menu> getLowStockMaterialList(
             @Param("menuId") String menuId,
-            @Param("bId") String bId
+            @Param("bId") String bId,
+            @Param("foodmLimit") int foodmLimit
     );
 
     int deleteMenu(

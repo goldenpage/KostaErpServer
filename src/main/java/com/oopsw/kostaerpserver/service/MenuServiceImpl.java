@@ -118,14 +118,23 @@ public class MenuServiceImpl implements MenuService {
 
 
     @Override
-    public List<Menu> getLowStockMaterialList(String menuId, String bId) {
-        return menuDAO.getLowStockMaterialList(menuId, bId);
+    public List<Menu> getLowStockMaterialList(String menuId, String bId, int foodmLimit) {
+        return menuDAO.getLowStockMaterialList(menuId, bId, foodmLimit);
     }
 
     private void generateLowStockNotices(String menuId, String bId) {
-        List<Menu> lowStockList = getLowStockMaterialList(menuId, bId);
+        StockNoticeResponse setting = stockNoticeSettingService.getStockNoticeSetting(bId);
+        if (!setting.isFoodmAlert()) {
+            return;
+        }
 
+        List<Menu> lowStockList = getLowStockMaterialList(menuId, bId,  setting.getFoodmLimit());
         for (Menu material : lowStockList) {
+            boolean alreadyExists = outOfStockNoticeServiceImpl.checkTodayNoticeExists(
+                    bId,
+                    material.getFoodMaterialName()
+            );
+            if (alreadyExists) {continue;}
             outOfStockNoticeServiceImpl.addOutOfStockNotice(
                     OutOfStockNoticeVO.builder()
                             .noticeContent(material.getFoodMaterialName() + " 재고 부족")

@@ -16,6 +16,6 @@ public interface MenuService {
     MenuListResponse getMenuListResponse(MenuListRequest request);
     MenuDetailResponse getMenuDetailResponse(String menuId);
     MenuMaterialListResponse getMenuMaterialListResponse(String menuId);
-    List<Menu> getLowStockMaterialList(String menuId, String bId);
+    List<Menu> getLowStockMaterialList(String menuId, String bId, int foodmLimit);
     void deleteMenu(String menuId);
 }

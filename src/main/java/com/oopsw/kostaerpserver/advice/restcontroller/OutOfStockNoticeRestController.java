@@ -2,6 +2,8 @@ package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
+import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
+import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
 import com.oopsw.kostaerpserver.service.entity.OutOfStockNoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,17 @@ import java.util.List;
 @RequestMapping("/api/out-of-stock-notice")
 public class OutOfStockNoticeRestController {
     private final OutOfStockNoticeServiceImpl outOfStockNoticeServiceImpl;
+    private final StockNoticeSettingService stockNoticeSettingService;
 
     @GetMapping
     public ResponseEntity<List<OutOfStockNoticeResponse>> getUnreadList(
             @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
         String bId = getBId(erpUserDetails);
+        StockNoticeResponse setting = stockNoticeSettingService.getStockNoticeSetting(bId);
+        if (!setting.isFoodmAlert()) {
+            return ResponseEntity.ok(List.of());
+        }
+
         return ResponseEntity.ok(outOfStockNoticeServiceImpl.getUnreadList(bId));
     }
 
@@ -28,6 +36,11 @@ public class OutOfStockNoticeRestController {
             @AuthenticationPrincipal ErpUserDetails erpUserDetails
     ) {
         String bId = getBId(erpUserDetails);
+        StockNoticeResponse setting = stockNoticeSettingService.getStockNoticeSetting(bId);
+
+        if (!setting.isFoodmAlert()) {
+            return ResponseEntity.ok(0);
+        }
         return ResponseEntity.ok(outOfStockNoticeServiceImpl.getUnreadCount(bId));
     }
 

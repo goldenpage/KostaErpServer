@@ -55,11 +55,23 @@ public class MenuServiceTest {
         });
     }
 
-    @Test
-    void getLowStockMaterialListTest() {
-        List<Menu> list = menuService.getLowStockMaterialList("MI001", bId);
+//    @Test
+//    void getLowStockMaterialListTest() {
+//        List<Menu> list = menuService.getLowStockMaterialList("MI001", bId);
+//
+//        list.forEach(m -> log.info("20% 이하 식자재: name={}, remainStock={}",
+//                m.getFoodMaterialName(), m.getFoodMaterialCountAll()));
+//
+//        assertTrue(list.size() >= 0);
+//    }
 
-        list.forEach(m -> log.info("20% 이하 식자재: name={}, remainStock={}",
+    @Test
+    void getLowStockMaterialListTesty() {
+        int foodmLimit = 500;
+
+        List<Menu> list = menuService.getLowStockMaterialList("MI001", bId, foodmLimit);
+
+        list.forEach(m -> log.info("재고 부족 식자재: name={}, remainStock={}",
                 m.getFoodMaterialName(), m.getFoodMaterialCountAll()));
 
         assertTrue(list.size() >= 0);
