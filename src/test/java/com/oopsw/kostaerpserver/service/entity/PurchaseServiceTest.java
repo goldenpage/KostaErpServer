@@ -23,17 +23,25 @@ public class PurchaseServiceTest {
     @Test
     public void addPurchaseTest() {
         Assertions.assertTrue(purchaseService.addPurchase(PurchaseVO.builder().
-                foodMaterialName("김치").
+                foodMaterialName("참치").
                 foodMaterialCount(5).
-                foodMaterialWeight(5000).
-                totalWeight(25000).
+                foodMaterialWeight(1000).
+                totalWeight(5000).
                 foodMaterialPrice(20000).
                 totalPrice(100000).
                 vender("김치집").
-                incomeDate(String.valueOf(LocalDateTime.now())).
-                expirationDate("2030-06-09").
+                incomeDate(LocalDateTime.parse(String.valueOf(LocalDateTime.now()))).
+                expirationDate(LocalDateTime.parse(String.valueOf(LocalDateTime.now().plusDays(100)))).
+                bId("1234567890").
                 build()));
 
-        log.info("saved notice = {}", purchaseService);
+        log.info("insert = {}", purchaseService);
+    }
+
+    @Test
+    public void getPurchaseListTest() {
+        Assertions.assertNotNull(purchaseService.getPurchaseList("1234567890"));
+
+        log.info("list = {}", purchaseService);
     }
 }

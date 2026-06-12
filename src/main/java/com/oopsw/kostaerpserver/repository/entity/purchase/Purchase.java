@@ -40,9 +40,13 @@ public class Purchase {
     private String vender;
 
     @CreationTimestamp
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false)
     private LocalDateTime incomeDate;
 
+    @CreationTimestamp
     @Column(nullable = false)
-    private LocalDate expirationDate;
+    private LocalDateTime expirationDate;
+
+    @Column(nullable = false)
+    private String bId;
 }

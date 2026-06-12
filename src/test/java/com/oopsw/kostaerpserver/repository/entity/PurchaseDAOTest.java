@@ -22,15 +22,16 @@ public class PurchaseDAOTest {
     @Test
     public void addPurchaseTest() {
         purchaseRepository.save(Purchase.builder().
-                foodMaterialName("김치").
+                foodMaterialName("참치").
                 foodMaterialCount(5).
-                foodMaterialWeight(5000).
-                totalWeight(25000).
+                foodMaterialWeight(1000).
+                totalWeight(5000).
                 foodMaterialPrice(20000).
                 totalPrice(100000).
                 vender("김치집").
                 incomeDate(LocalDateTime.now()).
-                expirationDate(LocalDate.parse("2030-06-09")).
+                expirationDate(LocalDateTime.now().plusDays(100)).
+                bId("1234567890").
                 build());
 
         log.info("saved notice = {}", purchaseRepository);

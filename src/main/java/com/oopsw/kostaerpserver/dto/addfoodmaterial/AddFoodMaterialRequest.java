@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.dto.addfoodmaterial;
 import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,8 @@ public class AddFoodMaterialRequest {
             vo.setFoodMaterialPrice(Integer.parseInt(foodMaterialPrice.get(i)));
             vo.setFoodMaterialType(foodMaterialType.get(i));
             vo.setVender(vender.get(i));
-            vo.setIncomeDate(java.sql.Date.valueOf(incomeDate.get(i)));
-            vo.setExpirationDate(java.sql.Date.valueOf(expirationDate.get(i)));
+            vo.setIncomeDate(LocalDate.parse(incomeDate.get(i)).atStartOfDay());
+            vo.setExpirationDate(LocalDate.parse(expirationDate.get(i)).atStartOfDay());
             vo.setBId(bId);
             list.add(vo);
         }

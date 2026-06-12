@@ -6,6 +6,7 @@ import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Slf4j
 public class AddFoodMaterialRestController {
     private final AddFoodMaterialService addFoodMaterialService;
 
@@ -76,6 +78,7 @@ public class AddFoodMaterialRestController {
             return AddFoodMaterialResponse.success(list.size());
 
         } catch (Exception e){
+            log.error("식자재 등록 실패", e);
             return AddFoodMaterialResponse.fail("식자재 등록 실패");
         }
     }

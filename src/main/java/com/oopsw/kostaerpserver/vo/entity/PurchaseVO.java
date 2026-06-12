@@ -2,6 +2,8 @@ package com.oopsw.kostaerpserver.vo.entity;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +18,7 @@ public class PurchaseVO {
     private int foodMaterialPrice;
     private int totalPrice;
     private String vender;
-    private String incomeDate;
-    private String expirationDate;
+    private LocalDateTime incomeDate;
+    private LocalDateTime expirationDate;
+    private String bId;
 }

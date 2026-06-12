@@ -1,15 +1,17 @@
 package com.oopsw.kostaerpserver.service.entity.purchase;
 
-import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
 import com.oopsw.kostaerpserver.repository.entity.purchase.Purchase;
 import com.oopsw.kostaerpserver.repository.entity.purchase.PurchaseRepository;
 import com.oopsw.kostaerpserver.vo.entity.PurchaseVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements PurchaseService {
@@ -17,18 +19,29 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public boolean addPurchase(PurchaseVO vo){
-        Purchase notice = purchaseRepository.save(Purchase.builder().
-                foodMaterialName("김치").
-                foodMaterialCount(5).
-                foodMaterialWeight(5000).
-                totalWeight(25000).
-                foodMaterialPrice(20000).
-                totalPrice(100000).
-                vender("김치집").
-                incomeDate(LocalDateTime.now()).
-                expirationDate(LocalDate.parse("2030-06-09")).
+        int totalWeight = vo.getFoodMaterialWeight() * vo.getFoodMaterialCount();
+        int totalPrice = vo.getFoodMaterialPrice() * vo.getFoodMaterialCount();
+        LocalDateTime incomeDate = (vo.getIncomeDate() == null) ? LocalDateTime.now() : vo.getIncomeDate();
+        LocalDateTime expirationDate = (vo.getExpirationDate() == null) ? LocalDateTime.now() : vo.getExpirationDate();
+
+        Purchase purchase = purchaseRepository.save(Purchase.builder().
+                foodMaterialName(vo.getFoodMaterialName()).
+                foodMaterialCount(vo.getFoodMaterialCount()).
+                foodMaterialWeight(vo.getFoodMaterialWeight()).
+                totalWeight(totalWeight).
+                foodMaterialPrice(vo.getFoodMaterialPrice()).
+                totalPrice(totalPrice).
+                vender(vo.getVender()).
+                incomeDate(incomeDate).
+                expirationDate(expirationDate).
+                bId(vo.getBId()).
                 build());
 
-        return notice != null;
+        return purchase != null;
+    }
+
+    @Override
+    public List<Purchase> getPurchaseList(String bId) {
+        return purchaseRepository.findAllByBIdOrderByIncomeDateDesc(bId);
     }
 }
