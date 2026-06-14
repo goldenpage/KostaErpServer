@@ -48,4 +48,9 @@ public interface FoodMaterialDAO {
             @Param("foodMaterialId") String foodMaterialId,
             @Param("bId") String bId
     );
+
+    List<FoodMaterial> getExpirationNoticeList(
+            @Param("bId") String bId,
+            @Param("expDays") int expDays
+    );
 }
