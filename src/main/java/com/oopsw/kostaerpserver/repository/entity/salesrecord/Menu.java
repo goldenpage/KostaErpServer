@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Menu {
 
     @Id
-    @Column(name = "menu_Id")
+    @Column(name = "menu_Id", nullable = false, insertable = true, updatable = true)
     private String menuId;
 
     @Column(name = "menuName")
@@ -23,4 +23,8 @@ public class Menu {
 
     @Column(name = "menuPrice")
     private int menuPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menuCategory_Id")
+    private MenuCategory menuCategory;
 }

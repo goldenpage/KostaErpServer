@@ -71,6 +71,7 @@ public class SecurityConfig {
                 "/api/auth/login",
                 "/api/auth/register",
                 "/api/auth/phone/**",
+                "/api/sales/**",
                 "/css/**",
                 "/js/**",
                 "/asset/**"

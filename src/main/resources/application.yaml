@@ -25,10 +25,15 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
+        hbm2ddl:
+          auto: none
         show_sql: true
         format_sql: true
+        globally_quoted_identifiers: true
 
 kind: Application
 logging:

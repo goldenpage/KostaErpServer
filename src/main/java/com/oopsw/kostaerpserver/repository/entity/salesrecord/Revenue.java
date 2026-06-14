@@ -22,4 +22,7 @@ public class Revenue {
 
     @Column(name = "revenueDate")
     private LocalDate revenueDate;
+
+    @Column(name = "payment")
+    private String payment;
 }
