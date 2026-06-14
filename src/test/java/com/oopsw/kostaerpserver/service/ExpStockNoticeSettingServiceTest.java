@@ -3,7 +3,7 @@ package com.oopsw.kostaerpserver.service;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeRequest;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
-import com.oopsw.kostaerpserver.service.entity.OutOfStockNoticeServiceImpl;
+import com.oopsw.kostaerpserver.service.entity.outofstocknotice.OutOfStockNoticeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
