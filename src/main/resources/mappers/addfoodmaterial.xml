@@ -6,7 +6,7 @@
         SELECT COUNT(*) FROM FOODM WHERE bId = #{bId}
     </select>
 
-    <insert id="addFoodMaterial" parameterType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+    <insert id="addFoodMaterial" parameterType="com.oopsw.kostaerpserver.vo.AddFoodMaterial">
         INSERT INTO FOODM(foodMaterialName, foodCategory_Id, foodMaterialCount,
                           foodMaterialCountAll, foodMaterialPrice, foodMaterialType, vender,
                           incomeDate, expirationDate, bId)
