@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.service.entity;
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNoticeRepository;
+import com.oopsw.kostaerpserver.service.entity.outofstocknotice.OutOfStockNoticeServiceImpl;
 import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
