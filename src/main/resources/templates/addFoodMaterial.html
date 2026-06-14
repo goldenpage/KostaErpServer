@@ -60,11 +60,11 @@
             </div>
 
             <div class="input_fields">
-              <label>구매 수량 *</label>
-              <input type="number" id="foodMaterialCount" placeholder="5" min="0">
+              <label>총 중량</label>
+              <input type="number" id="totalWeight" placeholder="자동 계산" readonly style="background:#f0f0f0; cursor:not-allowed;">
 
-              <label>식자재 중량(총 무게) *</label>
-              <input type="number" id="foodMaterialCountAll" placeholder="1500" min="0">
+              <label>식자재중량(개당, 단위:g) *</label>
+              <input type="number" id="foodMaterialWeight" placeholder="1500" min="0" oninput="calcAuto()">
               <select id="inputUnit">
                 <option value="g">g</option>
                 <option value="kg">kg</option>
@@ -74,8 +74,16 @@
             </div>
 
             <div class="input_fields">
-              <label>가격(총 가격) *</label>
-              <input type="number" id="foodMaterialPrice" placeholder="10000" min="0">
+              <label>총 가격</label>
+              <input type="number" id="totalPrice" placeholder="자동 계산" readonly style="background:#f0f0f0; cursor:not-allowed;">
+
+              <label>가격(개당) *</label>
+              <input type="number" id="foodMaterialPrice" placeholder="10000" min="0" oninput="calcAuto()">
+            </div>
+
+            <div class="input_fields">
+              <label>구매 수량 *</label>
+              <input type="number" id="foodMaterialCount" placeholder="5" min="0" oninput="calcAuto()">
 
               <label>타입 *</label>
               <select id="foodMaterialType">
@@ -92,7 +100,7 @@
             <div class="input_fields">
               <label>매입일자</label>
               <input type="date" id="incomeDate">
-              <span class="auto_date_hint">※ 미입력 시 오늘 날짜 자동 설정</span>
+              <span class="auto_date_hint"></span>
 
               <label>유통기한 *</label>
               <input type="date" id="expirationDate">
@@ -142,7 +150,7 @@
               <th>식자재명</th>
               <th>카테고리</th>
               <th>구매수량</th>
-              <th>총 중량</th>
+              <th>중량</th>
               <th>총 가격</th>
               <th>삭제</th>
             </tr>

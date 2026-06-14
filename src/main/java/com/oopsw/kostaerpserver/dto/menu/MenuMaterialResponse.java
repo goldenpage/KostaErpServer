@@ -11,7 +11,7 @@ public class MenuMaterialResponse {
     private String foodMaterialName;
     private int usedCount;
     private int foodMaterialPrice;
-    private int foodMaterialCountAll;
+    private int totalWeight;
     private int usedPrice;
 
     public static MenuMaterialResponse from(Menu menu) {
@@ -20,7 +20,7 @@ public class MenuMaterialResponse {
                 .foodMaterialName(menu.getFoodMaterialName())
                 .usedCount(menu.getUsedCount())
                 .foodMaterialPrice(menu.getFoodMaterialPrice())
-                .foodMaterialCountAll(menu.getFoodMaterialCountAll())
+                .totalWeight(menu.getTotalWeight())
                 .usedPrice(menu.getUsedPrice())
                 .build();
     }

@@ -10,7 +10,7 @@
             p.food_Material_Name AS foodMaterialName,
       ROUND(
         SUM(p.total_Price)
-          / NULLIF(SUM(p.food_Material_Count), 0)
+        / NULLIF(SUM(p.food_Material_Count), 0)
       ) AS foodMaterialPrice,
       SUM(p.food_Material_Count) AS foodMaterialCount,
       SUM(p.total_Price) AS totalExpense
@@ -131,7 +131,7 @@
     SELECT
       COALESCE(
         ROUND(
-          SUM(d.disposalCountAll) * 100 / NULLIF(SUM(f.foodMaterialCountAll), 0),
+          SUM(d.disposalCountAll) * 100 / NULLIF(SUM(f.totalWeight), 0),
           2
         ),
         0

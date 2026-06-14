@@ -13,7 +13,8 @@ public class FoodMaterialResponse {
     private String foodMaterialName;
     private String foodCategory;
     private int foodMaterialCount;
-    private int foodMaterialCountAll;
+    private int foodMaterialWeight;
+    private int totalWeight;
     private int foodMaterialPrice;
     private String vender;
     private Date incomeDate;
@@ -26,7 +27,8 @@ public class FoodMaterialResponse {
                 .foodMaterialName(food.getFoodMaterialName())
                 .foodCategory(food.getFoodCategory())
                 .foodMaterialCount(food.getFoodMaterialCount())
-                .foodMaterialCountAll(food.getFoodMaterialCountAll())
+                .foodMaterialWeight(food.getFoodMaterialWeight())
+                .totalWeight(food.getTotalWeight())
                 .foodMaterialPrice(food.getFoodMaterialPrice())
                 .vender(food.getVender())
                 .incomeDate(food.getIncomeDate())

@@ -117,7 +117,7 @@
     <select id="getDisposalRate" resultType="double">
         SELECT IFNULL(ROUND(
         SUM(d.disposalCountAll) * 100 /
-        NULLIF(SUM(f.foodMaterialCountAll), 0), 2
+        NULLIF(SUM(f.totalWeight), 0), 2
         ), 0) AS disposalRate
         FROM DISPOSALS d
         JOIN FOODM f ON d.foodMaterial_Id = f.foodMaterial_Id

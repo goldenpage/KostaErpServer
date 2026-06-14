@@ -58,8 +58,7 @@
                     <th>식자재명</th>
                     <th>카테고리</th>
                     <th>구매 수량</th>
-                    <th>총 중량(단위:g)</th>
-                    <th>총 매입가격</th>
+                    <th>총중량</th>
                     <th>구입처</th>
                     <th>매입날짜</th>
                     <th>
@@ -83,8 +82,7 @@
                     <td th:text="${food.foodMaterialName}">식자재명</td>
                     <td th:text="${food.foodCategory}">카테고리</td>
                     <td th:text="${food.foodMaterialCount}">전체수량</td>
-                    <td th:text="${food.foodMaterialCountAll}">전체용량</td>
-                    <td th:text="${food.foodMaterialPrice}">매입가격</td>
+                    <td th:text="${food.totalWeight}">총중량</td>
                     <td th:text="${food.vender}">구입처</td>
                     <td th:text="${#dates.format(food.incomeDate, 'yyyy-MM-dd')}">매입날짜</td>
                     <td th:text="${#dates.format(food.expirationDate, 'yyyy-MM-dd')}">유통기한</td>
@@ -105,7 +103,7 @@
                 </tr>
 
                 <tr class="emptyRow" th:if="${#lists.isEmpty(foodList)}">
-                    <td colspan="13">조회된 식자재가 없습니다.</td>
+                    <td colspan="12">조회된 식자재가 없습니다.</td>
                 </tr>
                 </tbody>
             </table>
