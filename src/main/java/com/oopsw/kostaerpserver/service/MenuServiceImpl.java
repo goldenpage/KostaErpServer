@@ -122,7 +122,7 @@ public class MenuServiceImpl implements MenuService {
                     OutOfStockNoticeVO.builder()
                             .noticeContent(material.getFoodMaterialName() + " 재고 부족")
                             .foodMaterialName(material.getFoodMaterialName())
-                            .remainStockAmount(material.getFoodMaterialCountAll())
+                            .remainStockAmount(material.getTotalWeight())
                             .bId(bId)
                             .build()
             );

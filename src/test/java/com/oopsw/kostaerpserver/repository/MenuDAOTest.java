@@ -94,7 +94,7 @@ public class MenuDAOTest {
 
         list.forEach(m -> log.info("재고 부족 식자재: name={}, remainStock={}",
                 m.getFoodMaterialName(),
-                m.getFoodMaterialCountAll()));
+                m.getTotalWeight()));
 
         assertTrue(list.size() >= 0);
     }

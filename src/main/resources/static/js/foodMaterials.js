@@ -112,7 +112,7 @@ function drawFoodTable(foodList) {
     if (foodList.length === 0) {
         tbody.innerHTML =
             "<tr class='emptyRow'>" +
-            "<td colspan='13'>조회된 식자재가 없습니다.</td>" +
+            "<td colspan='12'>조회된 식자재가 없습니다.</td>" +
             "</tr>";
         return;
     }
@@ -121,7 +121,7 @@ function drawFoodTable(foodList) {
         const tr = document.createElement("tr");
         tr.className = "foodRow";
 
-        const stockClass = getStockClass(food.foodMaterialCountAll);
+        const stockClass = getStockClass(food.totalWeight);
         const expClass = getExpirationClass(food.expirationDate);
 
         tr.innerHTML =
@@ -129,8 +129,7 @@ function drawFoodTable(foodList) {
             "<td>" + checkNull(food.foodMaterialName) + "</td>" +
             "<td>" + checkNull(food.foodCategory) + "</td>" +
             "<td>" + checkNull(food.foodMaterialCount) + "</td>" +
-            "<td class='" + stockClass + "'>" + checkNull(food.foodMaterialCountAll) + "</td>" +
-            "<td>" + checkNull(food.foodMaterialPrice) + "</td>" +
+            "<td class='" + stockClass + "'>" + checkNull(food.totalWeight) + "</td>" +
             "<td>" + checkNull(food.vender) + "</td>" +
             "<td>" + formatDate(food.incomeDate) + "</td>" +
             "<td class='" + expClass + "'>" + formatDate(food.expirationDate) + "</td>" +
@@ -377,7 +376,7 @@ function applyColorToCurrentTable() {
         }
 
         const stockCell = cells[4];
-        const expCell = cells[8];
+        const expCell = cells[7];
 
         const stockValue = stockCell.innerText.trim();
         const expValue = expCell.innerText.trim();

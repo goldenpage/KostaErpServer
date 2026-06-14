@@ -72,7 +72,7 @@ public class MenuServiceTest {
         List<Menu> list = menuService.getLowStockMaterialList("MI001", bId, foodmLimit);
 
         list.forEach(m -> log.info("재고 부족 식자재: name={}, remainStock={}",
-                m.getFoodMaterialName(), m.getFoodMaterialCountAll()));
+                m.getFoodMaterialName(), m.getTotalWeight()));
 
         assertTrue(list.size() >= 0);
     }
