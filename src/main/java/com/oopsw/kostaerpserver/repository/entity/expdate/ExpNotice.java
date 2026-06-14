@@ -25,23 +25,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class ExpNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exp_notice_id")
     private int expNoticeId;
 
-    @Column(name = "bId", unique = true, nullable = false, length = 10)
+    @Column(name = "b_Id", unique = true, nullable = false, length = 10)
     private String bId;
 
-    @Column(name = "expAlert", nullable = false)
+    @Column(name = "exp_Alert", nullable = false)
     private boolean expAlert;
 
-    @Column(name = "expDays", nullable = false)
+    @Column(name = "exp_Days", nullable = false)
     private int expDays;
 
     @CreationTimestamp
-    @Column(name = "createdAt", updatable = false, nullable = false)
+    @Column(name = "created_At", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = false)
+    @Column(name = "updated_At", nullable = false)
     private LocalDateTime updatedAt;
 
     public void update(boolean expAlert, int expDays) {

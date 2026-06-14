@@ -5,6 +5,8 @@ spring:
   application:
     name: KostaErpServer
   servlet:
+    session:
+      persistent: false
     multipart:
       max-file-size: 10MB
       max-request-size: 11MB
