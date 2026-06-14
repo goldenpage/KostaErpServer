@@ -89,7 +89,9 @@ public class AddFoodMaterialDAOTest {
         vo.setFoodMaterialName("테스트식자재");
         vo.setFoodCategory_Id(categoryId);
         vo.setFoodMaterialCount(10);
-        vo.setFoodMaterialCountAll(10000);
+        vo.setFoodMaterialWeight(1000);
+        vo.setTotalWeight(10000);
+        vo.setTotalPrice(50000);
         vo.setFoodMaterialPrice(5000);
         vo.setFoodMaterialType("고체");
         vo.setVender("테스트업체");
