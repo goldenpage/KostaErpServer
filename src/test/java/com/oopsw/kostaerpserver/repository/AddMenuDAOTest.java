@@ -1,5 +1,7 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.repository.dao.AddFoodMaterialDAO;
+import com.oopsw.kostaerpserver.repository.dao.AddMenuDAO;
 import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.Menu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;

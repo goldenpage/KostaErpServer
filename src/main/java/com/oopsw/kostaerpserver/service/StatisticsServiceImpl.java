@@ -9,7 +9,7 @@ import com.oopsw.kostaerpserver.dto.statistics.MonthlyExpenseRankChart;
 import com.oopsw.kostaerpserver.dto.statistics.MonthlyFoodMaterialExpenseRank;
 import com.oopsw.kostaerpserver.dto.statistics.MonthlyRevenue;
 import com.oopsw.kostaerpserver.dto.statistics.SalesHistory;
-import com.oopsw.kostaerpserver.repository.StatisticsDAO;
+import com.oopsw.kostaerpserver.repository.dao.StatisticsDAO;
 import com.oopsw.kostaerpserver.service.Interface.StatisticsService;
 import java.time.LocalDate;
 import java.util.List;

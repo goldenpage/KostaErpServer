@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.oopsw.kostaerpserver.repository.DisposalDAO;
+import com.oopsw.kostaerpserver.repository.dao.DisposalDAO;
 import com.oopsw.kostaerpserver.vo.Disposal;
 import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 import org.springframework.test.context.ActiveProfiles;

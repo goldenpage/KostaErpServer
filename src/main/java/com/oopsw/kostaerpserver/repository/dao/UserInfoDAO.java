@@ -1,8 +1,6 @@
-package com.oopsw.kostaerpserver.repository;
+package com.oopsw.kostaerpserver.repository.dao;
 
 import com.oopsw.kostaerpserver.vo.User;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

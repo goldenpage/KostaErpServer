@@ -14,8 +14,6 @@ import com.oopsw.kostaerpserver.dto.statistics.MonthlyRevenue;
 import com.oopsw.kostaerpserver.dto.statistics.SalesHistory;
 import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.StatisticsService;
-import com.oopsw.kostaerpserver.vo.User;
-import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
