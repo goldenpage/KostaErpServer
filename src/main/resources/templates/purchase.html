@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구매 내역</title>
+    <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+    <link rel="stylesheet" th:href="@{/css/userName.css}">
+    <link rel="stylesheet" th:href="@{/css/purchase.css}">
+</head>
+<body>
+<div class="container">
+    <section>
+        <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+    </section>
+
+    <div class="main">
+        <div th:replace="~{common/userName :: userName}"></div>
+
+        <h1>구매 내역</h1>
+
+        <div class="table_scroll">
+            <table class="list_container">
+                <thead>
+                <tr>
+                    <th>식자재 이름</th>
+                    <th>구매 수량</th>
+                    <th>개당 중량</th>
+                    <th>총 중량</th>
+                    <th>개당 가격</th>
+                    <th>총 구매가격</th>
+                    <th>구매처</th>
+                    <th>매입 날짜</th>
+                    <th>유통기한</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(purchaseList)}">
+                    <td colspan="9">구매 내역이 없습니다.</td>
+                </tr>
+                <tr th:each="purchase : ${purchaseList}">
+                    <td th:text="${purchase.foodMaterialName}">단무지</td>
+                    <td th:text="${purchase.foodMaterialCount}">5</td>
+                    <td th:text="${purchase.foodMaterialWeight}">1000</td>
+                    <td th:text="${purchase.totalWeight}">5000</td>
+                    <td th:text="${#numbers.formatInteger(purchase.foodMaterialPrice, 0)}">20000</td>
+                    <td th:text="${#numbers.formatInteger(purchase.totalPrice, 0)}">100000</td>
+                    <td th:text="${purchase.vender}">하나로마트</td>
+                    <td th:text="${purchase.incomeDate}">2026-06-09 12:00</td>
+                    <td th:text="${purchase.expirationDate}">2026-12-31</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

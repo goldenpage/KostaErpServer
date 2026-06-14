@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 //import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,8 +93,8 @@ public class AddFoodMaterialDAOTest {
         vo.setFoodMaterialPrice(5000);
         vo.setFoodMaterialType("고체");
         vo.setVender("테스트업체");
-        vo.setIncomeDate(Date.valueOf("2026-01-01"));
-        vo.setExpirationDate(Date.valueOf("2026-12-31"));
+        vo.setIncomeDate(LocalDateTime.now());
+        vo.setExpirationDate(LocalDateTime.now().plusDays(100));
         vo.setBId("0000000000");
 
         int result = addFoodMaterialDAO.addFoodMaterial(vo);
