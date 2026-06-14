@@ -9,4 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SaleRequest {
     private int saleCount;
+    private String payment;
 }

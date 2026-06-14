@@ -40,7 +40,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public void saleMenu(String menuId, int saleCount, String bId) {
+    public void saleMenu(String menuId, int saleCount, String bId, String payment) {
         if (saleCount < 1) {
             throw new RuntimeException("판매 수량은 1 이상이어야 합니다.");
         }
@@ -56,6 +56,23 @@ public class MenuServiceImpl implements MenuService {
         }
 
         generateLowStockNotices(menuId, bId);
+
+        String lastId = menuDAO.getLastRevenueId();
+        String revenueId;
+
+        if (lastId == null) {
+            revenueId = "RV001";
+        } else {
+            // "RV" 뒤의 숫자 부분만 추출하여 +1
+            int num = Integer.parseInt(lastId.substring(2)) + 1;
+            revenueId = String.format("RV%03d", num); // 3자리 숫자로 포맷팅
+        }
+        int revenueResult = menuDAO.insertRevenue(revenueId, bId, payment);
+        int insertSaleRecord = menuDAO.insertSaleRecord(menuId, saleCount, revenueId);
+        System.out.println("SALES 저장 결과: " + insertSaleRecord);
+        if (insertSaleRecord == 0) {
+            throw new RuntimeException("판매 기록 저장에 실패했습니다.");
+        }
     }
 
     @Override
