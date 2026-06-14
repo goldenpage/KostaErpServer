@@ -37,7 +37,7 @@ public class ExpStockNoticeSettingServiceTest
 
         int beforeCount = outOfStockNoticeServiceImpl.getUnreadCount(bId);
 
-        menuService.saleMenu("MI001", 1, bId);
+        menuService.saleMenu("MI001", 1, bId, "현금");
 
         int afterCount = outOfStockNoticeServiceImpl.getUnreadCount(bId);
 
@@ -56,7 +56,7 @@ public class ExpStockNoticeSettingServiceTest
 
         stockNoticeSettingService.updateStockNoticeSetting(bId, request);
 
-        menuService.saleMenu("MI001", 1, bId);
+        menuService.saleMenu("MI001", 1, bId, "카드");
 
         int count = outOfStockNoticeServiceImpl.getUnreadCount(bId);
 

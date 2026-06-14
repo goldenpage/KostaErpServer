@@ -24,6 +24,19 @@ public interface MenuDAO {
             @Param("bId") String bId
     );
 
+    int insertSaleRecord(
+            @Param("menuId") String menuId,
+            @Param("saleCount") int saleCount,
+            @Param("revenueId") String revenueId
+    );
+
+    int insertRevenue(
+            @Param("revenueId") String revenueId,
+            @Param("bId") String bId,
+            @Param("payment") String payment
+    );
+    String getLastRevenueId();
+
     List<Menu> getLowStockMaterialList(
             @Param("menuId") String menuId,
             @Param("bId") String bId,
