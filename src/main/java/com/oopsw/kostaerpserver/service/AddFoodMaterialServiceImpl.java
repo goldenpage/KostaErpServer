@@ -1,20 +1,25 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO;
+import com.oopsw.kostaerpserver.repository.dao.AddFoodMaterialDAO;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
+import com.oopsw.kostaerpserver.service.entity.purchase.PurchaseConvert;
+import com.oopsw.kostaerpserver.service.entity.purchase.PurchaseService;
 import com.oopsw.kostaerpserver.vo.AddFoodMaterial;
 import com.oopsw.kostaerpserver.vo.FoodCategory;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AddFoodMaterialServiceImpl implements AddFoodMaterialService {
     private final AddFoodMaterialDAO addFoodMaterialDAO;
+    private final PurchaseService purchaseService;
 
     // 1. 사용하고 있는 식자재 개수 조회
     public int getFoodMaterialCount(String bId){
@@ -23,7 +28,14 @@ public class AddFoodMaterialServiceImpl implements AddFoodMaterialService {
 
     // 2. 식자재 입력
     public int addFoodMaterial(AddFoodMaterial addFoodMaterial){
-        return addFoodMaterialDAO.addFoodMaterial(addFoodMaterial);
+        int result = addFoodMaterialDAO.addFoodMaterial(addFoodMaterial);
+        log.info("addFoodMaterial result = {}, addFoodMaterial = {}", result, addFoodMaterial);
+
+        if (result > 0) {
+            boolean purchaseSaved = purchaseService.addPurchase(PurchaseConvert.from(addFoodMaterial));
+            log.info("purchase saved = {}", purchaseSaved);
+        }
+        return result;
     }
 
     // 3. 카테고리 여부 체크
@@ -100,4 +112,5 @@ public class AddFoodMaterialServiceImpl implements AddFoodMaterialService {
     public String getCategoryId(String foodCategory){
         return addFoodMaterialDAO.getCategoryId(foodCategory);
     }
+
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,9 +31,17 @@ public class SecurityConfig {
         jsonLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
 
         jsonLoginFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
+            boolean isManager =
+                auth.getAuthorities().stream().anyMatch(
+                    authority -> authority.getAuthority()
+                        .equals("ROLE_MANAGER"));
+
+            String redirectUrl = isManager ? "/manager" : "/foodmaterials";
+
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().write("{\"message\":\"login success\"}");
+            res.getWriter().write("{\"message\":\"login success\", "
+                + "\"redirectUrl\":\"" + redirectUrl + "\"}");
         });
 
         jsonLoginFilter.setAuthenticationFailureHandler((req, res, ex) -> {
@@ -41,9 +50,18 @@ public class SecurityConfig {
             res.getWriter().write("{\"message\":\"login fail\"}");
         });
 
-
-
-
+        http.exceptionHandling(exception ->
+            exception.authenticationEntryPoint(
+                (request, response, authException) -> {
+                    if (request.getRequestURI().startsWith("/api/")) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.getWriter()
+                            .write("{\"message\":\"authentication required\"}");
+                        return;
+                    }
+                    response.sendRedirect("/login");
+                }));
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(auth -> auth
@@ -51,10 +69,13 @@ public class SecurityConfig {
                 "/login",
                 "/register",
                 "/api/auth/login",
+                "/api/auth/register",
+                "/api/auth/phone/**",
                 "/css/**",
                 "/js/**",
                 "/asset/**"
             ).permitAll()
+            .requestMatchers("/api/manager/**").hasRole("MANAGER")
             .requestMatchers("/manager/**").hasRole("MANAGER")
             .anyRequest().authenticated()
         );

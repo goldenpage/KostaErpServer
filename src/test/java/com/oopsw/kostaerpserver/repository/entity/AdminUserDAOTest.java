@@ -1,5 +1,7 @@
 package com.oopsw.kostaerpserver.repository.entity;
 
+import com.oopsw.kostaerpserver.repository.entity.admin.AdminUser;
+import com.oopsw.kostaerpserver.repository.entity.admin.AdminUserRepository;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -8,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class AdminUserDAOTest {
 
     @Autowired
@@ -20,7 +24,7 @@ class AdminUserDAOTest {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
-    void registerAdminTest() {
+    void savesAndFindsAdmin() {
         AdminUser adminUser = AdminUser.builder()
             .adminName("김관리")
             .pw(bCryptPasswordEncoder.encode("admin123"))
@@ -30,11 +34,6 @@ class AdminUserDAOTest {
 
         AdminUser saved = adminUserRepository.save(adminUser);
         log.info("saved adminId = {}", saved.getAdminId());
-    }
-
-    @Test
-    void findByAdminNameTest() {
-        log.info(String.valueOf(adminUserRepository.findByAdminName("김관리")));
-        Assertions.assertNotNull(adminUserRepository.findByAdminName("김관리"));
+        Assertions.assertTrue(adminUserRepository.findByAdminName("김관리").isPresent());
     }
 }

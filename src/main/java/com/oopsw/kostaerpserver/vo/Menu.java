@@ -17,6 +17,6 @@ public class Menu {
     private String foodMaterialName;
     private int usedCount;
     private int foodMaterialPrice;
-    private int foodMaterialCountAll;
+    private int totalWeight;
     private int usedPrice;
 }

@@ -26,4 +26,9 @@ public class AuthController {
     public String pwUpdate() {
         return "pwUpdate";
     }
+
+    @GetMapping("/manager")
+    public String manager() {
+        return "manager";
+    }
 }

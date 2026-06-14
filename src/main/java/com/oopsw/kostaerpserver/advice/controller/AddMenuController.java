@@ -22,7 +22,6 @@ public class AddMenuController {
                           @ModelAttribute StatisticsRequest statisticsRequest,
                           @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
         String bId = erpUserDetails.getLoginUser().getBId();
-        System.out.println(bId);
         List<MenuCategory> categoryList = addMenuService.getMenuCategoryList(bId);
         model.addAttribute("categoryList", GetMenuCategoryListResponse.fromList(categoryList));
 

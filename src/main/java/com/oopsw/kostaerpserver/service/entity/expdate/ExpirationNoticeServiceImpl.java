@@ -2,7 +2,10 @@ package com.oopsw.kostaerpserver.service.entity.expdate;
 
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeResponse;
 import com.oopsw.kostaerpserver.dto.expnotice.ExpirationNoticeResponse;
-import com.oopsw.kostaerpserver.repository.FoodMaterialDAO;
+
+import com.oopsw.kostaerpserver.repository.dao.FoodMaterialDAO;
+import com.oopsw.kostaerpserver.service.entity.expdate.ExpNoticeService;
+import com.oopsw.kostaerpserver.service.entity.expdate.ExpirationNoticeService;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

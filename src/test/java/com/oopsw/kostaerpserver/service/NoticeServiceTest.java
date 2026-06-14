@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import com.oopsw.kostaerpserver.repository.NoticeDAO;
+import com.oopsw.kostaerpserver.repository.dao.NoticeDAO;
 
 @Slf4j
 @ActiveProfiles("test")

@@ -14,7 +14,8 @@ public class FoodMaterial {
     private String foodMaterialName;
     private String foodCategory;
     private int foodMaterialCount;
-    private int foodMaterialCountAll;
+    private int foodMaterialWeight;
+    private int totalWeight;
     private int foodMaterialPrice;
     private String vender;
     private String foodMaterialType;

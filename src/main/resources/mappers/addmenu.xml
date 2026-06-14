@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.oopsw.kostaerpserver.repository.AddMenuDAO">
+<mapper namespace="com.oopsw.kostaerpserver.repository.dao.AddMenuDAO">
 
     <insert id="addMenu" parameterType="com.oopsw.kostaerpserver.vo.Menu">
         INSERT INTO MENUS(menuName, menuPrice, menuCategory_Id)
@@ -47,8 +47,8 @@
     <select id="getMenuDetail" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.Menu">
         SELECT m.menu_Id AS menuId, m.menuName, m.menuPrice,
                f.foodMaterialName, u.usedCount,
-               f.foodMaterialPrice, f.foodMaterialCountAll,
-               ROUND((u.usedCount / f.foodMaterialCountAll) * f.foodMaterialPrice, 0) AS usedPrice
+               f.foodMaterialPrice, f.totalWeight,
+               ROUND((u.usedCount / f.totalWeight) * f.foodMaterialPrice, 0) AS usedPrice
         FROM MENUS m
                  JOIN USED u ON m.menu_Id = u.menu_Id
                  JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
@@ -58,7 +58,7 @@
 
     <update id="updateFoodMaterialAfterSale" parameterType="map">
         UPDATE FOODM f
-        SET f.foodMaterialCountAll = f.foodMaterialCountAll - (
+        SET f.totalWeight = f.totalWeight - (
             SELECT SUM(u.usedCount) * #{saleCount}
             FROM USED u
             WHERE u.foodMaterial_Id = f.foodMaterial_Id
@@ -80,7 +80,7 @@
                 GROUP BY foodMaterial_Id
             ) need ON f2.foodMaterial_Id = need.foodMaterial_Id
             WHERE f2.bId = #{bId}
-              AND f2.foodMaterialCountAll &lt; need.needCount
+              AND f2.totalWeight &lt; need.needCount
         )
     </update>
 

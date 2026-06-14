@@ -3,7 +3,7 @@ package com.oopsw.kostaerpserver.service;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialPageResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialSearchRequest;
-import com.oopsw.kostaerpserver.repository.FoodMaterialDAO;
+import com.oopsw.kostaerpserver.repository.dao.FoodMaterialDAO;
 import com.oopsw.kostaerpserver.service.Interface.FoodMaterialService;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.RequiredArgsConstructor;
@@ -151,4 +151,5 @@ public class FoodMaterialServiceImpl implements FoodMaterialService {
 
         return totalPage;
     }
+
 }

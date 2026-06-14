@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.vo.User;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
 import org.springframework.test.context.ActiveProfiles;
 
 @Slf4j

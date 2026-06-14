@@ -50,7 +50,7 @@ public class OutOfStockNoticeRestController {
         return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/read-all")  // 추가
+    @PatchMapping("/read-all")
     public ResponseEntity<Void> markAllAsRead(
             @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
         outOfStockNoticeServiceImpl.markAllAsRead(getBId(erpUserDetails));

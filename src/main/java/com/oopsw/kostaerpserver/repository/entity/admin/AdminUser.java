@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.repository.entity;
+package com.oopsw.kostaerpserver.repository.entity.admin;
 
 
 import jakarta.persistence.Entity;
