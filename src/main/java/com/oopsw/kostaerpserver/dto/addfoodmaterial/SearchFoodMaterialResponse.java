@@ -17,7 +17,8 @@ public class SearchFoodMaterialResponse {
     private String foodMaterialName;
     private String foodCategory;
     private int foodMaterialCount;
-    private int foodMaterialCountAll;
+    private int foodMaterialWeight;
+    private int totalWeight;
     private int foodMaterialPrice;
     private String vender;
     private String foodMaterialType;
@@ -30,7 +31,8 @@ public class SearchFoodMaterialResponse {
                 .foodMaterialName(vo.getFoodMaterialName())
                 .foodCategory(vo.getFoodCategory())
                 .foodMaterialCount(vo.getFoodMaterialCount())
-                .foodMaterialCountAll(vo.getFoodMaterialCountAll())
+                .foodMaterialWeight(vo.getFoodMaterialWeight())
+                .totalWeight(vo.getTotalWeight())
                 .foodMaterialPrice(vo.getFoodMaterialPrice())
                 .vender(vo.getVender())
                 .foodMaterialType(vo.getFoodMaterialType())

@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.entity;
+package com.oopsw.kostaerpserver.service.entity.outofstocknotice;
 
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;

@@ -6,6 +6,15 @@ function today() {
 
 document.getElementById('incomeDate').value = today();
 
+function calcAuto() {
+    let count = Number(document.getElementById('foodMaterialCount').value);
+    let weight = Number(document.getElementById('foodMaterialWeight').value);
+    let price = Number(document.getElementById('foodMaterialPrice').value);
+
+    document.getElementById('totalWeight').value = (count > 0 && weight > 0) ? count * weight : '';
+    document.getElementById('totalPrice').value = (count > 0 && price > 0) ? count * price : '';
+}
+
 function selectCategory(btn) {
     document.querySelectorAll('#categoryArea button').forEach(function(b) {
         b.classList.remove('selected');
@@ -115,7 +124,7 @@ function addToList() {
     let foodCategory_Id = document.getElementById('selectedCategoryId').value;
     let foodCategoryName = getSelectedCategoryName();
     let foodMaterialCount = document.getElementById('foodMaterialCount').value;
-    let foodMaterialCountAll = document.getElementById('foodMaterialCountAll').value;
+    let foodMaterialWeight = document.getElementById('foodMaterialWeight').value;
     let unit = document.getElementById('inputUnit').value;
     let foodMaterialPrice = document.getElementById('foodMaterialPrice').value;
     let foodMaterialType = document.getElementById('foodMaterialType').value.trim();
@@ -128,7 +137,7 @@ function addToList() {
     if (!foodMaterialName) { alert('식자재명을 입력해주세요.'); return; }
     if (!foodCategory_Id) { alert('카테고리를 선택해주세요.'); return; }
     if (!foodMaterialCount || Number(foodMaterialCount) < 0) { alert('전체수량을 올바르게 입력해주세요.'); return; }
-    if (!foodMaterialCountAll || Number(foodMaterialCountAll) < 0) { alert('식자재 용량을 올바르게 입력해주세요.'); return; }
+    if (!foodMaterialWeight || Number(foodMaterialWeight) < 0) { alert('식자재 중량을 올바르게 입력해주세요.'); return; }
     if (!foodMaterialPrice || Number(foodMaterialPrice) < 0) { alert('가격을 올바르게 입력해주세요.'); return; }
     if (!foodMaterialType) { alert('타입을 입력해주세요.'); return; }
     if (!vender) { alert('구입처를 입력해주세요.'); return; }
@@ -140,7 +149,7 @@ function addToList() {
         foodCategory_Id: foodCategory_Id,
         foodCategoryName: foodCategoryName,
         foodMaterialCount: foodMaterialCount,
-        foodMaterialCountAll: foodMaterialCountAll,
+        foodMaterialWeight: foodMaterialWeight,
         unit: unit,
         foodMaterialPrice: foodMaterialPrice,
         foodMaterialType: foodMaterialType,
@@ -168,7 +177,7 @@ function renderPendingList() {
             '<td>' + item.foodMaterialName + '</td>' +
             '<td>' + item.foodCategoryName + '</td>' +
             '<td>' + item.foodMaterialCount + '</td>' +
-            '<td>' + item.foodMaterialCountAll + item.unit + '</td>' +
+            '<td>' + item.foodMaterialWeight + item.unit + '</td>' +
             '<td>' + Number(item.foodMaterialPrice).toLocaleString() + '원</td>' +
             '<td><span class="remove_btn" data-index="' + idx + '" onclick="removeRow(this)">&#10005;</span></td>';
         body.appendChild(tr);
@@ -184,9 +193,11 @@ function removeRow(el) {
 function clearInputs() {
     document.getElementById('foodMaterialName').value = '';
     document.getElementById('foodMaterialCount').value = '';
-    document.getElementById('foodMaterialCountAll').value = '';
+    document.getElementById('foodMaterialWeight').value = '';
+    document.getElementById('totalWeight').value = '';
     document.getElementById('inputUnit').selectedIndex = 0;
     document.getElementById('foodMaterialPrice').value = '';
+    document.getElementById('totalPrice').value = '';
     document.getElementById('foodMaterialType').selectedIndex = 0;
     document.getElementById('vender').value = '';
     document.getElementById('expirationDate').value = '';
@@ -263,7 +274,7 @@ function registerAll() {
         formData.append('foodMaterialName', item.foodMaterialName);
         formData.append('foodCategory_Id', item.foodCategory_Id);
         formData.append('foodMaterialCount', item.foodMaterialCount);
-        formData.append('foodMaterialCountAll', item.foodMaterialCountAll);
+        formData.append('foodMaterialWeight', item.foodMaterialWeight);
         formData.append('foodMaterialPrice', item.foodMaterialPrice);
         formData.append('foodMaterialType', item.foodMaterialType);
         formData.append('vender', item.vender);

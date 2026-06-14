@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.service.entity;
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNoticeRepository;
+import com.oopsw.kostaerpserver.service.entity.outofstocknotice.OutOfStockNoticeServiceImpl;
 import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,7 @@ public class OutOfStockNoticeServiceTest {
     @Autowired
     private OutOfStockNoticeRepository outOfStockNoticeRepository;
 
-    //    @Test
+    @Test
     public void addOutOfStockNoticeTest() {
         Assertions.assertTrue(outOfStockNoticeServiceImpl.addOutOfStockNotice(OutOfStockNoticeVO.builder().
                 noticeDate(String.valueOf(LocalDateTime.now())).
@@ -37,7 +38,7 @@ public class OutOfStockNoticeServiceTest {
         log.info("saved notice = {}", outOfStockNoticeServiceImpl);
     }
 
-//    @Test
+    @Test
     public void getUnreadListTest(){
         outOfStockNoticeRepository.save(com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -62,7 +63,7 @@ public class OutOfStockNoticeServiceTest {
         Assertions.assertTrue(list.size() > 0, "list");
     }
 
-//    @Test
+    @Test
     public void getUnreadCountTest(){
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -87,7 +88,7 @@ public class OutOfStockNoticeServiceTest {
         Assertions.assertEquals(1, result);
     }
 
-//    @Test
+    @Test
     public void markAsReadTest(){
         boolean result = outOfStockNoticeServiceImpl.markAsRead(2);
         log.info("result = {}", result);

@@ -4,7 +4,7 @@ import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
 import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
-import com.oopsw.kostaerpserver.service.entity.OutOfStockNoticeServiceImpl;
+import com.oopsw.kostaerpserver.service.entity.outofstocknotice.OutOfStockNoticeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,7 +50,7 @@ public class OutOfStockNoticeRestController {
         return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/read-all")  // 추가
+    @PatchMapping("/read-all")
     public ResponseEntity<Void> markAllAsRead(
             @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
         outOfStockNoticeServiceImpl.markAllAsRead(getBId(erpUserDetails));

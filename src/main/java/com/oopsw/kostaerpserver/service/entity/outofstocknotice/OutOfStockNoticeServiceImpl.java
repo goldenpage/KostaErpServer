@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.entity;
+package com.oopsw.kostaerpserver.service.entity.outofstocknotice;
 
 import com.oopsw.kostaerpserver.dto.outofstock.OutOfStockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
@@ -8,13 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OutOfStockNoticeServiceImpl implements com.oopsw.kostaerpserver.service.entity.OutOfStockNotice {
+public class OutOfStockNoticeServiceImpl implements com.oopsw.kostaerpserver.service.entity.outofstocknotice.OutOfStockNotice {
     private final OutOfStockNoticeRepository outOfStockNoticeRepository;
 
     @Override
