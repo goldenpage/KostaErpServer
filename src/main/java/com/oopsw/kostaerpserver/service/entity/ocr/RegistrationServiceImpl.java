@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service;
+package com.oopsw.kostaerpserver.service.entity.ocr;
 
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegistrationResponse;
@@ -7,9 +7,7 @@ import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.repository.entity.admin.RegistrationRequestedUser;
 import com.oopsw.kostaerpserver.repository.entity.admin.RegistrationRequestedUserRepository;
 import com.oopsw.kostaerpserver.repository.entity.admin.ReviewStatus;
-import com.oopsw.kostaerpserver.service.Interface.BusinessDocumentVerificationService;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
-import com.oopsw.kostaerpserver.service.Interface.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,24 +43,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         return switch (result.status()) {
             case APPROVED -> {
                 loginService.register(request);
-
                 yield new RegistrationResponse(
                     "APPROVED",
                     "회원가입이 완료되었습니다."
                 );
             }
-
             case REJECTED -> new RegistrationResponse(
                 "REJECTED",
                 result.message()
             );
-
-            case NEED_REVIEW -> savePendingRegistration(request, document, result);
-
-            case RETRY -> new RegistrationResponse(
-                "RETRY",
-                result.message()
-            );
+            case NEED_REVIEW, RETRY ->
+                savePendingRegistration(request, document, result);
         };
     }
 

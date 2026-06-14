@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service;
+package com.oopsw.kostaerpserver.service.entity.ocr;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,5 +70,25 @@ public class RegistrationDocumentStorageService {
         } catch (IOException ignored) {
             log.error(String.valueOf(ignored));
         }
+    }
+
+    public Resource loadAsResource(String documentPath) {
+        if (documentPath == null || documentPath.isBlank()) {
+            throw new IllegalArgumentException("제출 서류 경로가 없습니다.");
+        }
+
+        Path path = Path.of(documentPath)
+            .toAbsolutePath()
+            .normalize();
+
+        if (!path.startsWith(storageDirectory)) {
+            throw new IllegalArgumentException("허용되지 않은 제출 서류 경로입니다.");
+        }
+
+        if (!Files.isRegularFile(path)) {
+            throw new IllegalArgumentException("제출 서류를 찾을 수 없습니다.");
+        }
+
+        return new FileSystemResource(path);
     }
 }

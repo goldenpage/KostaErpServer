@@ -31,9 +31,17 @@ public class SecurityConfig {
         jsonLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
 
         jsonLoginFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
+            boolean isManager =
+                auth.getAuthorities().stream().anyMatch(
+                    authority -> authority.getAuthority()
+                        .equals("ROLE_MANAGER"));
+
+            String redirectUrl = isManager ? "/manager" : "/foodmaterials";
+
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().write("{\"message\":\"login success\"}");
+            res.getWriter().write("{\"message\":\"login success\", "
+                + "\"redirectUrl\":\"" + redirectUrl + "\"}");
         });
 
         jsonLoginFilter.setAuthenticationFailureHandler((req, res, ex) -> {
@@ -67,6 +75,7 @@ public class SecurityConfig {
                 "/js/**",
                 "/asset/**"
             ).permitAll()
+            .requestMatchers("/api/manager/**").hasRole("MANAGER")
             .requestMatchers("/manager/**").hasRole("MANAGER")
             .anyRequest().authenticated()
         );

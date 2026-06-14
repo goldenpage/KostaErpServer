@@ -7,6 +7,7 @@ import com.oopsw.kostaerpserver.dto.ocr.BusinessVerificationResult;
 import com.oopsw.kostaerpserver.dto.ocr.PythonOcrResponse;
 import com.oopsw.kostaerpserver.service.client.BusinessRegistrationClient;
 import com.oopsw.kostaerpserver.service.client.PythonOcrClient;
+import com.oopsw.kostaerpserver.service.entity.ocr.BusinessDocumentVerificationServiceImpl;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

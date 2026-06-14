@@ -7,6 +7,7 @@ import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.vo.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,10 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @Transactional
 public class PhoneVerificationServiceTest {
+    @Autowired
+    PhoneVerificationServiceImpl service;
+
 
     @Test
     void verifiesGeneratedCodeAndRequiresSamePhone() {
-        PhoneVerificationService service = serviceWithPhoneCount(0);
+        service = serviceWithPhoneCount(0);
         MockHttpSession session = new MockHttpSession();
 
         service.sendCode("010-1234-5678", session);
@@ -37,7 +41,7 @@ public class PhoneVerificationServiceTest {
 
     @Test
     void rejectsAlreadyRegisteredPhone() {
-        PhoneVerificationService service = serviceWithPhoneCount(1);
+        service = serviceWithPhoneCount(1);
 
         assertThrows(
             IllegalArgumentException.class,
@@ -47,7 +51,7 @@ public class PhoneVerificationServiceTest {
 
     @Test
     void rejectsResendDuringCooldown() {
-        PhoneVerificationService service = serviceWithPhoneCount(0);
+        service = serviceWithPhoneCount(0);
         MockHttpSession session = new MockHttpSession();
 
         service.sendCode("01012345678", session);
@@ -58,8 +62,9 @@ public class PhoneVerificationServiceTest {
         );
     }
 
-    private PhoneVerificationService serviceWithPhoneCount(int phoneCount) {
-        return new PhoneVerificationService(new UserInfoDaoStub(phoneCount), (phone, code) -> {
+    private PhoneVerificationServiceImpl serviceWithPhoneCount(int phoneCount) {
+        return new PhoneVerificationServiceImpl(new UserInfoDaoStub(phoneCount),
+            (phone, code) -> {
         });
     }
 

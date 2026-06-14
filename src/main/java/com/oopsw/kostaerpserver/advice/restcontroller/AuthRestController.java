@@ -7,8 +7,8 @@ import com.oopsw.kostaerpserver.dto.auth.PhoneVerificationRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegistrationResponse;
 import com.oopsw.kostaerpserver.dto.auth.UserResponse;
-import com.oopsw.kostaerpserver.service.Interface.RegistrationService;
-import com.oopsw.kostaerpserver.service.PhoneVerificationService;
+import com.oopsw.kostaerpserver.service.entity.ocr.RegistrationService;
+import com.oopsw.kostaerpserver.service.PhoneVerificationServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AuthRestController {
 
     private final RegistrationService registrationService;
-    private final PhoneVerificationService phoneVerificationService;
+    private final PhoneVerificationServiceImpl phoneVerificationService;
 
 
     @PostMapping(

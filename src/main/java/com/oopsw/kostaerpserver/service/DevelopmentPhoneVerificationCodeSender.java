@@ -1,12 +1,13 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.service.Interface.PhoneVerificationCodeSender;
+import com.oopsw.kostaerpserver.service.Interface.PhoneVerificationCodeSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class DevelopmentPhoneVerificationCodeSender implements PhoneVerificationCodeSender {
+public class DevelopmentPhoneVerificationCodeSender implements
+    PhoneVerificationCodeSenderService {
 
     @Override
     public void send(String phone, String code) {

@@ -1,7 +1,8 @@
 package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
-import com.oopsw.kostaerpserver.service.Interface.PhoneVerificationCodeSender;
+import com.oopsw.kostaerpserver.service.Interface.PhoneVerificationCodeSenderService;
+import com.oopsw.kostaerpserver.service.Interface.PhoneVerificationService;
 import jakarta.servlet.http.HttpSession;
 import java.security.SecureRandom;
 import java.time.Duration;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PhoneVerificationService {
+public class PhoneVerificationServiceImpl implements PhoneVerificationService {
 
     private static final String PHONE_ATTRIBUTE = "phoneVerification.phone";
     private static final String CODE_ATTRIBUTE = "phoneVerification.code";
@@ -26,9 +27,10 @@ public class PhoneVerificationService {
     private static final int MAX_ATTEMPTS = 5;
 
     private final UserInfoDAO userInfoDAO;
-    private final PhoneVerificationCodeSender codeSender;
+    private final PhoneVerificationCodeSenderService codeSender;
     private final SecureRandom secureRandom = new SecureRandom();
 
+    @Override
     public void sendCode(String phone, HttpSession session) {
         String normalizedPhone = normalizePhone(phone);
         if (userInfoDAO.getPhoneCheck(normalizedPhone) > 0) {
@@ -51,6 +53,7 @@ public class PhoneVerificationService {
         codeSender.send(normalizedPhone, code);
     }
 
+    @Override
     public void verify(String phone, String code, HttpSession session) {
         String normalizedPhone = normalizePhone(phone);
         if (code == null || !code.matches("\\d{6}")) {
@@ -89,6 +92,7 @@ public class PhoneVerificationService {
         session.removeAttribute(ATTEMPTS_ATTRIBUTE);
     }
 
+    @Override
     public String requireVerified(String phone, HttpSession session) {
         String normalizedPhone = normalizePhone(phone);
         String verifiedPhone = (String) session.getAttribute(PHONE_ATTRIBUTE);
@@ -105,6 +109,7 @@ public class PhoneVerificationService {
         return normalizedPhone;
     }
 
+    @Override
     public void clear(HttpSession session) {
         session.removeAttribute(PHONE_ATTRIBUTE);
         session.removeAttribute(CODE_ATTRIBUTE);

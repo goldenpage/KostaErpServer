@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>지출통계</title>
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
+  <link rel="stylesheet" th:href="@{/css/usedStatistics.css}">
+</head>
+
+<body>
+<div class="container">
+  <section>
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+  </section>
+
+  <div class="main">
+    <div th:replace="~{common/userName :: userName}"></div>
+
+    <div class="top_area">
+      <h1>관리자 페이지</h1>
+    </div>
+
+    <div>이세상은 내가 관리하는 세상이야</div>
+  </div>
+</div>
+</body>
+</html>

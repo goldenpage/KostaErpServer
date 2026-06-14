@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.Interface;
+package com.oopsw.kostaerpserver.service.entity.ocr;
 
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegistrationResponse;

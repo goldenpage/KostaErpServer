@@ -1,0 +1,33 @@
+server:
+  port: 15000
+
+spring:
+  application:
+    name: KostaErpServer
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${TEST_DB_URL}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: ${TEST_DB_DDL_AUTO:update}
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+kind: Application
+logging:
+  level:
+    com.oopsw: info
+
+mybatis:
+  #  type-aliases-package: com.oopsw.aspringweb.dao
+  type-aliases-package: com.oopsw.kostaerpserver.vo
+  mapper-locations: classpath:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

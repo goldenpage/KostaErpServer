@@ -56,8 +56,23 @@ public class RegistrationRequestedUser {
     private ReviewStatus reviewStatus;
 
     public void approve(String adminName) {
+        if (reviewStatus != ReviewStatus.PENDING) {
+            throw new IllegalStateException("심사 대기 중인 신청만 승인할 수 있습니다.");
+        }
+
         reviewStatus = ReviewStatus.APPROVED;
         reviewedBy = adminName;
+        reviewDate = LocalDateTime.now();
+    }
+
+    public void reject(String adminName, String rejectionReason) {
+        if (reviewStatus != ReviewStatus.PENDING) {
+            throw new IllegalStateException("심사 대기 중인 신청만 반려할 수 있습니다.");
+        }
+
+        reviewStatus = ReviewStatus.REJECTED;
+        reviewedBy = adminName;
+        reason = rejectionReason;
         reviewDate = LocalDateTime.now();
     }
 }

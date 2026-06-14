@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.service.Interface;
 
-public interface PhoneVerificationCodeSender {
+public interface PhoneVerificationCodeSenderService {
 
     void send(String phone, String code);
 }
