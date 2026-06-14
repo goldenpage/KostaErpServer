@@ -7,8 +7,6 @@ ul { list-style: none; }
     min-width: 1000px;
 }
 
-
-
 .main {
     width: 100%;
 }
@@ -138,3 +136,4 @@ table { border-spacing: 24px; }
     color: #aaa;
     font-size: 13px;
 }
+

@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: KostaErpServer
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
+      resolve-lazily: true
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DB_URL}
@@ -41,3 +46,8 @@ mybatis:
   mapper-locations: classpath:mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+external-api:
+  python-ocr-url: http://127.0.0.1:8000/api/v1/business-document-ocr
+  business-registration-url: http://127.0.0.1:3000/nts-businessman/v1/validate
+

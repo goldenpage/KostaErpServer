@@ -15,16 +15,16 @@ const login = async () => {
     })
   });
 
+  const data = await res.json();
+
   console.log("status:", res.status);
 
-  if (res.ok) {
-    console.log("로그인 성공");
-    bid = '';
-    location.href = "/revenuestatistics";
-  } else {
-    console.log("로그인 실패");
-    alert("로그인 실패");
+  if (!res.ok) {
+    alert(data.message || "로그인 실패");
+    return;
   }
+
+  location.href = data.redirectUrl;
 };
 
 button.addEventListener("click", () => {

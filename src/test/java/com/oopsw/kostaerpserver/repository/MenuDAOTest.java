@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.repository;
 
+import com.oopsw.kostaerpserver.repository.dao.MenuDAO;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNotice;
 import com.oopsw.kostaerpserver.repository.entity.outofstocknotice.OutOfStockNoticeRepository;
 import com.oopsw.kostaerpserver.vo.Menu;
