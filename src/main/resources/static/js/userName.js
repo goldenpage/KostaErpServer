@@ -32,26 +32,32 @@ async function stockLoadList() {
 
   try {
     const res = await fetch("/api/out-of-stock-notice");
+    const expRes = await fetch("/api/expiration-notice");
 
-    if (!res.ok) throw new Error("조회 실패");
+    if (!res.ok || !expRes.ok) throw new Error("조회 실패");
 
     const data = await res.json();
-    stockRenderList(data);
+    const expData = await expRes.json();
+    stockRenderList(data, expData);
   } catch (e) {
     listEl.innerHTML = '<li class="stock-empty">불러오기 실패</li>';
   }
 }
 
-function stockRenderList(notices) {
+function stockRenderList(stockNotices, expNotices) {
   const listEl = document.getElementById("stockList");
 
-  if (!notices || notices.length === 0) {
-    listEl.innerHTML = '<li class="stock-empty">알림이 없습니다.</li>';
-    stockUpdateBadge(0);
-    return;
-  }
+  const expHtml = expNotices.map(n => `
+        <li class="stock-item" onclick="location.href='/foodmaterials?sort=expAsc'">
+            <div class="stock-item-info">
+                <span class="stock-item-name">${n.foodMaterialName} 유통기한 알림</span>
+                <span class="stock-item-content">${n.noticeContent}</span>
+                <span class="stock-item-remain">유통기한: ${n.expirationDate}</span>
+            </div>
+        </li>
+    `).join("");
 
-  listEl.innerHTML = notices.map(n => `
+  const stockHtml = stockNotices.map(n => `
         <li class="stock-item" data-id="${n.noticeId}" onclick="stockMarkAsReadAndMove(${n.noticeId})">
             <div class="stock-item-info">
                 <span class="stock-item-name">${n.foodMaterialName} 재고 부족</span>
@@ -60,7 +66,16 @@ function stockRenderList(notices) {
         </li>
     `).join("");
 
-  stockUpdateBadge(notices.length);
+  const html = expHtml + stockHtml;
+
+  if (html === "") {
+    listEl.innerHTML = '<li class="stock-empty">알림이 없습니다.</li>';
+    stockUpdateBadge(0);
+    return;
+  }
+
+  listEl.innerHTML = html;
+  stockUpdateBadge(stockNotices.length + expNotices.length);
 }
 
 async function stockMarkAsReadAndMove(noticeId) {
@@ -108,9 +123,11 @@ function stockUpdateBadge(count) {
 async function stockInitBadge() {
   try {
     const res = await fetch("/api/out-of-stock-notice/count");
-    if (!res.ok) return;
+    const expRes = await fetch("/api/expiration-notice/count");
+    if (!res.ok || !expRes.ok) return;
     const count = await res.json();
-    stockUpdateBadge(count);
+    const expCount = await expRes.json();
+    stockUpdateBadge(count + expCount);
   } catch (e) {
     console.error("알림 개수 조회 실패", e);
   }

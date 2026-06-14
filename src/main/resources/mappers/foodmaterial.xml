@@ -125,4 +125,25 @@
           AND bId = #{bId}
     </delete>
 
+    <select id="getExpirationNoticeList" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+        SELECT
+        f.foodMaterial_Id AS foodMaterialId,
+        f.foodMaterialName AS foodMaterialName,
+        c.foodCategory AS foodCategory,
+        f.foodMaterialCount AS foodMaterialCount,
+        f.foodMaterialCountAll AS foodMaterialCountAll,
+        f.foodMaterialPrice AS foodMaterialPrice,
+        f.foodMaterialType AS foodMaterialType,
+        f.vender AS vender,
+        f.incomeDate AS incomeDate,
+        f.expirationDate AS expirationDate,
+        f.bId AS bId
+        FROM FOODM f
+        JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
+        WHERE f.bId = #{bId}
+        AND f.expirationDate IS NOT NULL
+        AND f.expirationDate &lt;= DATE_ADD(CURDATE(), INTERVAL #{expDays} DAY)
+        ORDER BY f.expirationDate ASC
+    </select>
+
 </mapper>
