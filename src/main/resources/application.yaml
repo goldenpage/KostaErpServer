@@ -1,5 +1,8 @@
 server:
   port: 15000
+  servlet:
+    session:
+      persistent: false
 
 spring:
   application:

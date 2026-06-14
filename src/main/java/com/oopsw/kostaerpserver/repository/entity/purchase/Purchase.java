@@ -13,40 +13,42 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Table(name = "purchase")
 public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "purchase_id")
     private int purchaseId;
 
-    @Column(nullable = false)
+    @Column(name = "food_material_name", nullable = false)
     private String foodMaterialName;
 
-    @Column(nullable = false)
+    @Column(name = "food_material_count", nullable = false)
     private int foodMaterialCount;
 
-    @Column(nullable = false)
+    @Column(name = "food_material_weight", nullable = false)
     private int foodMaterialWeight;
 
-    @Column(nullable = false)
+    @Column(name = "total_weight", nullable = false)
     private int totalWeight;
 
-    @Column(nullable = false)
+    @Column(name = "food_material_price", nullable = false)
     private int foodMaterialPrice;
 
-    @Column(nullable = false)
+    @Column(name = "total_price", nullable = false)
     private int totalPrice;
 
-    @Column(nullable = false)
+    @Column(name = "vender", nullable = false)
     private String vender;
 
     @CreationTimestamp
-    @Column(nullable = false)
+    @Column(name = "income_date", nullable = false)
     private LocalDateTime incomeDate;
 
     @CreationTimestamp
-    @Column(nullable = false)
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
-    @Column(nullable = false)
+    @Column(name = "b_id", nullable = false)
     private String bId;
 }
