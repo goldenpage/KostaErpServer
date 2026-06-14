@@ -5,33 +5,33 @@
     resultType="com.oopsw.kostaerpserver.dto.statistics.MonthlyFoodMaterialExpenseRank">
     SELECT
       RANK() OVER (
-      ORDER BY SUM(f.foodMaterialPrice * f.foodMaterialCount) DESC
+      ORDER BY SUM(p.total_Price) DESC
     ) AS ranking,
-      f.foodMaterialName,
+            p.food_Material_Name AS foodMaterialName,
       ROUND(
-        SUM(f.foodMaterialPrice * f.foodMaterialCount)
-          / NULLIF(SUM(f.foodMaterialCount), 0)
+        SUM(p.total_Price)
+          / NULLIF(SUM(p.food_Material_Count), 0)
       ) AS foodMaterialPrice,
-      SUM(f.foodMaterialCount) AS foodMaterialCount,
-      SUM(f.foodMaterialPrice * f.foodMaterialCount) AS totalExpense
-    FROM FOODM f
-    WHERE f.bId = #{bId}
-      AND f.incomeDate >= #{startDate}
-      AND f.incomeDate &lt; #{endDate}
-    GROUP BY f.foodMaterialName
+      SUM(p.food_Material_Count) AS foodMaterialCount,
+      SUM(p.total_Price) AS totalExpense
+    FROM purchase p
+    WHERE p.b_Id = #{bId}
+      AND p.income_Date >= #{startDate}
+      AND p.income_Date &lt; #{endDate}
+    GROUP BY p.food_Material_Name
     ORDER BY totalExpense DESC
   </select>
 
   <select id="getMonthlyExpense"
     resultType="com.oopsw.kostaerpserver.dto.statistics.MonthlyExpense">
     SELECT
-      DATE_FORMAT(f.incomeDate, '%Y-%m') AS expenseMonth,
-      COALESCE(SUM(f.foodMaterialPrice * f.foodMaterialCount), 0) AS totalExpense
-    FROM FOODM f
-    WHERE f.bId = #{bId}
-      AND f.incomeDate >= #{startDate}
-      AND f.incomeDate &lt; #{endDate}
-    GROUP BY DATE_FORMAT(f.incomeDate, '%Y-%m')
+      DATE_FORMAT(p.income_Date, '%Y-%m') AS expenseMonth,
+      COALESCE(SUM(p.total_Price), 0) AS totalExpense
+    FROM purchase p
+    WHERE p.b_Id = #{bId}
+      AND p.income_Date >= #{startDate}
+      AND p.income_Date &lt; #{endDate}
+    GROUP BY DATE_FORMAT(p.income_Date, '%Y-%m')
     ORDER BY expenseMonth
   </select>
 
@@ -42,24 +42,24 @@
     expense.totalExpense
   FROM (
          SELECT
-           f.foodMaterialName AS foodMaterialName,
-           SUM(f.foodMaterialPrice * f.foodMaterialCount) AS totalExpense
-         FROM FOODM f
-         WHERE f.bId = #{bId}
-           AND f.incomeDate >= #{startDate}
-           AND f.incomeDate &lt; #{endDate}
-         GROUP BY f.foodMaterialName
+           p.food_Material_Name AS foodMaterialName,
+           SUM(p.total_Price) AS totalExpense
+         FROM purchase p
+         WHERE p.b_Id = #{bId}
+           AND p.income_Date >= #{startDate}
+           AND p.income_Date &lt; #{endDate}
+         GROUP BY p.food_Material_Name
        ) expense
   ORDER BY expense.totalExpense DESC
 </select>
 
   <select id="getTotalExpense" parameterType="map" resultType="long">
     SELECT
-    COALESCE(SUM(f.foodMaterialPrice * f.foodMaterialCount), 0)
-    FROM FOODM f
-    WHERE f.bId = #{bId}
-    AND f.incomeDate >= #{startDate}
-    AND f.incomeDate &lt; #{endDate}
+    COALESCE(SUM(p.total_Price), 0)
+    FROM purchase p
+    WHERE p.b_Id = #{bId}
+    AND p.income_Date >= #{startDate}
+    AND p.income_Date &lt; #{endDate}
   </select>
 
   <select id="getSalesHistory" parameterType="map" resultType="com.oopsw.kostaerpserver.dto.statistics.SalesHistory">

@@ -3,6 +3,8 @@ package com.oopsw.kostaerpserver.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -17,7 +19,7 @@ public class AddFoodMaterial {
     private int foodMaterialPrice;
     private String vender;
     private String foodMaterialType;
-    private Date incomeDate;
-    private Date expirationDate;
+    private LocalDateTime incomeDate;
+    private LocalDateTime expirationDate;
     private String bId;
 }

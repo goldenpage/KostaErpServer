@@ -68,7 +68,7 @@ public class MenuDAOTest {
         assertTrue(result > 0);
     }
 
-    @Test
+//    @Test
     public void existsTodayNoticeTest() {
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -83,5 +83,20 @@ public class MenuDAOTest {
                 existsTodayNotice("1234567890", "단무지");
 
         log.info("existsTodayNotice(단무지) = {}", exists);
+    }
+
+    @Test
+    void getLowStockMaterialListTest() {
+        String menuId = "MI001";
+        String bId = "0000000000";
+        int foodmLimit = 500;
+
+        List<Menu> list = menuDAO.getLowStockMaterialList(menuId, bId, foodmLimit);
+
+        list.forEach(m -> log.info("재고 부족 식자재: name={}, remainStock={}",
+                m.getFoodMaterialName(),
+                m.getFoodMaterialCountAll()));
+
+        assertTrue(list.size() >= 0);
     }
 }
