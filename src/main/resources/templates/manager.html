@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>지출통계</title>
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
+  <link rel="stylesheet" th:href="@{/css/usedStatistics.css}">
+</head>
+
+<body>
+<div class="container">
+  <section>
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+  </section>
+
+  <div class="main">
+    <div th:replace="~{common/userName :: userName}"></div>
+
+    <div class="top_area">
+      <h1>관리자 페이지</h1>
+    </div>
+
+    <div class="review-tabs">
+      <button onclick="loadReviews('PENDING')">대기 중</button>
+      <button onclick="loadReviews('APPROVED')">승인 완료</button>
+      <button onclick="loadReviews('REJECTED')">반려 완료</button>
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>신청일</th>
+        <th>사업자번호</th>
+        <th>상호명</th>
+        <th>대표자</th>
+        <th>상태</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody id="review-list"></tbody>
+    </table>
+
+    <dialog id="review-detail"></dialog>
+  </div>
+</div>
+</body>
+</html>

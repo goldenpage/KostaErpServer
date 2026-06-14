@@ -55,7 +55,7 @@ const fetchJson = async (url) => {
     throw new Error(`API 요청 실패: ${res.status}`)
   }
 
-  return await res.json();
+  return res.json();
 }
 
 const renderRankTable = (rankList)=>{

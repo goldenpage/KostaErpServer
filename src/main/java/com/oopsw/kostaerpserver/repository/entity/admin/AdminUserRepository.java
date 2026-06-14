@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.repository.entity;
+package com.oopsw.kostaerpserver.repository.entity.admin;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

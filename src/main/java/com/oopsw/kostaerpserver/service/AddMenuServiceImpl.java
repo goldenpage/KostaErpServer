@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.repository.AddMenuDAO;
+import com.oopsw.kostaerpserver.repository.dao.AddMenuDAO;
 import com.oopsw.kostaerpserver.service.Interface.AddMenuService;
 import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;

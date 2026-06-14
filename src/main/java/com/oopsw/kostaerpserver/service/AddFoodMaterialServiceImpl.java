@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
-import com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO;
+import com.oopsw.kostaerpserver.repository.dao.AddFoodMaterialDAO;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
 import com.oopsw.kostaerpserver.service.entity.purchase.PurchaseConvert;
 import com.oopsw.kostaerpserver.service.entity.purchase.PurchaseService;

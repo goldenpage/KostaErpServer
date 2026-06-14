@@ -1,6 +1,7 @@
 package com.oopsw.kostaerpserver.repository.entity;
 
-import com.oopsw.kostaerpserver.repository.FoodMaterialDAO;
+
+import com.oopsw.kostaerpserver.repository.dao.FoodMaterialDAO;
 import com.oopsw.kostaerpserver.vo.FoodMaterial;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

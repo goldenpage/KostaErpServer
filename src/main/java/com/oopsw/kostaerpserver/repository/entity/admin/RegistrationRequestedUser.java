@@ -1,0 +1,78 @@
+package com.oopsw.kostaerpserver.repository.entity.admin;
+
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class RegistrationRequestedUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int reviewId;
+
+    @Column(nullable = false, unique = true)
+    private String bId;
+
+    @Column(nullable = false)
+    private String pwHash;
+
+    private String name;
+    private String email;
+    private String phone;
+    private String storeName;
+    private String storeType;
+    private String storeCategory;
+    private boolean marketingAgree;
+
+    @Column(nullable = false)
+    private String documentPath;
+
+    private String ocrConfidence;
+    @Column(length = 1000)
+    private String reason;
+    private String reviewedBy;
+    @Builder.Default
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime requestedAt = LocalDateTime.now();
+    private LocalDateTime reviewDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReviewStatus reviewStatus;
+
+    public void approve(String adminName) {
+        if (reviewStatus != ReviewStatus.PENDING) {
+            throw new IllegalStateException("심사 대기 중인 신청만 승인할 수 있습니다.");
+        }
+
+        reviewStatus = ReviewStatus.APPROVED;
+        reviewedBy = adminName;
+        reviewDate = LocalDateTime.now();
+    }
+
+    public void reject(String adminName, String rejectionReason) {
+        if (reviewStatus != ReviewStatus.PENDING) {
+            throw new IllegalStateException("심사 대기 중인 신청만 반려할 수 있습니다.");
+        }
+
+        reviewStatus = ReviewStatus.REJECTED;
+        reviewedBy = adminName;
+        reason = rejectionReason;
+        reviewDate = LocalDateTime.now();
+    }
+}
