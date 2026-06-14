@@ -15,8 +15,10 @@ public class AddFoodMaterial {
     private String foodMaterialName;
     private String foodCategory_Id;
     private int foodMaterialCount;
-    private int foodMaterialCountAll;
+    private int foodMaterialWeight;
+    private int totalWeight;
     private int foodMaterialPrice;
+    private int totalPrice;
     private String vender;
     private String foodMaterialType;
     private LocalDateTime incomeDate;

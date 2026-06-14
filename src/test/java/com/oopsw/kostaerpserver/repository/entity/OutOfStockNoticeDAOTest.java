@@ -18,7 +18,7 @@ public class OutOfStockNoticeDAOTest {
     @Autowired
     private OutOfStockNoticeRepository outOfStockNoticeRepository;
 
-//    @Test
+    @Test
     public void stockNoticeTest() {
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -41,7 +41,7 @@ public class OutOfStockNoticeDAOTest {
         log.info("saved notice = {}", outOfStockNoticeRepository);
     }
 
-//    @Test
+    @Test
     public void findByBIdAndReadYnOrderByNoticeDateDescTest(){
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -66,7 +66,7 @@ public class OutOfStockNoticeDAOTest {
         log.info("list = {}", list);
     }
 
-//    @Test
+    @Test
     public void countByBIdAndReadYnTest(){
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
                 noticeDate(LocalDateTime.now()).
@@ -82,7 +82,7 @@ public class OutOfStockNoticeDAOTest {
         log.info("result = {}", result);
     }
 
-//    @Test
+    @Test
     public void existsTodayNoticeTest() {
         // given: 오늘 날짜로 단무지 알림 저장
         outOfStockNoticeRepository.save(OutOfStockNotice.builder().
