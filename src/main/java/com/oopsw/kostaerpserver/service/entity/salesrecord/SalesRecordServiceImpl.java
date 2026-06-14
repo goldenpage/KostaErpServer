@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.entity;
+package com.oopsw.kostaerpserver.service.entity.salesrecord;
 
 import com.oopsw.kostaerpserver.dto.salesrecord.SalesRecordResponse;
 import com.oopsw.kostaerpserver.repository.entity.salesrecord.*;

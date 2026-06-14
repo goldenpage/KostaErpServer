@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.advice.controller;
 
 import com.oopsw.kostaerpserver.dto.salesrecord.SalesRecordResponse;
-import com.oopsw.kostaerpserver.service.entity.SalesRecordService;
+import com.oopsw.kostaerpserver.service.entity.salesrecord.SalesRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;

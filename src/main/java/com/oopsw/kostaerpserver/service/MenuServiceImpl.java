@@ -10,7 +10,7 @@ import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.MenuDAO;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
-import com.oopsw.kostaerpserver.service.entity.OutOfStockNoticeServiceImpl;
+import com.oopsw.kostaerpserver.service.entity.outofstocknotice.OutOfStockNoticeServiceImpl;
 import com.oopsw.kostaerpserver.vo.Menu;
 import com.oopsw.kostaerpserver.vo.entity.OutOfStockNoticeVO;
 import lombok.RequiredArgsConstructor;

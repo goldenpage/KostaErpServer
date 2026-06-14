@@ -2,13 +2,12 @@ package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.dto.salesrecord.SalesRecordResponse;
 import com.oopsw.kostaerpserver.dto.salesrecord.SalesRecordRequest;
-import com.oopsw.kostaerpserver.service.entity.SalesRecordService;
+import com.oopsw.kostaerpserver.service.entity.salesrecord.SalesRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController

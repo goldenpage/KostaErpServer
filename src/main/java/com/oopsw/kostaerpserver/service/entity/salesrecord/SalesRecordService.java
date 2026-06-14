@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.entity;
+package com.oopsw.kostaerpserver.service.entity.salesrecord;
 
 import com.oopsw.kostaerpserver.dto.salesrecord.SalesRecordResponse;
 import org.springframework.data.domain.Page;

@@ -3,6 +3,7 @@ package com.oopsw.kostaerpserver.service.entity;
 import com.oopsw.kostaerpserver.dto.salesrecord.SalesRecordResponse;
 import com.oopsw.kostaerpserver.repository.entity.salesrecord.*;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
+import com.oopsw.kostaerpserver.service.entity.salesrecord.SalesRecordService;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
