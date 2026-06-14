@@ -103,8 +103,8 @@ class RegistrationServiceTest {
             proxy(LoginService.class, (methodName, args) -> 0),
             verificationService,
             proxy(RegistrationRequestedUserRepository.class, (methodName, args) -> {
-                if ("existsByBusinessIdAndReviewStatus".equals(methodName)) {
-                    return false;
+                if ("countByBusinessIdAndReviewStatus".equals(methodName)) {
+                    return 0L;
                 }
                 if ("save".equals(methodName)) {
                     savedRequest.set((RegistrationRequestedUser) args[0]);

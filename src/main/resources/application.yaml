@@ -46,7 +46,3 @@ external-api:
   python-ocr-url: http://127.0.0.1:8000/api/v1/business-document-ocr
   business-registration-url: http://127.0.0.1:3000/nts-businessman/v1/validate
 
-admin:
-  bootstrap:
-    name: ${ADMIN_BOOTSTRAP_NAME:}
-    password: ${ADMIN_BOOTSTRAP_PASSWORD:}

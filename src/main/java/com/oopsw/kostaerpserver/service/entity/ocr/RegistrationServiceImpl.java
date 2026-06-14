@@ -136,10 +136,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             );
         }
 
-        if (requestedUserRepository.existsByBusinessIdAndReviewStatus(
+        if (requestedUserRepository.countByBusinessIdAndReviewStatus(
             normalizedBid,
             ReviewStatus.PENDING
-        )) {
+        ) > 0) {
             throw new IllegalArgumentException(
                 "이미 관리자 검토 중인 사업자등록번호입니다."
             );

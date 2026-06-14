@@ -30,9 +30,15 @@ public interface RegistrationRequestedUserRepository extends JpaRepository<Regis
         @Param("reviewId") int reviewId
     );
 
-    boolean existsByBusinessIdAndReviewStatus(
-        String bId,
-        ReviewStatus reviewStatus
+    @Query("""
+        select count(review)
+        from RegistrationRequestedUser review
+        where review.bId = :bId
+          and review.reviewStatus = :reviewStatus
+        """)
+    long countByBusinessIdAndReviewStatus(
+        @Param("bId") String bId,
+        @Param("reviewStatus") ReviewStatus reviewStatus
     );
 
 
