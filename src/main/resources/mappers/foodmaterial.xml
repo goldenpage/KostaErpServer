@@ -132,7 +132,6 @@
         f.foodMaterialName AS foodMaterialName,
         c.foodCategory AS foodCategory,
         f.foodMaterialCount AS foodMaterialCount,
-        f.foodMaterialCountAll AS foodMaterialCountAll,
         f.foodMaterialPrice AS foodMaterialPrice,
         f.foodMaterialType AS foodMaterialType,
         f.vender AS vender,
