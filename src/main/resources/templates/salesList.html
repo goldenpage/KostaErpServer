@@ -47,22 +47,6 @@
             </thead>
             <tbody id="salesTableBody">
             <tr th:if="${#lists.isEmpty(salesList)}">
-                <td colspan="8" style="text-align:center; padding:20px;">조회된 데이터가 없습니다.</td>
-            </tr>
-            <tr th:each="sale : ${salesList}">
-                <td th:text="${sale.saleId}"></td>
-                <td th:text="${sale.saleDate}"></td>
-                <td th:text="${sale.menuName}"></td>
-                <td th:text="${sale.category}"></td>
-                <td th:text="${sale.qty}"></td>
-                <td th:text="${#numbers.formatInteger(sale.price, 3, 'COMMA')}"></td>
-                <td th:text="${#numbers.formatInteger(sale.qty * sale.price, 3, 'COMMA')}"></td>
-                <td th:text="${sale.paymentMethod}"></td>
-                <td>
-                    <button type="button" class="btn-edit" th:data-id="${sale.saleId}">수정</button>
-                    <button type="button" class="btn-delete" th:data-id="${sale.saleId}">삭제</button>
-                </td>
-            </tr>
             </tbody>
         </table>
         <div id="pagination"></div>

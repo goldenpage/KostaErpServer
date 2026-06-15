@@ -1,6 +1,8 @@
 let globalSalesData = [];
 let currentPage = 0;
 const pageSize = 5;
+let isSearching = false;
+let currentSearchCondition = {};
 
 function updateTableAndTotal(data) {
     if (data) globalSalesData = data;
@@ -42,17 +44,31 @@ function updateTableAndTotal(data) {
     totalSpan.innerText = total.toLocaleString() + "원";
 }
 
-function searchSales() {
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+function searchSales(page = 0) {
 
-    fetch(`/api/sales/search?startDate=${startDate}&endDate=${endDate}`)
-        .then(response => response.json())
+    isSearching = true;
+
+    currentSearchCondition = {
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        category: document.getElementById('categorySelect').value,
+        payment: document.getElementById('paymentSelect').value,
+        menuName: document.getElementById('menuSelect').value
+    };
+
+    const params = new URLSearchParams({
+        ...currentSearchCondition,
+        page,
+        size: pageSize
+    });
+
+    fetch(`/api/sales/search?${params}`)
+        .then(res => res.json())
         .then(data => {
-            globalSalesData = data;
-            filterSales();
+            renderTable(data.content);
+            renderPagination(data);
         })
-        .catch(error => console.error("조회 실패:", error));
+        .catch(err => console.error(err));
 }
 
 function deleteSale(id) {
@@ -146,19 +162,16 @@ function filterSales() {
 }
 
 function resetFilters() {
+
+    isSearching = false;
+
     document.getElementById('startDate').value = "";
     document.getElementById('endDate').value = "";
     document.getElementById('categorySelect').value = "";
     document.getElementById('paymentSelect').value = "";
     document.getElementById('menuSelect').value = "";
 
-    fetch(`/api/sales/list?page=0&size=20`)
-        .then(response => response.json())
-        .then(data => {
-            globalSalesData = data.content;
-            renderTable(data);
-        })
-        .catch(error => console.error("초기화 실패:", error));
+    loadSalesList(0);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -170,6 +183,9 @@ function loadSalesList(page = 0) {
         .then(res => res.json())
         .then(data => {
             currentPage = data.number;
+            globalSalesData = data.content;
+
+            initFilters(data.content);
             renderTable(data.content);
             renderPagination(data);
         })
@@ -188,7 +204,15 @@ function renderPagination(pageData) {
     const prevButton = document.createElement("button");
     prevButton.textContent = "이전";
     prevButton.disabled = pageData.first;
-    prevButton.onclick = () => loadSalesList(currentPage - 1);
+    prevButton.onclick = () => {
+
+        if (isSearching) {
+            searchSales(currentPage - 1);
+        } else {
+            loadSalesList(currentPage - 1);
+        }
+
+    };
     pagination.appendChild(prevButton);
 
     for (let i = 0; i < pageData.totalPages; i++) {
@@ -199,14 +223,30 @@ function renderPagination(pageData) {
             button.classList.add("active");
         }
 
-        button.onclick = () => loadSalesList(i);
+        button.onclick = () => {
+
+            if (isSearching) {
+                searchSales(i);
+            } else {
+                loadSalesList(i);
+            }
+
+        };
         pagination.appendChild(button);
     }
 
     const nextButton = document.createElement("button");
     nextButton.textContent = "다음";
     nextButton.disabled = pageData.last;
-    nextButton.onclick = () => loadSalesList(currentPage + 1);
+    nextButton.onclick = () => {
+
+        if (isSearching) {
+            searchSales(currentPage + 1);
+        } else {
+            loadSalesList(currentPage + 1);
+        }
+
+    };
     pagination.appendChild(nextButton);
 }
 

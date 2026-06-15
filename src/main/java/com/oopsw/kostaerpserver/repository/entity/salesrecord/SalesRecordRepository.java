@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public interface SalesRecordRepository
@@ -43,6 +44,45 @@ public interface SalesRecordRepository
     )
     Page<SalesRecord> findAllWithFetch(Pageable pageable);
 
+    @Query(
+            value = """
+        select s
+        from SalesRecord s
+        join fetch s.menu m
+        join fetch m.menuCategory mc
+        join fetch s.revenue r
+        where (:start is null or r.revenueDate >= :start)
+          and (:end is null or r.revenueDate <= :end)
+          and (:category is null or mc.menuCategory = :category)
+          and (:menuName is null or m.menuName = :menuName)
+          and (:payment is null or r.payment = :payment)
+        order by s.saleId desc
+        """,
+            countQuery = """
+        select count(s)
+        from SalesRecord s
+        join s.menu m
+        join m.menuCategory mc
+        join s.revenue r
+        where (:start is null or r.revenueDate >= :start)
+          and (:end is null or r.revenueDate <= :end)
+          and (:category is null or mc.menuCategory = :category)
+          and (:menuName is null or m.menuName = :menuName)
+          and (:payment is null or r.payment = :payment)
+        """
+    )
+    Page<SalesRecord> searchSales(
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end,
+            @Param("category") String category,
+            @Param("menuName") String menuName,
+            @Param("payment") String payment,
+            Pageable pageable
+    );
+
+    @Query("SELECT SUM(s.saleMenuCount * m.menuPrice) FROM SalesRecord s JOIN s.menu m")
+    Integer getTotalRevenue();
+
     @Query("""
         select s
         from SalesRecord s
@@ -54,7 +94,4 @@ public interface SalesRecordRepository
             @Param("start") LocalDate start,
             @Param("end") LocalDate end
     );
-
-    @Query("SELECT SUM(s.saleMenuCount * m.menuPrice) FROM SalesRecord s JOIN s.menu m")
-    Integer getTotalRevenue();
 }

@@ -45,6 +45,51 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     }
 
     @Override
+    public Page<SalesRecordResponse> searchSales(
+            String startDate,
+            String endDate,
+            String category,
+            String menuName,
+            String payment,
+            int page,
+            int size
+    ) {
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("saleId").descending()
+        );
+
+        LocalDate start = null;
+        LocalDate end = null;
+
+        if (startDate != null && !startDate.isBlank()) {
+            start = LocalDate.parse(startDate);
+        }
+
+        if (endDate != null && !endDate.isBlank()) {
+            end = LocalDate.parse(endDate);
+        }
+
+        Page<SalesRecord> salesPage =
+                salesRecordRepository.searchSales(
+                        start,
+                        end,
+                        emptyToNull(category),
+                        emptyToNull(menuName),
+                        emptyToNull(payment),
+                        pageable
+                );
+
+        return salesPage.map(this::toDTO);
+    }
+
+    private String emptyToNull(String value) {
+        return (value == null || value.isBlank()) ? null : value;
+    }
+
+    @Override
     @Transactional
     public void addSale(String menuId, int saleMenuCount, String bId, String payment){
         try (Connection conn = dataSource.getConnection()) {
@@ -81,27 +126,6 @@ public class SalesRecordServiceImpl implements SalesRecordService {
         salesRecordRepository.saveAndFlush(salesRecord);
 
         menuService.saleMenu(menuId, saleMenuCount, bId, payment);
-    }
-
-    @Override
-    public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate) {
-        if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
-            Pageable pageable = PageRequest.of(0, 5, Sort.by("saleId").descending());
-
-            return salesRecordRepository.findAllWithFetch(pageable)
-                    .getContent()
-                    .stream()
-                    .map(this::toDTO)
-                    .toList();
-        }
-
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
-
-        return salesRecordRepository.findByDateWith(start, end)
-                .stream()
-                .map(this::toDTO)
-                .toList();
     }
 
     @Override
@@ -143,6 +167,22 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     public int getTotalRevenue() {
         Integer total = salesRecordRepository.getTotalRevenue();
         return total != null ? total : 0;
+    }
+
+    @Override
+    public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate){
+        Pageable pageable = PageRequest.of(0, 5);
+        if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
+            return salesRecordRepository.findAllWithFetch(pageable).stream().map(this::toDTO).toList();
+        }
+
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        return salesRecordRepository.findByDateWith(start, end)
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     //Entity > DTO 변환 메서드
