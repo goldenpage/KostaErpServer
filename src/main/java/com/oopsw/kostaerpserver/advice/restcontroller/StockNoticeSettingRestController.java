@@ -3,7 +3,7 @@ package com.oopsw.kostaerpserver.advice.restcontroller;
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeRequest;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
-import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
+import com.oopsw.kostaerpserver.service.entity.stocknotice.StockNoticeSettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

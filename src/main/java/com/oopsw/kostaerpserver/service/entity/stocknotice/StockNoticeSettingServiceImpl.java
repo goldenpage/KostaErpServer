@@ -1,10 +1,9 @@
-package com.oopsw.kostaerpserver.service;
+package com.oopsw.kostaerpserver.service.entity.stocknotice;
 
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeRequest;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
 import com.oopsw.kostaerpserver.repository.entity.stocknotice.StockNoticeSetting;
 import com.oopsw.kostaerpserver.repository.entity.stocknotice.StockNoticeSettingRepository;
-import com.oopsw.kostaerpserver.service.Interface.StockNoticeSettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
