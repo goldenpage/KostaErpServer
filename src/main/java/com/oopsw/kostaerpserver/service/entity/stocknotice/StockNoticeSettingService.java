@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.Interface;
+package com.oopsw.kostaerpserver.service.entity.stocknotice;
 
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeRequest;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;

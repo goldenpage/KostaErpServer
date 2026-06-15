@@ -2,7 +2,7 @@ package com.oopsw.kostaerpserver.service;
 
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeRequest;
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeResponse;
-import com.oopsw.kostaerpserver.service.Interface.ExpNoticeService;
+import com.oopsw.kostaerpserver.service.entity.expdate.ExpNoticeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
