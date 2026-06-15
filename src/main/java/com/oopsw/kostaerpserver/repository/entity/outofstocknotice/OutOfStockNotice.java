@@ -13,28 +13,30 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Table(name = "out_of_stock_notice")
 public class OutOfStockNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private int noticeId;
 
     @CreationTimestamp
-    @Column(updatable = false, nullable = false)
+    @Column(name = "notice_date", updatable = false, nullable = false)
     private LocalDateTime noticeDate;
 
-    @Column(nullable = false)
+    @Column(name = "notice_content",nullable = false)
     private String noticeContent;
 
-    @Column(nullable = false)
+    @Column(name = "food_material_name",nullable = false)
     private String foodMaterialName;
 
-    @Column(nullable = false)
+    @Column(name = "remain_stock_amount",nullable = false)
     private int remainStockAmount;
 
-    @Column(nullable = false)
+    @Column(name = "b_id",nullable = false)
     private String bId;
 
-    @Column(nullable = false)
+    @Column(name = "read_yn",nullable = false)
     @Builder.Default
     private String readYn = "N";
 
