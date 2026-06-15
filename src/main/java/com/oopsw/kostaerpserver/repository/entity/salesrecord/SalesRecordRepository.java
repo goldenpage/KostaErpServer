@@ -27,8 +27,21 @@ public interface SalesRecordRepository
         """, nativeQuery = true)
     String getNextSaleId();
 
-    @Query("SELECT s FROM SalesRecord s LEFT JOIN FETCH s.menu LEFT JOIN FETCH s.revenue ORDER BY s.saleId DESC")
-    List<SalesRecord> findAllWithFetch();
+    @Query(
+            value = """
+                SELECT s
+                FROM SalesRecord s
+                LEFT JOIN FETCH s.menu m
+                LEFT JOIN FETCH m.menuCategory
+                LEFT JOIN FETCH s.revenue
+                ORDER BY s.saleId DESC
+                """,
+            countQuery = """
+                SELECT COUNT(s)
+                FROM SalesRecord s
+                """
+    )
+    Page<SalesRecord> findAllWithFetch(Pageable pageable);
 
     @Query("""
         select s

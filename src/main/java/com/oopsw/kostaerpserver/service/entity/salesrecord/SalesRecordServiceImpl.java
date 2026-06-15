@@ -33,11 +33,15 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     public Page<SalesRecordResponse> getSalesList(int page, int size){
         int safePage = Math.max(0, page);
 
-        Pageable pageable = PageRequest.of(safePage, size, Sort.by("saleId").ascending());
-        List<SalesRecord> content = salesRecordRepository.findAllWithFetch();
-        List<SalesRecordResponse> dtoList = content.stream().map(this::toDTO).toList();
+        Pageable pageable = PageRequest.of(
+                safePage,
+                size,
+                Sort.by("saleId").descending()
+        );
 
-        return new PageImpl<>(dtoList, pageable, dtoList.size());
+        Page<SalesRecord> salesPage = salesRecordRepository.findAllWithFetch(pageable);
+
+        return salesPage.map(this::toDTO);
     }
 
     @Override
@@ -80,9 +84,15 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     }
 
     @Override
-    public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate){
+    public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate) {
         if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
-            return salesRecordRepository.findAllWithFetch().stream().map(this::toDTO).toList();
+            Pageable pageable = PageRequest.of(0, 5, Sort.by("saleId").descending());
+
+            return salesRecordRepository.findAllWithFetch(pageable)
+                    .getContent()
+                    .stream()
+                    .map(this::toDTO)
+                    .toList();
         }
 
         LocalDate start = LocalDate.parse(startDate);

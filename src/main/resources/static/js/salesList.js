@@ -1,4 +1,6 @@
 let globalSalesData = [];
+let currentPage = 0;
+const pageSize = 5;
 
 function updateTableAndTotal(data) {
     if (data) globalSalesData = data;
@@ -159,30 +161,69 @@ function resetFilters() {
         .catch(error => console.error("초기화 실패:", error));
 }
 
-function loadSalesList() {
-    fetch('/api/sales/list')
+window.addEventListener('DOMContentLoaded', () => {
+    loadSalesList(0);
+});
+
+function loadSalesList(page = 0) {
+    fetch(`/api/sales/list?page=${page}&size=${pageSize}`)
         .then(res => res.json())
         .then(data => {
-            renderTable(data);
+            currentPage = data.number;
+            renderTable(data.content);
+            renderPagination(data);
         })
-        .catch(err => console.error("데이터 로드 실패:", err));
+        .catch(err => console.error("판매 목록 로드 실패:", err));
 }
 
-function renderTable(data) {
-    const listToRender = (data && data.content) ? data.content : (Array.isArray(data) ? data : []);
 
+function renderPagination(pageData) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = "";
+
+    if (pageData.totalPages <= 1) {
+        return;
+    }
+
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "이전";
+    prevButton.disabled = pageData.first;
+    prevButton.onclick = () => loadSalesList(currentPage - 1);
+    pagination.appendChild(prevButton);
+
+    for (let i = 0; i < pageData.totalPages; i++) {
+        const button = document.createElement("button");
+        button.textContent = i + 1;
+
+        if (i === pageData.number) {
+            button.classList.add("active");
+        }
+
+        button.onclick = () => loadSalesList(i);
+        pagination.appendChild(button);
+    }
+
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "다음";
+    nextButton.disabled = pageData.last;
+    nextButton.onclick = () => loadSalesList(currentPage + 1);
+    pagination.appendChild(nextButton);
+}
+
+function renderTable(listToRender) {
     const tbody = document.getElementById('salesTableBody');
     const totalSpan = document.getElementById('totalRevenue');
 
     tbody.innerHTML = "";
 
-    if (listToRender.length === 0) {
+    if (!listToRender || listToRender.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">조회된 데이터가 없습니다.</td></tr>`;
         totalSpan.innerText = "0원";
         return;
     }
 
     let total = 0;
+
     listToRender.forEach((sale) => {
         const subtotal = sale.qty * sale.price;
         total += subtotal;
@@ -201,7 +242,9 @@ function renderTable(data) {
                 <button type="button" class="btn-delete" onclick="deleteSale('${sale.saleId}')">삭제</button>
             </td>
         </tr>`;
+
         tbody.innerHTML += row;
     });
+
     totalSpan.innerText = total.toLocaleString() + "원";
 }
