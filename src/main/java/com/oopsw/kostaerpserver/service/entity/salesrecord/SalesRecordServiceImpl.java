@@ -33,11 +33,60 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     public Page<SalesRecordResponse> getSalesList(int page, int size){
         int safePage = Math.max(0, page);
 
-        Pageable pageable = PageRequest.of(safePage, size, Sort.by("saleId").ascending());
-        List<SalesRecord> content = salesRecordRepository.findAllWithFetch();
-        List<SalesRecordResponse> dtoList = content.stream().map(this::toDTO).toList();
+        Pageable pageable = PageRequest.of(
+                safePage,
+                size,
+                Sort.by("saleId").descending()
+        );
 
-        return new PageImpl<>(dtoList, pageable, dtoList.size());
+        Page<SalesRecord> salesPage = salesRecordRepository.findAllWithFetch(pageable);
+
+        return salesPage.map(this::toDTO);
+    }
+
+    @Override
+    public Page<SalesRecordResponse> searchSales(
+            String startDate,
+            String endDate,
+            String category,
+            String menuName,
+            String payment,
+            int page,
+            int size
+    ) {
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("saleId").descending()
+        );
+
+        LocalDate start = null;
+        LocalDate end = null;
+
+        if (startDate != null && !startDate.isBlank()) {
+            start = LocalDate.parse(startDate);
+        }
+
+        if (endDate != null && !endDate.isBlank()) {
+            end = LocalDate.parse(endDate);
+        }
+
+        Page<SalesRecord> salesPage =
+                salesRecordRepository.searchSales(
+                        start,
+                        end,
+                        emptyToNull(category),
+                        emptyToNull(menuName),
+                        emptyToNull(payment),
+                        pageable
+                );
+
+        return salesPage.map(this::toDTO);
+    }
+
+    private String emptyToNull(String value) {
+        return (value == null || value.isBlank()) ? null : value;
     }
 
     @Override
@@ -80,21 +129,6 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     }
 
     @Override
-    public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate){
-        if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
-            return salesRecordRepository.findAllWithFetch().stream().map(this::toDTO).toList();
-        }
-
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
-
-        return salesRecordRepository.findByDateWith(start, end)
-                .stream()
-                .map(this::toDTO)
-                .toList();
-    }
-
-    @Override
     @Transactional
     public void deleteSale(String saleId) {
         SalesRecord record = salesRecordRepository.findById(saleId)
@@ -133,6 +167,22 @@ public class SalesRecordServiceImpl implements SalesRecordService {
     public int getTotalRevenue() {
         Integer total = salesRecordRepository.getTotalRevenue();
         return total != null ? total : 0;
+    }
+
+    @Override
+    public List<SalesRecordResponse> getSalesByDate(String startDate, String endDate){
+        Pageable pageable = PageRequest.of(0, 5);
+        if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
+            return salesRecordRepository.findAllWithFetch(pageable).stream().map(this::toDTO).toList();
+        }
+
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        return salesRecordRepository.findByDateWith(start, end)
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     //Entity > DTO 변환 메서드

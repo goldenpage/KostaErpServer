@@ -18,9 +18,14 @@ public interface SalesRecordService {
             String payment
     );
 
-    List<SalesRecordResponse> getSalesByDate(
+    Page<SalesRecordResponse> searchSales(
             String startDate,
-            String endDate
+            String endDate,
+            String category,
+            String menuName,
+            String payment,
+            int page,
+            int size
     );
 
     void deleteSale(String saleId);
@@ -28,4 +33,6 @@ public interface SalesRecordService {
     void updateSale(String salesId, String menuId, int saleMenuCount, String payment);
 
     int getTotalRevenue();
+
+    List<SalesRecordResponse> getSalesByDate(String date, String date1);
 }
