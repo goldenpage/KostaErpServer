@@ -1,8 +1,6 @@
 package com.oopsw.kostaerpserver.repository.entity.admin;
 
-
 import jakarta.persistence.LockModeType;
-
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RegistrationRequestedUserRepository extends JpaRepository<RegistrationRequestedUser, Integer> {
+public interface RegistrationRequestedUserRepository
+    extends JpaRepository<RegistrationRequestedUser, Integer> {
 
     Page<RegistrationRequestedUser> findAllByReviewStatusOrderByRequestedAtAsc(
         ReviewStatus reviewStatus,
@@ -36,10 +35,8 @@ public interface RegistrationRequestedUserRepository extends JpaRepository<Regis
         where review.bId = :bId
           and review.reviewStatus = :reviewStatus
         """)
-    long countByBusinessIdAndReviewStatus(
+    long countByBIdAndReviewStatus(
         @Param("bId") String bId,
         @Param("reviewStatus") ReviewStatus reviewStatus
     );
-
-
 }

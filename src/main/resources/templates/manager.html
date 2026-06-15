@@ -1,48 +1,72 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
-  <title>지출통계</title>
-  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
-  <link rel="stylesheet" th:href="@{/css/userName.css}">
-  <link rel="stylesheet" th:href="@{/css/usedStatistics.css}">
+  <title>회원가입 서류 심사</title>
+  <link rel="stylesheet" th:href="@{/css/manager.css}">
+  <script defer th:src="@{/js/manager.js}"></script>
 </head>
 
 <body>
-<div class="container">
-  <section>
-    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
-  </section>
-
-  <div class="main">
-    <div th:replace="~{common/userName :: userName}"></div>
-
-    <div class="top_area">
-      <h1>관리자 페이지</h1>
-    </div>
-
-    <div class="review-tabs">
-      <button onclick="loadReviews('PENDING')">대기 중</button>
-      <button onclick="loadReviews('APPROVED')">승인 완료</button>
-      <button onclick="loadReviews('REJECTED')">반려 완료</button>
-    </div>
-
-    <table>
-      <thead>
-      <tr>
-        <th>신청일</th>
-        <th>사업자번호</th>
-        <th>상호명</th>
-        <th>대표자</th>
-        <th>상태</th>
-        <th>관리</th>
-      </tr>
-      </thead>
-      <tbody id="review-list"></tbody>
-    </table>
-
-    <dialog id="review-detail"></dialog>
+<header class="manager-header">
+  <div>
+    <h1>회원가입 서류 심사</h1>
+    <span class="manager-name">
+      <strong sec:authentication="name">관리자</strong>님
+    </span>
   </div>
-</div>
+
+  <form method="post" th:action="@{/logout}">
+    <button type="submit" class="logout-button">로그아웃</button>
+  </form>
+</header>
+
+<main class="manager-content">
+  <div class="review-tabs">
+    <button type="button"
+            class="review-tab active"
+            data-status="PENDING"
+            onclick="loadReviews('PENDING')">
+      대기 중
+    </button>
+
+    <button type="button"
+            class="review-tab"
+            data-status="APPROVED"
+            onclick="loadReviews('APPROVED')">
+      승인 완료
+    </button>
+
+    <button type="button"
+            class="review-tab"
+            data-status="REJECTED"
+            onclick="loadReviews('REJECTED')">
+      반려 완료
+    </button>
+  </div>
+
+  <table class="review-table">
+    <thead>
+    <tr>
+      <th>신청일</th>
+      <th>사업자번호</th>
+      <th>상호명</th>
+      <th>대표자</th>
+      <th>상태</th>
+      <th>관리</th>
+    </tr>
+    </thead>
+
+    <tbody id="review-list">
+    <tr>
+      <td colspan="6">가입 신청을 불러오는 중입니다.</td>
+    </tr>
+    </tbody>
+  </table>
+</main>
+
+<dialog id="review-detail" class="review-dialog"></dialog>
 </body>
 </html>

@@ -32,29 +32,46 @@ public class RegistrationServiceImpl implements RegistrationService {
         String normalizedBid = validateNewRegistration(request, document);
         request.setBId(normalizedBid);
 
-        BusinessVerificationResult result =
-            verificationService.verify(
-                normalizedBid,
-                request.getName(),
-                request.getStoreName(),
-                document
-            );
+        BusinessVerificationResult result = verificationService.verify(
+            normalizedBid,
+            request.getName(),
+            request.getStoreName(),
+            document
+        );
 
         return switch (result.status()) {
-            case APPROVED -> {
-                loginService.register(request);
-                yield new RegistrationResponse(
-                    "APPROVED",
-                    "회원가입이 완료되었습니다."
-                );
-            }
+            case APPROVED -> registerApprovedUser(request);
+
             case REJECTED -> new RegistrationResponse(
                 "REJECTED",
                 result.message()
             );
-            case NEED_REVIEW, RETRY ->
-                savePendingRegistration(request, document, result);
+
+            case NEED_REVIEW -> savePendingRegistration(
+                request,
+                document,
+                result
+            );
+
+            case RETRY -> new RegistrationResponse(
+                "RETRY",
+                result.message()
+            );
         };
+    }
+
+    private RegistrationResponse registerApprovedUser(RegisterRequest request) {
+        if (loginService.register(request) != 1) {
+            return new RegistrationResponse(
+                "RETRY",
+                "회원가입 정보 저장에 실패했습니다. 잠시 후 다시 시도해주세요."
+            );
+        }
+
+        return new RegistrationResponse(
+            "APPROVED",
+            "회원가입이 완료되었습니다."
+        );
     }
 
     private RegistrationResponse savePendingRegistration(
@@ -63,9 +80,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         BusinessVerificationResult result
     ) {
         String documentPath = null;
+
         try {
             documentPath = documentStorageService.store(request.getBId(), document);
-            requestedUserRepository.save(
+
+            RegistrationRequestedUser review =
                 RegistrationRequestedUser.builder()
                     .bId(request.getBId())
                     .pwHash(passwordEncoder.encode(request.getPw()))
@@ -79,14 +98,17 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .documentPath(documentPath)
                     .reason(result.message())
                     .reviewStatus(ReviewStatus.PENDING)
-                    .build()
-            );
+                    .build();
+
+            requestedUserRepository.saveAndFlush(review);
+
             return new RegistrationResponse(
                 "PENDING",
                 "회원가입 신청이 접수되었습니다. 관리자 승인 후 이용할 수 있습니다."
             );
         } catch (RuntimeException exception) {
             documentStorageService.delete(documentPath);
+
             return new RegistrationResponse(
                 "RETRY",
                 "회원가입 검토 신청 저장에 실패했습니다. 잠시 후 다시 시도해주세요."
@@ -102,21 +124,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new IllegalArgumentException("회원가입 정보는 필수입니다.");
         }
 
-        if (request.getBId() == null || request.getBId().isBlank()) {
-            throw new IllegalArgumentException("사업자등록번호는 필수입니다.");
-        }
-
-        if (request.getPw() == null || request.getPw().isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 필수입니다.");
-        }
-
-        if (request.getName() == null || request.getName().isBlank()) {
-            throw new IllegalArgumentException("대표자명은 필수입니다.");
-        }
-
-        if (request.getStoreName() == null || request.getStoreName().isBlank()) {
-            throw new IllegalArgumentException("상호명은 필수입니다.");
-        }
+        requireText(request.getBId(), "사업자등록번호는 필수입니다.");
+        requireText(request.getPw(), "비밀번호는 필수입니다.");
+        requireText(request.getName(), "대표자명은 필수입니다.");
+        requireText(request.getStoreName(), "상호명은 필수입니다.");
 
         if (document == null || document.isEmpty()) {
             throw new IllegalArgumentException("사업자등록증 파일은 필수입니다.");
@@ -136,7 +147,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             );
         }
 
-        if (requestedUserRepository.countByBusinessIdAndReviewStatus(
+        if (requestedUserRepository.countByBIdAndReviewStatus(
             normalizedBid,
             ReviewStatus.PENDING
         ) > 0) {
@@ -146,5 +157,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         return normalizedBid;
+    }
+
+    private void requireText(String value, String message) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(message);
+        }
     }
 }
