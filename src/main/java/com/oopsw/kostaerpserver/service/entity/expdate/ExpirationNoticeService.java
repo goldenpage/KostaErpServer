@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.service.Interface;
+package com.oopsw.kostaerpserver.service.entity.expdate;
 
 import com.oopsw.kostaerpserver.dto.expnotice.ExpirationNoticeResponse;
 

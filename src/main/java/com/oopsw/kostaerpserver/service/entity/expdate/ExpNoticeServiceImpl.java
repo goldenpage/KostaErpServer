@@ -1,10 +1,9 @@
-package com.oopsw.kostaerpserver.service;
+package com.oopsw.kostaerpserver.service.entity.expdate;
 
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeRequest;
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeResponse;
 import com.oopsw.kostaerpserver.repository.entity.expdate.ExpNotice;
 import com.oopsw.kostaerpserver.repository.entity.expdate.ExpNoticeRepository;
-import com.oopsw.kostaerpserver.service.Interface.ExpNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

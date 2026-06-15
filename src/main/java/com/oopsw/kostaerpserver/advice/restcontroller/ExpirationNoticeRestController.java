@@ -2,7 +2,7 @@ package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.dto.expnotice.ExpirationNoticeResponse;
-import com.oopsw.kostaerpserver.service.Interface.ExpirationNoticeService;
+import com.oopsw.kostaerpserver.service.entity.expdate.ExpirationNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
