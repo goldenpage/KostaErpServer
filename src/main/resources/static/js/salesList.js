@@ -1,4 +1,8 @@
 let globalSalesData = [];
+let currentPage = 0;
+const pageSize = 5;
+let isSearching = false;
+let currentSearchCondition = {};
 
 function updateTableAndTotal(data) {
     if (data) globalSalesData = data;
@@ -40,17 +44,31 @@ function updateTableAndTotal(data) {
     totalSpan.innerText = total.toLocaleString() + "원";
 }
 
-function searchSales() {
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+function searchSales(page = 0) {
 
-    fetch(`/api/sales/search?startDate=${startDate}&endDate=${endDate}`)
-        .then(response => response.json())
+    isSearching = true;
+
+    currentSearchCondition = {
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        category: document.getElementById('categorySelect').value,
+        payment: document.getElementById('paymentSelect').value,
+        menuName: document.getElementById('menuSelect').value
+    };
+
+    const params = new URLSearchParams({
+        ...currentSearchCondition,
+        page,
+        size: pageSize
+    });
+
+    fetch(`/api/sales/search?${params}`)
+        .then(res => res.json())
         .then(data => {
-            globalSalesData = data;
-            filterSales();
+            renderTable(data.content);
+            renderPagination(data);
         })
-        .catch(error => console.error("조회 실패:", error));
+        .catch(err => console.error(err));
 }
 
 function deleteSale(id) {
@@ -144,45 +162,108 @@ function filterSales() {
 }
 
 function resetFilters() {
+
+    isSearching = false;
+
     document.getElementById('startDate').value = "";
     document.getElementById('endDate').value = "";
     document.getElementById('categorySelect').value = "";
     document.getElementById('paymentSelect').value = "";
     document.getElementById('menuSelect').value = "";
 
-    fetch(`/api/sales/list?page=0&size=20`)
-        .then(response => response.json())
-        .then(data => {
-            globalSalesData = data.content;
-            renderTable(data);
-        })
-        .catch(error => console.error("초기화 실패:", error));
+    loadSalesList(0);
 }
 
-function loadSalesList() {
-    fetch('/api/sales/list')
+window.addEventListener('DOMContentLoaded', () => {
+    loadSalesList(0);
+});
+
+function loadSalesList(page = 0) {
+    fetch(`/api/sales/list?page=${page}&size=${pageSize}`)
         .then(res => res.json())
         .then(data => {
-            renderTable(data);
+            currentPage = data.number;
+            globalSalesData = data.content;
+
+            initFilters(data.content);
+            renderTable(data.content);
+            renderPagination(data);
         })
-        .catch(err => console.error("데이터 로드 실패:", err));
+        .catch(err => console.error("판매 목록 로드 실패:", err));
 }
 
-function renderTable(data) {
-    const listToRender = (data && data.content) ? data.content : (Array.isArray(data) ? data : []);
 
+function renderPagination(pageData) {
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = "";
+
+    if (pageData.totalPages <= 1) {
+        return;
+    }
+
+    const prevButton = document.createElement("button");
+    prevButton.textContent = "이전";
+    prevButton.disabled = pageData.first;
+    prevButton.onclick = () => {
+
+        if (isSearching) {
+            searchSales(currentPage - 1);
+        } else {
+            loadSalesList(currentPage - 1);
+        }
+
+    };
+    pagination.appendChild(prevButton);
+
+    for (let i = 0; i < pageData.totalPages; i++) {
+        const button = document.createElement("button");
+        button.textContent = i + 1;
+
+        if (i === pageData.number) {
+            button.classList.add("active");
+        }
+
+        button.onclick = () => {
+
+            if (isSearching) {
+                searchSales(i);
+            } else {
+                loadSalesList(i);
+            }
+
+        };
+        pagination.appendChild(button);
+    }
+
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "다음";
+    nextButton.disabled = pageData.last;
+    nextButton.onclick = () => {
+
+        if (isSearching) {
+            searchSales(currentPage + 1);
+        } else {
+            loadSalesList(currentPage + 1);
+        }
+
+    };
+    pagination.appendChild(nextButton);
+}
+
+function renderTable(listToRender) {
     const tbody = document.getElementById('salesTableBody');
     const totalSpan = document.getElementById('totalRevenue');
 
     tbody.innerHTML = "";
 
-    if (listToRender.length === 0) {
+    if (!listToRender || listToRender.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">조회된 데이터가 없습니다.</td></tr>`;
         totalSpan.innerText = "0원";
         return;
     }
 
     let total = 0;
+
     listToRender.forEach((sale) => {
         const subtotal = sale.qty * sale.price;
         total += subtotal;
@@ -201,7 +282,9 @@ function renderTable(data) {
                 <button type="button" class="btn-delete" onclick="deleteSale('${sale.saleId}')">삭제</button>
             </td>
         </tr>`;
+
         tbody.innerHTML += row;
     });
+
     totalSpan.innerText = total.toLocaleString() + "원";
 }
