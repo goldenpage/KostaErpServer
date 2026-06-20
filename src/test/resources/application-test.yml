@@ -6,15 +6,15 @@ spring:
     name: KostaErpServer
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ${TEST_DB_URL}
-    username: ${TEST_DB_USERNAME}
-    password: ${TEST_DB_PASSWORD}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     open-in-view: false
     generate-ddl: false
     show-sql: true
     hibernate:
-      ddl-auto: ${TEST_DB_DDL_AUTO:update}
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
