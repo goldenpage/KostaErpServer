@@ -1,6 +1,5 @@
 package com.oopsw.kostaerpserver.auth;
 
-
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -91,7 +90,6 @@ public class SecurityConfig {
             );
         return http.build();
     }
-
 
 
     @Bean
