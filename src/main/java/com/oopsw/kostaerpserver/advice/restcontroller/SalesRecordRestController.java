@@ -17,17 +17,24 @@ public class SalesRecordRestController {
     private final SalesRecordService salesRecordService;
 
     @GetMapping("/search")
-    public List<SalesRecordResponse> getSalesByDate(
-
-            @RequestParam
-            String startDate,
-
-            @RequestParam
-            String endDate
+    public Page<SalesRecordResponse> searchSales(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String menuName,
+            @RequestParam(required = false) String payment,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
     ) {
-        return salesRecordService.getSalesByDate(
+
+        return salesRecordService.searchSales(
                 startDate,
-                endDate
+                endDate,
+                category,
+                menuName,
+                payment,
+                page,
+                size
         );
     }
 

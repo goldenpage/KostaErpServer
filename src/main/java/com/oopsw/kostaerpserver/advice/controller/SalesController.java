@@ -17,18 +17,7 @@ public class SalesController {
     private final SalesRecordService salesRecordService;
 
     @GetMapping("/sales-list")
-    public String salesList(@RequestParam(value = "page", defaultValue = "1") int page,
-                            @RequestParam(value = "size", defaultValue = "10") int size,
-                            Model model) {
-
-        Page<SalesRecordResponse> salesPage = salesRecordService.getSalesList(page, size);
-        List<SalesRecordResponse> list = salesPage.getContent();
-
-
-        int total = list.stream().mapToInt(SalesRecordResponse::getTotalPrice).sum();
-
-        model.addAttribute("salesList", salesPage.getContent());
-        model.addAttribute("totalSum", total);
+    public String salesList() {
         return "salesList";
     }
 }

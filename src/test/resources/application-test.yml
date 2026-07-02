@@ -17,8 +17,10 @@ spring:
       ddl-auto: ${TEST_DB_DDL_AUTO:update}
     properties:
       hibernate:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         show_sql: true
         format_sql: true
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 kind: Application
 logging:
