@@ -54,3 +54,12 @@ external-api:
   python-ocr-url: http://127.0.0.1:8000/api/v1/business-document-ocr
   business-registration-url: http://127.0.0.1:3000/nts-businessman/v1/validate
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  packages-to-scan: com.oopsw.kostaerpserver
+
