@@ -1,6 +1,5 @@
 package com.oopsw.kostaerpserver.auth;
 
-
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -74,7 +73,10 @@ public class SecurityConfig {
                 "/api/sales/**",
                 "/css/**",
                 "/js/**",
-                "/asset/**"
+                "/asset/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**"
             ).permitAll()
             .requestMatchers("/api/manager/**").hasRole("MANAGER")
             .requestMatchers("/manager/**").hasRole("MANAGER")
@@ -91,7 +93,6 @@ public class SecurityConfig {
             );
         return http.build();
     }
-
 
 
     @Bean
