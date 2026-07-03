@@ -3,18 +3,25 @@
 .sideMenu {
   width: 260px;
   min-height: 100vh;
-  padding: 24px 18px;
+  padding: 24px;
   box-sizing: border-box;
   background-color: #f8fafc;
   border-right: 1px solid #d9e2ec;
 }
 
 .sideMenu > img {
+
   display: block;
-  width: 110px;
-  height: auto;
-  margin: 0 auto 28px;
+  width: 200px;
+  height: 100px;
+  /*margin: 0 auto 28px;*/
   cursor: pointer;
+  transform:scale(1.5);
+}
+
+.sideMenu > img:hover {
+  transform:rotate(90deg);
+  
 }
 
 .sideMenu > ul {
