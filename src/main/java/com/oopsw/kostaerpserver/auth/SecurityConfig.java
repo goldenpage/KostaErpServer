@@ -73,7 +73,10 @@ public class SecurityConfig {
                 "/api/sales/**",
                 "/css/**",
                 "/js/**",
-                "/asset/**"
+                "/asset/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**"
             ).permitAll()
             .requestMatchers("/api/manager/**").hasRole("MANAGER")
             .requestMatchers("/manager/**").hasRole("MANAGER")
