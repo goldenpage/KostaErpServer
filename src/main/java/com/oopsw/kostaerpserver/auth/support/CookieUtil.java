@@ -10,7 +10,7 @@ public class CookieUtil {
         return ResponseCookie.from("refreshToken", token)
                 .httpOnly(true)
                 .secure(false)
-                .path("/api/auth/reissue")
+                .path("/api/auth")
                 .maxAge(Duration.ofMillis(maxAgeMillis))
                 .sameSite("Lax")
                 .build();
@@ -21,7 +21,7 @@ public class CookieUtil {
         return ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(false)
-                .path("/api/auth/reissue")
+                .path("/api/auth")
                 .maxAge(0)
                 .sameSite("Lax")
                 .build();
