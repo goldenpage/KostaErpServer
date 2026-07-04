@@ -63,3 +63,7 @@ springdoc:
     tags-sorter: alpha
   packages-to-scan: com.oopsw.kostaerpserver
 
+jwt:
+  secret: ${JWT_SECRET}
+  access-expiration: 30m
+  refresh-expiration: 14d
