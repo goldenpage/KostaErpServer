@@ -19,6 +19,19 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AccountRepository accountRepository;
 
+    public void createUserAccount(String username, String password, String name, String email) {
+        if(username == null || accountRepository.existsByUsername(username)) {
+            return; //이미 있으면 스킵
+        }
+        accountRepository.save(Account.builder()
+                .username(username)
+                .password(password)
+                .role("ROLE_USER")
+                .email(email)
+                .name(name)
+                .build());
+    }
+
     //AT, RT 생성 및 RT DB저장
     @Transactional
     public TokenResponse issueToken(String username, String role) {
