@@ -1,5 +1,7 @@
-package com.oopsw.kostaerpserver.auth;
+package com.oopsw.kostaerpserver.auth.config;
 
+import com.oopsw.kostaerpserver.auth.ErpUserDetailsService;
+import com.oopsw.kostaerpserver.auth.JsonLoginFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

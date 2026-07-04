@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver.auth;
+package com.oopsw.kostaerpserver.auth.userdetails;
 
 import com.oopsw.kostaerpserver.auth.repository.AccountRepository;
 import com.oopsw.kostaerpserver.auth.repository.entity.Account;

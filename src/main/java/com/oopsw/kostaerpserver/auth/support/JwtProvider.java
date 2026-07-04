@@ -1,4 +1,4 @@
-package com.oopsw.kostaerpserver;
+package com.oopsw.kostaerpserver.auth.support;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
