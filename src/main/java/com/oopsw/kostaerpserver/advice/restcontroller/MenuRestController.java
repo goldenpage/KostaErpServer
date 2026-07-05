@@ -1,7 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
-import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialDeleteResponse;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.menu.*;
 import com.oopsw.kostaerpserver.service.Interface.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,9 @@ public class MenuRestController {
     @GetMapping
     public ResponseEntity<MenuListResponse> getMenuList(
             @ModelAttribute MenuListRequest request,
-            @AuthenticationPrincipal ErpUserDetails userDetails
-    ) {
-        String bId = getBId(userDetails);
+            @AuthenticationPrincipal AccountDetails accountDetails
+            ) {
+        String bId = getBId(accountDetails);
         request.setBId(bId);
 
         MenuListResponse response =
@@ -54,9 +53,9 @@ public class MenuRestController {
     public ResponseEntity<SaleResponse> saleMenu(
             @PathVariable String menuId,
             @RequestBody SaleRequest request,
-            @AuthenticationPrincipal ErpUserDetails userDetails
+            @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
         menuService.saleMenu(menuId, request.getSaleCount(), bId, request.getPayment());
 
         return ResponseEntity.ok(
@@ -64,12 +63,12 @@ public class MenuRestController {
         );
     }
 
-    private String getBId(ErpUserDetails userDetails) {
-        if (userDetails == null) {
+    private String getBId(AccountDetails accountDetails) {
+        if (accountDetails == null) {
             throw new IllegalStateException("로그인 정보가 없습니다.");
         }
 
-        return userDetails.getUsername();
+            return accountDetails.getUsername();
     }
 
     @DeleteMapping("/{menuId}")

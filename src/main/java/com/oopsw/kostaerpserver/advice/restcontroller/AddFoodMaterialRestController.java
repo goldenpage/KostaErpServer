@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.addfoodmaterial.*;
 import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
@@ -57,8 +57,8 @@ public class AddFoodMaterialRestController {
     public List<SearchFoodMaterialResponse> searchFoodMaterial(
             @PathVariable String foodMaterialName,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
-        String bId = erpUserDetails.getLoginUser().getBId();
+            @AuthenticationPrincipal AccountDetails accountDetails){
+        String bId = accountDetails.getAccount().getUsername();
         return SearchFoodMaterialResponse.fromList(addFoodMaterialService.getFoodMaterialByName(foodMaterialName, bId));
     }
 
@@ -66,9 +66,9 @@ public class AddFoodMaterialRestController {
     public AddFoodMaterialResponse addFoodMaterial(
             AddFoodMaterialRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
+            @AuthenticationPrincipal AccountDetails accountDetails){
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         try{
             List<AddFoodMaterial> list = request.VOList(bId);
