@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeRequest;
 import com.oopsw.kostaerpserver.dto.stocknotice.StockNoticeResponse;
 import com.oopsw.kostaerpserver.service.entity.stocknotice.StockNoticeSettingService;
@@ -21,9 +21,9 @@ public class StockNoticeSettingRestController {
 
     @GetMapping
     public ResponseEntity<StockNoticeResponse> getStockNoticeSetting(
-            @AuthenticationPrincipal ErpUserDetails userDetails
+            @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
 
         StockNoticeResponse response =
                 stockNoticeSettingService.getStockNoticeSetting(bId);
@@ -34,9 +34,9 @@ public class StockNoticeSettingRestController {
     @PatchMapping
     public ResponseEntity<StockNoticeResponse> updateStockNoticeSetting(
             @RequestBody StockNoticeRequest request,
-            @AuthenticationPrincipal ErpUserDetails userDetails
+            @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
 
         StockNoticeResponse response =
                 stockNoticeSettingService.updateStockNoticeSetting(bId, request);
@@ -44,11 +44,11 @@ public class StockNoticeSettingRestController {
         return ResponseEntity.ok(response);
     }
 
-    private String getBId(ErpUserDetails userDetails) {
-        if (userDetails == null) {
+    private String getBId(AccountDetails accountDetails) {
+        if (accountDetails == null) {
             throw new RuntimeException("로그인 정보가 없습니다.");
         }
 
-        return userDetails.getUsername();
+        return accountDetails.getUsername();
     }
 }

@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.disposal.*;
 import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.DisposalService;
@@ -24,9 +24,9 @@ public class DisposalRestController {
     public DisposalPageResponse getDisposalItems(
             DisposalSearchRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+            @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         List<DisposalListResponse> filteredList =
                 disposalService.getDisposalsPaging(bId, 1, Integer.MAX_VALUE);
@@ -71,9 +71,9 @@ public class DisposalRestController {
 
     @GetMapping("/filters")
     public Map<String, List<String>> getDisposalFilters(
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails
+            @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         return Map.of(
                 "categories", disposalService.getCategories(bId),
