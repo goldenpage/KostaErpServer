@@ -61,6 +61,7 @@ springdoc:
     path: /swagger-ui.html
     operations-sorter: method
     tags-sorter: alpha
+    persistAuthorization: true
   packages-to-scan: com.oopsw.kostaerpserver
 
 jwt:
