@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.addmenu.*;
 import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
@@ -25,9 +25,9 @@ public class AddMenuRestController {
     public AddMenuCategoryResponse addMenuCategory(
             @RequestBody AddMenuCategoryRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+            @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         try{
             MenuCategory vo = request.toVO(bId);
@@ -67,8 +67,8 @@ public class AddMenuRestController {
     @GetMapping("/menu/foodmaterial/list")
     public List<GetFoodMaterialListResponse> getFoodMaterialList(
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+            @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 
@@ -76,7 +76,7 @@ public class AddMenuRestController {
     public AddMenuResponse addMenu(
             AddMenuRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
+            @AuthenticationPrincipal AccountDetails accountDetails){
 
 
         try{

@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialDeleteResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialPageResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialSearchRequest;
@@ -20,9 +20,9 @@ public class FoodMaterialRestController {
     @GetMapping
     public ResponseEntity<FoodMaterialPageResponse> getFoodMaterials(
             @ModelAttribute FoodMaterialSearchRequest request,
-            @AuthenticationPrincipal ErpUserDetails userDetails
+            @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
         request.setBId(bId);
         FoodMaterialPageResponse response = foodMaterialService.getFoodMaterialPage(request);
         return ResponseEntity.ok(response);
@@ -31,19 +31,19 @@ public class FoodMaterialRestController {
     @DeleteMapping("/{foodMaterialId}")
     public ResponseEntity<FoodMaterialDeleteResponse> deleteFoodMaterial(
             @PathVariable String foodMaterialId,
-            @AuthenticationPrincipal ErpUserDetails userDetails
+            @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
         foodMaterialService.deleteFoodMaterial(foodMaterialId, bId);
 
         return ResponseEntity.ok(new FoodMaterialDeleteResponse("삭제 완료", foodMaterialId)
         );
     }
 
-    private String getBId(ErpUserDetails userDetails) {
-        if (userDetails == null) {
+    private String getBId(AccountDetails accountDetails) {
+        if (accountDetails == null) {
             throw new RuntimeException("로그인 정보가 없습니다.");
         }
-        return userDetails.getUsername();
+        return accountDetails.getUsername();
     }
 }

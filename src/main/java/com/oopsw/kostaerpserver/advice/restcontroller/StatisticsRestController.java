@@ -1,7 +1,7 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.statistics.DailyDisposalChart;
 import com.oopsw.kostaerpserver.dto.statistics.DisposalRateResponse;
 import com.oopsw.kostaerpserver.dto.statistics.DisposalReasonRatio;
@@ -33,10 +33,10 @@ public class StatisticsRestController {
 
     @GetMapping("/disposals/rate")
     public ResponseEntity<DisposalRateResponse> getDisposalRate(
-        @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails
-    ) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal AccountDetails accountDetails
+            ) {
+        String bId = accountDetails.getAccount().getUsername();
         Double response = statisticsService.getDisposalRate(
             bId,
             statisticsRequest.getStartDate(),
@@ -48,8 +48,8 @@ public class StatisticsRestController {
     @GetMapping("/disposals/total-price")
     public ResponseEntity<Long> getTotalDisposalPrice(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
 
         Long disposalTotalPrice =
             statisticsService.getTotalDisposalPrice(bId,
@@ -63,9 +63,9 @@ public class StatisticsRestController {
     @GetMapping("/disposals/top-materials")
     public ResponseEntity<List<DisposalTopMaterialsResponse>> getDisposalTopMaterials(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
         List<DisposalTopMaterialsResponse> response =
             statisticsService.getTopDisposalMaterials(
                 bId,
@@ -79,8 +79,8 @@ public class StatisticsRestController {
     @GetMapping("/disposals/reason-ratio")
     public ResponseEntity<List<DisposalReasonRatio>> getDisposalReasonRatio(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
 
         List<DisposalReasonRatio> list = statisticsService.getDisposalReasonRatio(
             bId,
@@ -94,9 +94,9 @@ public class StatisticsRestController {
     @GetMapping("/disposals/daily-chart")
     public ResponseEntity<List<DailyDisposalChart>> getDailyDisposalChart(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         List<DailyDisposalChart> list =
             statisticsService.getDailyDisposalChart(
@@ -111,9 +111,9 @@ public class StatisticsRestController {
     @GetMapping("/revenue/total")
     public ResponseEntity<Long> getTotalSales(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         Long result = statisticsService.getTotalSales(bId,
             statisticsRequest.getStartDate(),
@@ -126,8 +126,8 @@ public class StatisticsRestController {
     @GetMapping("/revenue/history")
     public ResponseEntity<List<SalesHistory>> getSalesHistory(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
 
         List<SalesHistory> list = statisticsService.getSalesHistory(
             bId,
@@ -141,8 +141,8 @@ public class StatisticsRestController {
     @GetMapping("/revenue/menu-rank")
     public ResponseEntity<List<MenuSalesRank>> getMenuSalesRank(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
 
         List<MenuSalesRank> list = statisticsService.getMenuSalesRank(
             bId,
@@ -156,9 +156,9 @@ public class StatisticsRestController {
     @GetMapping("/expenses/material-rank")
     public ResponseEntity<List<MonthlyFoodMaterialExpenseRank>> getMonthlyFoodMaterialExpenseRank(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         List<MonthlyFoodMaterialExpenseRank> list = statisticsService.getMonthlyFoodMaterialExpenseRank(
             bId,
@@ -171,8 +171,8 @@ public class StatisticsRestController {
     @GetMapping("/expenses/total")
     public ResponseEntity<Long> getTotalExpense(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
 
         Long result = statisticsService.getTotalExpense(
             bId,
@@ -187,9 +187,9 @@ public class StatisticsRestController {
     @GetMapping("/expenses/material-rank/chart")
     public ResponseEntity<List<MonthlyExpenseRankChart>> getMonthlyExpenseRankChart(
         @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         List<MonthlyExpenseRankChart> list = statisticsService.getMonthlyExpenseRankChart(
             bId,
@@ -202,9 +202,9 @@ public class StatisticsRestController {
     @GetMapping("/revenue/monthly")
     public ResponseEntity<List<MonthlyRevenue>> getMonthlyRevenue(
         @ModelAttribute StatisticsRequest request,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         return ResponseEntity.ok(
             statisticsService.getMonthlyRevenue(
@@ -218,9 +218,9 @@ public class StatisticsRestController {
     @GetMapping("/expenses/monthly")
     public ResponseEntity<List<MonthlyExpense>> getMonthlyExpense(
         @ModelAttribute StatisticsRequest request,
-        @AuthenticationPrincipal ErpUserDetails erpUserDetails
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         return ResponseEntity.ok(
             statisticsService.getMonthlyExpense(
