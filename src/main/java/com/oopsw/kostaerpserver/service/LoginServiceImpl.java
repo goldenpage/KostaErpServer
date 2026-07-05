@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service;
 
+import com.oopsw.kostaerpserver.auth.service.AuthService;
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
@@ -10,11 +11,13 @@ import org.apache.coyote.BadRequestException;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
+    private final AuthService authService;
     private final UserInfoDAO userInfoDAO;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -34,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
         return user;
     }
 
-
+    @Transactional
     @Override
     public int register(RegisterRequest request) {
         LocalDateTime now = LocalDateTime.now();
@@ -56,8 +59,11 @@ public class LoginServiceImpl implements LoginService {
             .agreementDate(now)
             .marketingDate(request.isMarketingAgree() ? now : null)
             .build();
-
-        return userInfoDAO.register(user);
+        int result = userInfoDAO.register(user);
+        if (result == 1) {
+            authService.createUserAccount(user.getBId(), user.getPw(), user.getName(), user.getEmail());
+        }
+        return result;
     }
 
     @Override

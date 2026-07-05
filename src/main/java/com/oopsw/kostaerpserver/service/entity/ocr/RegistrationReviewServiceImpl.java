@@ -1,5 +1,6 @@
 package com.oopsw.kostaerpserver.service.entity.ocr;
 
+import com.oopsw.kostaerpserver.auth.service.AuthService;
 import com.oopsw.kostaerpserver.dto.manager.RegistrationDocument;
 import com.oopsw.kostaerpserver.dto.manager.RegistrationReviewResponse;
 import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
@@ -27,6 +28,7 @@ public class RegistrationReviewServiceImpl implements
     private final RegistrationRequestedUserRepository reviewRepository;
     private final UserInfoDAO userInfoDAO;
     private final RegistrationDocumentStorageService documentStorageService;
+    private final AuthService authService;
 
 
     @Override
@@ -76,6 +78,8 @@ public class RegistrationReviewServiceImpl implements
         if (userInfoDAO.register(user) != 1) {
             throw new IllegalStateException("사용자 계정 생성에 실패했습니다.");
         }
+
+        authService.createUserAccount(user.getBId(), user.getPw(), user.getName(),  user.getEmail());
 
         review.approve(adminName);
     }

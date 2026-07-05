@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,33 +25,60 @@ public class DisposalRestController {
             DisposalSearchRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+
         String bId = erpUserDetails.getLoginUser().getBId();
-        List<DisposalListResponse> list = null;
+
+        List<DisposalListResponse> filteredList =
+                disposalService.getDisposalsPaging(bId, 1, Integer.MAX_VALUE);
 
         if (hasText(request.getCategory())) {
-            list = disposalService.getDisposalsByCategoryAndBId(request.getCategory(), bId);
-        } else {
-            list = disposalService.getDisposalsFilteredPaging(
-                    bId,
-                    request.getPage(),
-                    request.getSize());
+            filteredList = filteredList.stream()
+                    .filter(disposal -> request.getCategory().equals(disposal.getFoodCategory()))
+                    .toList();
         }
-        if (list != null && hasText(request.getType())) {
-            list = list.stream()
+
+        if (hasText(request.getType())) {
+            filteredList = filteredList.stream()
                     .filter(disposal -> request.getType().equals(disposal.getFoodMaterialType()))
                     .toList();
         }
-        if (list != null && hasText(request.getReason())) {
-            list = list.stream()
+
+        if (hasText(request.getReason())) {
+            filteredList = filteredList.stream()
                     .filter(disposal -> request.getReason().equals(disposal.getReason()))
                     .toList();
         }
 
-        int totalCount = disposalService.getTotalCount(bId);
-        int totalPages = (int) Math.ceil((double) totalCount / request.getSize());
+        int size = request.getSize() <= 0 ? 5 : request.getSize();
+        int page = Math.max(request.getPage(), 1);
+
+        int totalCount = filteredList.size();
+        int totalPages = (int) Math.ceil((double) totalCount / size);
         if (totalPages < 1) totalPages = 1;
 
-        return new DisposalPageResponse(list, request.getPage(), totalPages);
+        int fromIndex = Math.min((page - 1) * size, totalCount);
+        int toIndex = Math.min(fromIndex + size, totalCount);
+        List<DisposalListResponse> pageList = filteredList.subList(fromIndex, toIndex);
+
+        return new DisposalPageResponse(
+                pageList,
+                page,
+                totalPages,
+                disposalService.getCategories(bId),
+                disposalService.getReasons()
+        );
+    }
+
+    @GetMapping("/filters")
+    public Map<String, List<String>> getDisposalFilters(
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails
+    ) {
+        String bId = erpUserDetails.getLoginUser().getBId();
+
+        return Map.of(
+                "categories", disposalService.getCategories(bId),
+                "reasons", disposalService.getReasons()
+        );
     }
 
     @PatchMapping("/{id}/reason")
