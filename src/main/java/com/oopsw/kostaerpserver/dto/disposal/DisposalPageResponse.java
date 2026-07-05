@@ -13,4 +13,6 @@ public class DisposalPageResponse {
     private List<DisposalListResponse> list;
     private int currentPage;
     private int totalPages;
+    private List<String> categories;
+    private List<String> reasons;
 }
