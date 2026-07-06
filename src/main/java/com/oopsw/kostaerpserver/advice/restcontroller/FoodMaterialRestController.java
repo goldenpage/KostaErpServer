@@ -1,10 +1,12 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialDeleteResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialPageResponse;
 import com.oopsw.kostaerpserver.dto.foodmaterial.FoodMaterialSearchRequest;
 import com.oopsw.kostaerpserver.service.Interface.FoodMaterialService;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,9 +22,9 @@ public class FoodMaterialRestController {
     @GetMapping
     public ResponseEntity<FoodMaterialPageResponse> getFoodMaterials(
             @ModelAttribute FoodMaterialSearchRequest request,
-            @AuthenticationPrincipal ErpUserDetails userDetails
+        Principal principal
     ) {
-        String bId = getBId(userDetails);
+        String bId = principal.getName();
         request.setBId(bId);
         FoodMaterialPageResponse response = foodMaterialService.getFoodMaterialPage(request);
         return ResponseEntity.ok(response);

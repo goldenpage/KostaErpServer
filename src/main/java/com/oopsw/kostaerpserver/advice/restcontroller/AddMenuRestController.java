@@ -8,6 +8,7 @@ import com.oopsw.kostaerpserver.service.Interface.AddMenuService;
 import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +68,8 @@ public class AddMenuRestController {
     @GetMapping("/menu/foodmaterial/list")
     public List<GetFoodMaterialListResponse> getFoodMaterialList(
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+            Principal principal) {
+        String bId = principal.getName();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 

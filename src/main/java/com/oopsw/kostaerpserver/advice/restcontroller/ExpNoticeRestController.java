@@ -25,9 +25,7 @@ public class ExpNoticeRestController {
             @AuthenticationPrincipal ErpUserDetails userDetails
     ) {
         String bId = getBId(userDetails);
-
         ExpNoticeResponse response = expNoticeService.getExpNotice(bId);
-
         return ResponseEntity.ok(response);
     }
 

@@ -44,7 +44,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             //UPA토큰 생성
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            username, List.of(new SimpleGrantedAuthority(role)));
+                            username,
+                        null, List.of(new SimpleGrantedAuthority(role)));
 
             //UPA토큰 기반 ContextHolder 생성
             SecurityContextHolder.getContext().setAuthentication(authentication);
