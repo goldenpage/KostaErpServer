@@ -23,9 +23,9 @@ public class AddMenuRestController {
 
     @PostMapping("/menu/menucategory/add")
     public AddMenuCategoryResponse addMenuCategory(
-            @RequestBody AddMenuCategoryRequest request,
-            @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal AccountDetails accountDetails) {
+        @RequestBody AddMenuCategoryRequest request,
+        @ModelAttribute StatisticsRequest statisticsRequest,
+        @AuthenticationPrincipal AccountDetails accountDetails) {
 
         String bId = accountDetails.getAccount().getUsername();
 
@@ -66,17 +66,17 @@ public class AddMenuRestController {
 
     @GetMapping("/menu/foodmaterial/list")
     public List<GetFoodMaterialListResponse> getFoodMaterialList(
-            @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
-        String bId = erpUserDetails.getLoginUser().getBId();
+        @ModelAttribute StatisticsRequest statisticsRequest,
+        @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getAccount().getUsername();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 
     @PostMapping("/menu/add")
     public AddMenuResponse addMenu(
-            AddMenuRequest request,
-            @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal AccountDetails accountDetails){
+        AddMenuRequest request,
+        @ModelAttribute StatisticsRequest statisticsRequest,
+        @AuthenticationPrincipal AccountDetails accountDetails){
 
 
         try{
