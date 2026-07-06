@@ -19,6 +19,11 @@ import java.util.List;
 public class AddFoodMaterialRestController {
     private final AddFoodMaterialService addFoodMaterialService;
 
+    @GetMapping("/foodmaterial/foodcategory/list")
+    public List<GetFoodCategoryListResponse> getFoodCategoryList() {
+        return GetFoodCategoryListResponse.fromList(addFoodMaterialService.getFoodCategoryList());
+    }
+
     @PostMapping("/foodmaterial/foodcategory/add")
     public AddFoodCategoryResponse  addFoodCategory(@RequestBody AddFoodCategoryRequest request) {
         try {
@@ -58,7 +63,7 @@ public class AddFoodMaterialRestController {
             @PathVariable String foodMaterialName,
             @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal AccountDetails accountDetails){
-        String bId = accountDetails.getAccount().getUsername();
+        String bId = accountDetails.getUsername();
         return SearchFoodMaterialResponse.fromList(addFoodMaterialService.getFoodMaterialByName(foodMaterialName, bId));
     }
 
@@ -68,7 +73,7 @@ public class AddFoodMaterialRestController {
             @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal AccountDetails accountDetails){
 
-        String bId = accountDetails.getAccount().getUsername();
+        String bId = accountDetails.getUsername();
 
         try{
             List<AddFoodMaterial> list = request.VOList(bId);

@@ -45,7 +45,6 @@ public class Purchase {
     @Column(name = "income_date", nullable = false)
     private LocalDateTime incomeDate;
 
-    @CreationTimestamp
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
