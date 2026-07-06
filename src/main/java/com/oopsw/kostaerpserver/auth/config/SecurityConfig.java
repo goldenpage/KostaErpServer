@@ -129,7 +129,6 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             response.getWriter().write("{\"message\":\"authentication required\"}");
-                            System.out.println(authException);
                         }));
 
         return http.build();
