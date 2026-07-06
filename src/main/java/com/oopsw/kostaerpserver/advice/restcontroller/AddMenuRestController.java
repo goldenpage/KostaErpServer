@@ -76,7 +76,7 @@ public class AddMenuRestController {
     public List<GetFoodMaterialListResponse> getFoodMaterialList(
             @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal AccountDetails accountDetails) {
-        String bId = accountDetails.getUsername();
+        String bId = accountDetails.getAccount().getUsername();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 
