@@ -1,6 +1,8 @@
 package com.oopsw.kostaerpserver.auth.filter;
 
+import com.oopsw.kostaerpserver.auth.repository.entity.Account;
 import com.oopsw.kostaerpserver.auth.support.JwtProvider;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -40,12 +42,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             Claims claims = jwtProvider.parseClaims(token); //서명, 만료 검증(실패 시 예외)
             String username = claims.getSubject();
             String role = claims.get("role", String.class);
+            Account account = new  Account();
+            account.setUsername(username);
+            account.setRole(role);
+
 
             //UPA토큰 생성
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            username,
-                        null, List.of(new SimpleGrantedAuthority(role)));
+                            new AccountDetails(account), null, List.of(new SimpleGrantedAuthority(role)));
 
             //UPA토큰 기반 ContextHolder 생성
             SecurityContextHolder.getContext().setAuthentication(authentication);

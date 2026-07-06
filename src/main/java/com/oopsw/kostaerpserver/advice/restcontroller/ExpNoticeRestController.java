@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeRequest;
 import com.oopsw.kostaerpserver.dto.expnotice.ExpNoticeResponse;
 import com.oopsw.kostaerpserver.service.entity.expdate.ExpNoticeService;
@@ -22,31 +22,33 @@ public class ExpNoticeRestController {
 
     @GetMapping
     public ResponseEntity<ExpNoticeResponse> getExpNotice(
-            @AuthenticationPrincipal ErpUserDetails userDetails
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
+
         ExpNoticeResponse response = expNoticeService.getExpNotice(bId);
+
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping
     public ResponseEntity<ExpNoticeResponse> updateExpNotice(
-            @RequestBody ExpNoticeRequest request,
-            @AuthenticationPrincipal ErpUserDetails userDetails
+        @RequestBody ExpNoticeRequest request,
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        String bId = getBId(userDetails);
+        String bId = getBId(accountDetails);
 
         ExpNoticeResponse response =
-                expNoticeService.updateExpNotice(bId, request);
+            expNoticeService.updateExpNotice(bId, request);
 
         return ResponseEntity.ok(response);
     }
 
-    private String getBId(ErpUserDetails userDetails) {
-        if (userDetails == null) {
+    private String getBId(AccountDetails accountDetails) {
+        if (accountDetails == null) {
             throw new IllegalStateException("로그인 정보가 없습니다.");
         }
 
-        return userDetails.getUsername();
+        return accountDetails.getUsername();
     }
 }

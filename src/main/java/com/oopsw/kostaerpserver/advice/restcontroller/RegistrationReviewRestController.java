@@ -1,7 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-
-import com.oopsw.kostaerpserver.auth.ErpAdminUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.manager.RegistrationDocument;
 import com.oopsw.kostaerpserver.dto.manager.RegistrationRejectRequest;
 import com.oopsw.kostaerpserver.dto.manager.RegistrationReviewResponse;
@@ -45,10 +44,10 @@ public class RegistrationReviewRestController {
 
     @PostMapping("/{reviewId}/approve")
     public ResponseEntity<Void> approve(
-        @PathVariable int reviewId,
-        @AuthenticationPrincipal ErpAdminUserDetails admin
-    ) {
-        reviewService.approve(reviewId, admin.getUsername());
+            @PathVariable int reviewId,
+            @AuthenticationPrincipal AccountDetails accountDetails
+            ) {
+        reviewService.approve(reviewId, accountDetails.getUsername());
         return ResponseEntity.ok().build();
     }
 
@@ -56,9 +55,9 @@ public class RegistrationReviewRestController {
     public ResponseEntity<Void> reject(
         @PathVariable int reviewId,
         @RequestBody RegistrationRejectRequest request,
-        @AuthenticationPrincipal ErpAdminUserDetails admin
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
-        reviewService.reject(reviewId, admin.getUsername(), request.reason());
+        reviewService.reject(reviewId, accountDetails.getUsername(), request.reason());
         return ResponseEntity.ok().build();
     }
 

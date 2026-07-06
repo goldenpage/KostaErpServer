@@ -1,6 +1,6 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.addmenu.*;
 import com.oopsw.kostaerpserver.dto.statistics.StatisticsRequest;
 import com.oopsw.kostaerpserver.service.Interface.AddFoodMaterialService;
@@ -8,7 +8,6 @@ import com.oopsw.kostaerpserver.service.Interface.AddMenuService;
 import com.oopsw.kostaerpserver.vo.AddMenu;
 import com.oopsw.kostaerpserver.vo.MenuCategory;
 import com.oopsw.kostaerpserver.vo.Used;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +25,9 @@ public class AddMenuRestController {
     public AddMenuCategoryResponse addMenuCategory(
             @RequestBody AddMenuCategoryRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+            @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = erpUserDetails.getLoginUser().getBId();
+        String bId = accountDetails.getAccount().getUsername();
 
         try{
             MenuCategory vo = request.toVO(bId);
@@ -68,8 +67,8 @@ public class AddMenuRestController {
     @GetMapping("/menu/foodmaterial/list")
     public List<GetFoodMaterialListResponse> getFoodMaterialList(
             @ModelAttribute StatisticsRequest statisticsRequest,
-            Principal principal) {
-        String bId = principal.getName();
+            @AuthenticationPrincipal ErpUserDetails erpUserDetails) {
+        String bId = erpUserDetails.getLoginUser().getBId();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 
@@ -77,7 +76,7 @@ public class AddMenuRestController {
     public AddMenuResponse addMenu(
             AddMenuRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
-            @AuthenticationPrincipal ErpUserDetails erpUserDetails){
+            @AuthenticationPrincipal AccountDetails accountDetails){
 
 
         try{
