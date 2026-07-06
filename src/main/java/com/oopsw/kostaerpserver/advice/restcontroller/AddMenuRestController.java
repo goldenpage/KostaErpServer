@@ -21,13 +21,21 @@ public class AddMenuRestController {
     private final AddMenuService addMenuService;
     private final AddFoodMaterialService addFoodMaterialService;
 
+    @GetMapping("/menu/menucategory/list")
+    public List<GetMenuCategoryListResponse> getMenuCategoryList(
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getUsername();
+        return GetMenuCategoryListResponse.fromList(addMenuService.getMenuCategoryList(bId));
+    }
+
     @PostMapping("/menu/menucategory/add")
     public AddMenuCategoryResponse addMenuCategory(
-        @RequestBody AddMenuCategoryRequest request,
-        @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal AccountDetails accountDetails) {
+            @RequestBody AddMenuCategoryRequest request,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = accountDetails.getAccount().getUsername();
+        String bId = accountDetails.getUsername();
 
         try{
             MenuCategory vo = request.toVO(bId);
@@ -66,17 +74,17 @@ public class AddMenuRestController {
 
     @GetMapping("/menu/foodmaterial/list")
     public List<GetFoodMaterialListResponse> getFoodMaterialList(
-        @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal AccountDetails accountDetails) {
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal AccountDetails accountDetails) {
         String bId = accountDetails.getAccount().getUsername();
         return GetFoodMaterialListResponse.fromList(addFoodMaterialService.getFoodMaterialListAll(bId));
     }
 
     @PostMapping("/menu/add")
     public AddMenuResponse addMenu(
-        AddMenuRequest request,
-        @ModelAttribute StatisticsRequest statisticsRequest,
-        @AuthenticationPrincipal AccountDetails accountDetails){
+            AddMenuRequest request,
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal AccountDetails accountDetails){
 
 
         try{
