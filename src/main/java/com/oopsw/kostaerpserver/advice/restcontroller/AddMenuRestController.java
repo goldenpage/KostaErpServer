@@ -21,13 +21,21 @@ public class AddMenuRestController {
     private final AddMenuService addMenuService;
     private final AddFoodMaterialService addFoodMaterialService;
 
+    @GetMapping("/menu/menucategory/list")
+    public List<GetMenuCategoryListResponse> getMenuCategoryList(
+            @ModelAttribute StatisticsRequest statisticsRequest,
+            @AuthenticationPrincipal AccountDetails accountDetails) {
+        String bId = accountDetails.getUsername();
+        return GetMenuCategoryListResponse.fromList(addMenuService.getMenuCategoryList(bId));
+    }
+
     @PostMapping("/menu/menucategory/add")
     public AddMenuCategoryResponse addMenuCategory(
             @RequestBody AddMenuCategoryRequest request,
             @ModelAttribute StatisticsRequest statisticsRequest,
             @AuthenticationPrincipal AccountDetails accountDetails) {
 
-        String bId = accountDetails.getAccount().getUsername();
+        String bId = accountDetails.getUsername();
 
         try{
             MenuCategory vo = request.toVO(bId);

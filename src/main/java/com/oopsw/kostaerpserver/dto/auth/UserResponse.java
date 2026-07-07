@@ -12,4 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserResponse {
     private String userName;
+    private String role;
 }

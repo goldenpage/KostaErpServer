@@ -2,6 +2,7 @@ package com.oopsw.kostaerpserver.advice.restcontroller;
 
 
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
+import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.auth.ApiResponse;
 import com.oopsw.kostaerpserver.dto.auth.PhoneVerificationRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
@@ -75,10 +76,11 @@ public class AuthRestController {
 
     @GetMapping("/userinfo")
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal
-        ErpUserDetails erpUserDetails) {
-        if (erpUserDetails == null) {
+    AccountDetails accountDetails) {
+        if (accountDetails == null) {
             return null;
         }
-        return ResponseEntity.ok(new UserResponse(erpUserDetails.getLoginUser().getName()));
+        return ResponseEntity.ok(new UserResponse( accountDetails.getUsername(),
+            accountDetails.getAccount().getRole()));
     }
 }

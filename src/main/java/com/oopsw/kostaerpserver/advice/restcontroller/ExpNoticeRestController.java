@@ -22,8 +22,8 @@ public class ExpNoticeRestController {
 
     @GetMapping
     public ResponseEntity<ExpNoticeResponse> getExpNotice(
-            @AuthenticationPrincipal AccountDetails accountDetails
-            ) {
+        @AuthenticationPrincipal AccountDetails accountDetails
+    ) {
         String bId = getBId(accountDetails);
 
         ExpNoticeResponse response = expNoticeService.getExpNotice(bId);
@@ -33,13 +33,13 @@ public class ExpNoticeRestController {
 
     @PatchMapping
     public ResponseEntity<ExpNoticeResponse> updateExpNotice(
-            @RequestBody ExpNoticeRequest request,
-            @AuthenticationPrincipal AccountDetails accountDetails
+        @RequestBody ExpNoticeRequest request,
+        @AuthenticationPrincipal AccountDetails accountDetails
     ) {
         String bId = getBId(accountDetails);
 
         ExpNoticeResponse response =
-                expNoticeService.updateExpNotice(bId, request);
+            expNoticeService.updateExpNotice(bId, request);
 
         return ResponseEntity.ok(response);
     }
