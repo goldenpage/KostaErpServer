@@ -25,4 +25,7 @@ public class Revenue {
 
     @Column(name = "payment")
     private String payment;
+
+    @Column(name = "bId", nullable = false)
+    private String bId;
 }
