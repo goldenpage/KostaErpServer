@@ -14,5 +14,5 @@ public interface LoginService {
     int getPhoneCheck( String phone);
     int getBidCheck( String bId);
     int checkPwFindUser(String bId, String name, String phone);
-
+    String getNameById(String bId);
 }

@@ -14,4 +14,5 @@ public interface UserInfoDAO {
     int getPhoneCheck(String phone);
     int getBidCheck(@Param("bId") String bId);
     int checkPwFindUser(String bId, String name, String phone);
+    String getNameById(@Param("bId") String bId);
 }
