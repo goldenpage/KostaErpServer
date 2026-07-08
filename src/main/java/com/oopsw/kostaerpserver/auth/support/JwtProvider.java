@@ -16,7 +16,6 @@ public class JwtProvider {
     public static final String HEADER = "Authorization";
     public static final String PREFIX = "Bearer ";
 
-    //private final SecretKey key;
     private final Algorithm algorithm;
     private final long accessExpMillis;
     private final long refreshExpMillis;
@@ -33,13 +32,7 @@ public class JwtProvider {
 
     public String createAccessToken(String username, String role) {
         long now = System.currentTimeMillis();
-        /*return Jwts.builder()
-                .subject(username)
-                .claim("role", role)
-                .issuedAt(new Date(now))
-                .expiration(new Date(now + accessExpMillis))
-                .signWith(key)
-                .compact();*/
+
         log.info("[JwtProvider] createAccessToken : username={}, role={}", username, role);
         return JWT.create()
                 .withSubject(username)
@@ -51,12 +44,7 @@ public class JwtProvider {
 
     public String createRefreshToken(String username) {
         long now = System.currentTimeMillis();
-       /* return Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date(now))
-                .expiration(new Date(now + refreshExpMillis))
-                .signWith(key)
-                .compact();*/
+
         log.info("[JwtProvider] createRefreshToken : username={}", username);
         return JWT.create()
                 .withSubject(username)
@@ -65,13 +53,6 @@ public class JwtProvider {
                 .sign(algorithm);
     }
 
-    /*public Claims parseClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }*/
     public DecodedJWT verify(String token) {
         log.info("[JwtProvider] verify : {} 토큰검증 시작", token);
         return JWT.require(algorithm)
@@ -80,7 +61,6 @@ public class JwtProvider {
     }
 
     public String getUsername(String token) {
-        /*return parseClaims(token).getSubject();*/
         return verify(token).getSubject();
     }
 
