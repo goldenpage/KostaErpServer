@@ -93,6 +93,7 @@ public class LoginServiceImpl implements LoginService {
         return userInfoDAO.checkPwFindUser(bId, name, phone);
     }
 
-
-
+    public String getNameById(String bId) {
+        return userInfoDAO.getNameById(bId);
+    }
 }

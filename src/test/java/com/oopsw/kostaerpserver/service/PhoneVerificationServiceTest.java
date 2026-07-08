@@ -110,5 +110,10 @@ public class PhoneVerificationServiceTest {
         public int checkPwFindUser(String bId, String name, String phone) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public String getNameById(String bId) {
+            return "";
+        }
     }
 }
