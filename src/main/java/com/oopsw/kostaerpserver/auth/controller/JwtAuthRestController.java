@@ -1,12 +1,13 @@
 package com.oopsw.kostaerpserver.auth.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.oopsw.kostaerpserver.auth.dto.TokenResponse;
 import com.oopsw.kostaerpserver.auth.service.AuthService;
 import com.oopsw.kostaerpserver.auth.support.CookieUtil;
 import com.oopsw.kostaerpserver.auth.support.JwtProvider;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 @RestController
@@ -33,10 +35,11 @@ public class JwtAuthRestController {
 
             response.setHeader(JwtProvider.HEADER, JwtProvider.PREFIX + tokens.getAccessToken());
             response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.refreshCookie(tokens.getRefreshToken(), jwtProvider.getRefreshExpMillis()).toString());
-            return ResponseEntity.ok("재발급 성공");
+            return ResponseEntity.status(HttpStatus.OK).build();
 
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (JWTVerificationException e) {
+            log.error("[JwtAuthRestController] reissue : {} 재발급 오류", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
