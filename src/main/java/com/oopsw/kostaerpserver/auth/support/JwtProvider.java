@@ -24,7 +24,6 @@ public class JwtProvider {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.access-expiration}")Duration accessExp,
             @Value("${jwt.refresh-expiration}")Duration refreshExp) {
-        //this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.algorithm = Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8));
         this.accessExpMillis = accessExp.toMillis();
         this.refreshExpMillis = refreshExp.toMillis();
@@ -52,12 +51,17 @@ public class JwtProvider {
                 .withExpiresAt(new Date(now + refreshExpMillis))
                 .sign(algorithm);
     }
-
+    
     public DecodedJWT verify(String token) {
-        log.info("[JwtProvider] verify : {} 토큰검증 시작", token);
         return JWT.require(algorithm)
                 .build()
                 .verify(token);
+    }
+    
+    //검증과 상관없이 Subject만 뽑아낼때(로그아웃 정리용)
+    public String getUserNameWithoutVerify(String token) {
+        log.info("[JwtProvider] getUserNameWithoutVerify : 만료된 토큰에서 Subject 추출");
+        return JWT.decode(token).getSubject();
     }
 
     public String getUsername(String token) {
