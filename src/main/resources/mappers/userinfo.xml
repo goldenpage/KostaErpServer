@@ -60,4 +60,9 @@
     SELECT COUNT(*) FROM USERINFO WHERE bId = #{bId} AND name = #{name} AND phone = #{phone}
   </select>
 
+
+
+  <select id="getNameById" resultType="string">
+    SELECT  name FROM USERINFO where bId = #{bId}
+  </select>
 </mapper>

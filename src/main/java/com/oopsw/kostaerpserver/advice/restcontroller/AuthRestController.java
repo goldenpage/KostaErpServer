@@ -1,6 +1,5 @@
 package com.oopsw.kostaerpserver.advice.restcontroller;
 
-
 import com.oopsw.kostaerpserver.auth.ErpUserDetails;
 import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
 import com.oopsw.kostaerpserver.dto.auth.ApiResponse;
@@ -8,6 +7,7 @@ import com.oopsw.kostaerpserver.dto.auth.PhoneVerificationRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegisterRequest;
 import com.oopsw.kostaerpserver.dto.auth.RegistrationResponse;
 import com.oopsw.kostaerpserver.dto.auth.UserResponse;
+import com.oopsw.kostaerpserver.service.Interface.LoginService;
 import com.oopsw.kostaerpserver.service.entity.ocr.RegistrationService;
 import com.oopsw.kostaerpserver.service.PhoneVerificationServiceImpl;
 import jakarta.servlet.http.HttpSession;
@@ -32,7 +32,7 @@ public class AuthRestController {
 
     private final RegistrationService registrationService;
     private final PhoneVerificationServiceImpl phoneVerificationService;
-
+    private final LoginService loginService;
 
     @PostMapping(
         value = "/register",
@@ -75,12 +75,19 @@ public class AuthRestController {
 
 
     @GetMapping("/userinfo")
-    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal
-    AccountDetails accountDetails) {
+    public ResponseEntity<UserResponse> getUser(
+        @AuthenticationPrincipal AccountDetails accountDetails
+    ) {
         if (accountDetails == null) {
             return null;
         }
-        return ResponseEntity.ok(new UserResponse( accountDetails.getUsername(),
-            accountDetails.getAccount().getRole()));
+
+        String bId = accountDetails.getUsername();
+        String name = loginService.getNameById(bId);
+
+        return ResponseEntity.ok(new UserResponse(
+            name,
+            accountDetails.getAccount().getRole()
+        ));
     }
 }
