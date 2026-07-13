@@ -1,13 +1,13 @@
 package com.oopsw.kostaerpserver.auth.service;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.oopsw.kostaerpserver.auth.dto.TokenResponse;
 import com.oopsw.kostaerpserver.auth.repository.AccountRepository;
 import com.oopsw.kostaerpserver.auth.repository.RefreshTokenRepository;
 import com.oopsw.kostaerpserver.auth.repository.entity.Account;
 import com.oopsw.kostaerpserver.auth.repository.entity.RefreshToken;
 import com.oopsw.kostaerpserver.auth.support.JwtProvider;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,35 +50,35 @@ public class AuthService {
     //재발급
     @Transactional
     public TokenResponse reissue(String refreshToken) {
-        if(refreshToken == null) throw new JwtException("RT 없음");
+        if(refreshToken == null) throw new JWTVerificationException("RT 없음");
 
         String username;
         try {
             username = jwtProvider.getUsername(refreshToken);
         } catch (Exception e) {
-            throw new JwtException("RT 유효하지 않음");
+            throw new JWTVerificationException("RT 유효하지 않음");
         }
 
         RefreshToken saved = refreshTokenRepository.findByUsername(username)
-                .orElseThrow(() -> new JwtException("저장된 RT 없음(로그아웃 상태)"));
+                .orElseThrow(() -> new JWTVerificationException("저장된 RT 없음(로그아웃 상태)"));
 
         //쿠키 RT 와 DB RT 서로 다름 탈취 되었거나 구버전 -> 삭제하고 거부
         if(!saved.getToken().equals(refreshToken)) {
             refreshTokenRepository.deleteByUsername(username);
-            throw new JwtException("RT 불일치 (탈취 의심)");
+            throw new JWTVerificationException("RT 불일치 (탈취 의심)");
         }
 
         //DB 만료 체크
         if(saved.getExpiryDate() < System.currentTimeMillis()) {
             refreshTokenRepository.deleteByUsername(username);
-            throw new JwtException("RT 만료");
+            throw new JWTVerificationException("RT 만료");
         }
 
         Account account = accountRepository.findByUsername(username); //모든 검증 끝 -> 사용자 정보 가져옴
 
         if (account == null) {                                 //그 사이 계정 삭제/비활성
             refreshTokenRepository.deleteByUsername(username);  //고아 RT도 정리
-            throw new JwtException("계정 없음(삭제/비활성)");
+            throw new JWTVerificationException("계정 없음(삭제/비활성)");
         }
 
         return issueToken(username, account.getRole()); //AT, RT 생성 리턴
@@ -91,9 +91,9 @@ public class AuthService {
         String username;
         try {
             username = jwtProvider.getUsername(refreshToken);
-        } catch (ExpiredJwtException e) {
-            username = e.getClaims().getSubject(); //만료되었을때도 RT 삭제
-        } catch (JwtException e) {
+        } catch (TokenExpiredException e) {
+            username = jwtProvider.getUserNameWithoutVerify(refreshToken);
+        } catch (JWTVerificationException e) {
             return;
         }
         refreshTokenRepository.deleteByUsername(username); // 서버측 무효화

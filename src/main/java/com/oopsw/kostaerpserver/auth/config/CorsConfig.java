@@ -20,7 +20,7 @@ public class CorsConfig {
         config.addAllowedOriginPattern("*"); //개발용 전체 허용
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setExposedHeaders(List.of(JwtProvider.HEADER)); //AT 헤더 JS 노출 (RT 쿠키는 자동)
+        config.setExposedHeaders(List.of(JwtProvider.HEADER, "Token-Status")); //AT 헤더 JS 노출 (RT 쿠키는 자동)
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);

@@ -8,6 +8,7 @@ import com.oopsw.kostaerpserver.auth.support.JwtProvider;
 import com.oopsw.kostaerpserver.auth.userdetails.AccountDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -54,47 +56,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-   /*     JsonLoginFilter jsonLoginFilter = new JsonLoginFilter(
-            authenticationManager);
-
-        jsonLoginFilter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
-
-        jsonLoginFilter.setAuthenticationSuccessHandler((req, res, auth) -> {
-            boolean isManager =
-                auth.getAuthorities().stream().anyMatch(
-                    authority -> authority.getAuthority()
-                        .equals("ROLE_MANAGER"));
-
-            String redirectUrl = isManager ? "/manager" : "/foodmaterials";
-
-            res.setStatus(HttpServletResponse.SC_OK);
-            res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().write("{\"message\":\"login success\", "
-                + "\"redirectUrl\":\"" + redirectUrl + "\"}");
-        });
-
-        jsonLoginFilter.setAuthenticationFailureHandler((req, res, ex) -> {
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().write("{\"message\":\"login fail\"}");
-        });
-
-        http.exceptionHandling(exception ->
-            exception.authenticationEntryPoint(
-                (request, response, authException) -> {
-                    if (request.getRequestURI().startsWith("/api/")) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                        response.getWriter()
-                            .write("{\"message\":\"authentication required\"}");
-                        return;
-                    }
-                    response.sendRedirect("/login");
-                }));*/
 
         http
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .requestCache(cache -> cache.disable())  //인증되지 않은 사용자 보호 url 접근시 쿠키생성 비활성화
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
             .logout(logout -> logout.disable())
@@ -126,6 +92,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
                         (request, response, authException) -> {
+                            log.error("[SecurityConfig] .exceptionHandling : " + authException.getMessage());
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             response.getWriter().write("{\"message\":\"authentication required\"}");
