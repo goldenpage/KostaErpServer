@@ -1,14 +1,16 @@
 package com.oopsw.kostaerpserver.auth.filter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.oopsw.kostaerpserver.auth.repository.entity.Account;
 import com.oopsw.kostaerpserver.auth.support.JwtProvider;
 import com.oopsw.kostaerpserver.auth.userdetails.AccountDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +20,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final JwtProvider jwtProvider;
 
@@ -39,9 +42,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String token = header.substring(JwtProvider.PREFIX.length());
 
         try {
-            Claims claims = jwtProvider.parseClaims(token); //서명, 만료 검증(실패 시 예외)
-            String username = claims.getSubject();
-            String role = claims.get("role", String.class);
+            DecodedJWT decodedToken = jwtProvider.verify(token); //서명, 만료 검증(실패 시 예외)
+            String username = decodedToken.getSubject();
+            String role = decodedToken.getClaim("role").toString();
             Account account = new  Account();
             account.setUsername(username);
             account.setRole(role);
@@ -55,14 +58,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             //UPA토큰 기반 ContextHolder 생성
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        } catch (ExpiredJwtException e) {
+        } catch (TokenExpiredException e) {
             SecurityContextHolder.clearContext();
-            response.setHeader("Token-Error", "expired");
+            response.setHeader("Token-Status", "expired");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } catch (Exception e) {
+            log.error("[JwtAuthorizationFilter] TokenExpiredException : 토큰만료");
+        } catch (JWTVerificationException e) {
             SecurityContextHolder.clearContext();
-            response.setHeader("Token-Error", "invalid");
+            response.setHeader("Token-Status", "invalid");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.error("[JwtAuthorizationFilter] JWTVerificationException : 토큰검증X");
         }
 
         //다음 필터로
