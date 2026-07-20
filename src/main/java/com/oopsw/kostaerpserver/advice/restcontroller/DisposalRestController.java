@@ -92,8 +92,11 @@ public class DisposalRestController {
 
     @PostMapping
     public DisposalCreateResponse insertDisposalItem(
-            @RequestBody DisposalCreateRequest request) {
-        boolean success = disposalService.insertDisposal(request);
+            @RequestBody DisposalCreateRequest request,
+            @AuthenticationPrincipal AccountDetails accountDetails
+    ) {
+        String bId = accountDetails.getAccount().getUsername();
+        boolean success = disposalService.insertDisposal(request, bId);
         return new DisposalCreateResponse(success);
     }
 }

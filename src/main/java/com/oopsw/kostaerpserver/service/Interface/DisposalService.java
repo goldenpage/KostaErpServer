@@ -20,7 +20,7 @@ public interface DisposalService {
     int getDisposalCount(String bId);
     int getTotalCount(String bId);
     boolean updateReason(String disposalId, String reasonId);
-    boolean insertDisposal(DisposalCreateRequest request);
+    boolean insertDisposal(DisposalCreateRequest request, String bId);
     List<String> getExpiredDisposalIds(String bId);
     double getDisposalRate(String bId, LocalDate startDate, LocalDate endDate);
     int getTotalDisposalPrice(String bId, LocalDate startDate, LocalDate endDate);

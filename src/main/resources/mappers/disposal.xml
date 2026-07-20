@@ -106,6 +106,13 @@
         )
     </insert>
 
+    <update id="decreaseTotalWeight">
+        UPDATE FOODM SET totalWeight = totalWeight - #{disposalCountAll}
+        WHERE foodMaterial_id = #{foodMaterialId}
+        AND bId = #{bId}
+        And totalWeight >= #{disposalCountAll}
+    </update>
+
     <select id="getExpiredDisposalIds" resultType="string">
         SELECT d.disposal_Id
         FROM DISPOSALS d

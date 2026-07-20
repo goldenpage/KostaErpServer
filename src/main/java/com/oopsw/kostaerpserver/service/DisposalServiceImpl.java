@@ -6,8 +6,10 @@ import com.oopsw.kostaerpserver.service.Interface.DisposalService;
 import com.oopsw.kostaerpserver.vo.Disposal;
 import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -72,8 +74,58 @@ public class DisposalServiceImpl implements DisposalService {
 
     @Override
     @Transactional
-    public boolean insertDisposal(DisposalCreateRequest request) {
-        return disposalDAO.insertDisposal(request) == 1;
+    public boolean insertDisposal(DisposalCreateRequest request, String bId) {
+        if (request == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "폐기 등록 정보가 필요합니다."
+            );
+        }
+
+        if (request.getFoodMaterialId() == null || request.getFoodMaterialId().isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "식자재 ID가 필요합니다."
+            );
+        }
+
+        if (request.getReasonId() == null || request.getReasonId().isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "폐기 사유가 필요합니다."
+            );
+        }
+
+        if (request.getDisposalDate() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "폐기일이 필요합니다."
+            );
+        }
+        if (request.getDisposalCountAll() <= 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "폐기량은 0보다 커야합니다."
+            );
+        }
+        if (request.getDisposalPrice() < 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "폐기금액은 0 이상이어야 합니다."
+            );
+        }
+
+        int updated = disposalDAO.decreaseTotalWeight(
+                request.getFoodMaterialId(),
+                bId,
+                request.getDisposalCountAll()
+        );
+
+        if (updated != 1){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "식자재가 없거나 폐기량이 현재 재고보다 많습니다."
+            );
+        }
+
+        int inserted = disposalDAO.insertDisposal(request);
+        if (inserted != 1) {
+            throw new IllegalStateException("폐기 내역 등록에 실패했습니다.");
+        }
+        return true;
     }
 
     @Override
