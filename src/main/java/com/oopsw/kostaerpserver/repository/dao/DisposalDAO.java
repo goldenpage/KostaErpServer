@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.oopsw.kostaerpserver.vo.Disposal;
 import com.oopsw.kostaerpserver.dto.disposal.DisposalListResponse;
+import org.springframework.security.core.parameters.P;
 
 @Mapper
 public interface DisposalDAO {
@@ -44,6 +45,12 @@ public interface DisposalDAO {
             @Param("reasonId") String reasonId);
 
     int insertDisposal(DisposalCreateRequest request);
+
+    int decreaseTotalWeight(
+            @Param("foodMaterialId") String foodMaterialId,
+            @Param("bId") String bId,
+            @Param("disposalCountAll") int disposalCountAll
+    );
 
     List<String> getExpiredDisposalIds(@Param("bId") String bId);
 
