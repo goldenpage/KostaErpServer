@@ -13,8 +13,8 @@ import com.oopsw.kostaerpserver.repository.dao.UserInfoDAO;
 import com.oopsw.kostaerpserver.repository.entity.admin.RegistrationRequestedUser;
 import com.oopsw.kostaerpserver.repository.entity.admin.RegistrationRequestedUserRepository;
 import com.oopsw.kostaerpserver.repository.entity.admin.ReviewStatus;
-import com.oopsw.kostaerpserver.service.entity.ocr.BusinessDocumentVerificationService;
 import com.oopsw.kostaerpserver.service.Interface.LoginService;
+import com.oopsw.kostaerpserver.service.entity.ocr.BusinessDocumentVerificationService;
 import com.oopsw.kostaerpserver.service.entity.ocr.RegistrationDocumentStorageService;
 import com.oopsw.kostaerpserver.service.entity.ocr.RegistrationServiceImpl;
 import java.lang.reflect.Proxy;
@@ -35,18 +35,21 @@ class RegistrationServiceTest {
 
     private final AtomicReference<RegistrationRequestedUser> savedRequest =
         new AtomicReference<>();
+
     private MultipartFile document;
     private RegisterRequest request;
 
     @BeforeEach
     void setUp() {
         savedRequest.set(null);
+
         document = new MockMultipartFile(
             "document",
             "business-registration.jpg",
             "image/jpeg",
             new byte[]{1, 2, 3}
         );
+
         request = RegisterRequest.builder()
             .bId("000-00-00006")
             .pw("password")
@@ -64,30 +67,68 @@ class RegistrationServiceTest {
         RegistrationServiceImpl service = serviceWithResult(
             BusinessVerificationResult.needReview(
                 "0000000006",
-                "OCR 인식 정보와 사업자등록정보가 일치하지 않아 관리자 확인이 필요합니다."
+                "OCR 인식 정보와 사업자등록정보가 일치하지 않아 "
+                    + "관리자 확인이 필요합니다."
             )
         );
 
-        RegistrationResponse response = service.register(request, document);
+        RegistrationResponse response =
+            service.register(request, document);
 
         RegistrationRequestedUser saved = savedRequest.get();
+
         assertEquals("PENDING", response.status());
         assertNotNull(saved);
         assertEquals("0000000006", saved.getBId());
-        assertEquals(ReviewStatus.PENDING, saved.getReviewStatus());
+        assertEquals(
+            ReviewStatus.PENDING,
+            saved.getReviewStatus()
+        );
         assertNotEquals("password", saved.getPwHash());
-        assertTrue(Files.exists(Path.of(saved.getDocumentPath())));
+        assertTrue(
+            Files.exists(Path.of(saved.getDocumentPath()))
+        );
     }
 
     @Test
-    void registerDoesNotStoreTechnicalFailureAsPending() {
+    void registerStoresTechnicalFailureAsPending() {
         RegistrationServiceImpl service = serviceWithResult(
-            BusinessVerificationResult.retry(null, "OCR 서버 요청에 실패했습니다.")
+            BusinessVerificationResult.retry(
+                null,
+                "OCR 서버 요청에 실패했습니다."
+            )
         );
 
-        RegistrationResponse response = service.register(request, document);
+        RegistrationResponse response =
+            service.register(request, document);
 
-        assertEquals("RETRY", response.status());
+        RegistrationRequestedUser saved = savedRequest.get();
+
+        assertEquals("PENDING", response.status());
+        assertNotNull(saved);
+        assertEquals(
+            ReviewStatus.PENDING,
+            saved.getReviewStatus()
+        );
+        assertEquals(
+            "OCR 서버 요청에 실패했습니다.",
+            saved.getReason()
+        );
+    }
+
+    @Test
+    void registerDoesNotStoreRejectedApplication() {
+        RegistrationServiceImpl service = serviceWithResult(
+            BusinessVerificationResult.rejected(
+                "1234567890",
+                "입력한 사업자등록번호와 서류 번호가 일치하지 않습니다."
+            )
+        );
+
+        RegistrationResponse response =
+            service.register(request, document);
+
+        assertEquals("REJECTED", response.status());
         assertNull(savedRequest.get());
     }
 
@@ -98,31 +139,67 @@ class RegistrationServiceTest {
             (businessNumber, representativeName, companyName, file) ->
                 verificationResult;
 
+        UserInfoDAO userInfoDAO = proxy(
+            UserInfoDAO.class,
+            (methodName, args) -> {
+                if ("getBidCheck".equals(methodName)) {
+                    return 0;
+                }
+
+                return 0;
+            }
+        );
+
+        LoginService loginService = proxy(
+            LoginService.class,
+            (methodName, args) -> 0
+        );
+
+        RegistrationRequestedUserRepository reviewRepository =
+            proxy(
+                RegistrationRequestedUserRepository.class,
+                (methodName, args) -> {
+                    if (
+                        "countByBIdAndReviewStatus"
+                            .equals(methodName)
+                    ) {
+                        return 0L;
+                    }
+
+                    if ("saveAndFlush".equals(methodName)) {
+                        RegistrationRequestedUser review =
+                            (RegistrationRequestedUser) args[0];
+
+                        savedRequest.set(review);
+                        return review;
+                    }
+
+                    return null;
+                }
+            );
+
         return new RegistrationServiceImpl(
-            proxy(UserInfoDAO.class, (methodName, args) -> 0),
-            proxy(LoginService.class, (methodName, args) -> 0),
+            userInfoDAO,
+            loginService,
             verificationService,
-            proxy(RegistrationRequestedUserRepository.class, (methodName, args) -> {
-                if ("countByBusinessIdAndReviewStatus".equals(methodName)) {
-                    return 0L;
-                }
-                if ("save".equals(methodName)) {
-                    savedRequest.set((RegistrationRequestedUser) args[0]);
-                    return args[0];
-                }
-                return null;
-            }),
+            reviewRepository,
             new BCryptPasswordEncoder(),
-            new RegistrationDocumentStorageService(tempDirectory.toString())
+            new RegistrationDocumentStorageService(
+                tempDirectory.toString()
+            )
         );
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T proxy(Class<T> type, StubInvocation invocation) {
+    private <T> T proxy(
+        Class<T> type,
+        StubInvocation invocation
+    ) {
         return (T) Proxy.newProxyInstance(
             type.getClassLoader(),
             new Class<?>[]{type},
-            (proxy, method, args) -> invocation.invoke(method.getName(), args)
+            (proxy, method, args) ->
+                invocation.invoke(method.getName(), args)
         );
     }
 
