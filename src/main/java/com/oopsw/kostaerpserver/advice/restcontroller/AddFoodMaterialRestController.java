@@ -18,7 +18,6 @@ import java.util.List;
 @Slf4j
 public class AddFoodMaterialRestController {
     private final AddFoodMaterialService addFoodMaterialService;
-
     @GetMapping("/foodmaterial/foodcategory/list")
     public List<GetFoodCategoryListResponse> getFoodCategoryList() {
         return GetFoodCategoryListResponse.fromList(addFoodMaterialService.getFoodCategoryList());
