@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.oopsw.kostaerpserver.repository.MenuDAO">
+<mapper namespace="com.oopsw.kostaerpserver.repository.dao.MenuDAO">
 
     <select id="getMenuList" resultType="com.oopsw.kostaerpserver.vo.Menu">
         SELECT
@@ -23,12 +23,26 @@
             f.foodMaterial_Id AS foodMaterialId,
             f.foodMaterialName AS foodMaterialName,
             u.usedCount AS usedCount,
-            f.foodMaterialPrice AS foodMaterialPrice,
-            f.foodMaterialCountAll AS foodMaterialCountAll,
-            (u.usedCount * f.foodMaterialPrice) AS usedPrice
+            COALESCE(latest.food_Material_Price, f.foodMaterialPrice) AS foodMaterialPrice,
+            COALESCE(latest.food_Material_Weight, f.foodMaterialWeight) AS totalWeight,
+            ROUND(
+                    u.usedCount * (
+                        COALESCE(latest.food_Material_Price, f.foodMaterialPrice)
+                            / NULLIF(COALESCE(latest.food_Material_Weight, f.foodMaterialWeight), 0)
+                        ), 0
+            ) AS usedPrice
         FROM MENUS m
                  JOIN USED u ON m.menu_Id = u.menu_Id
                  JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+                 LEFT JOIN (
+            SELECT food_Material_Name, food_Material_Price, food_Material_Weight
+            FROM purchase
+            WHERE (food_Material_Name, income_Date) IN (
+                SELECT food_Material_Name, MAX(income_Date)
+                FROM purchase
+                GROUP BY food_Material_Name
+            )
+        ) latest ON f.foodMaterialName = latest.food_Material_Name
         WHERE m.menu_Id = #{menuId}
         ORDER BY f.foodMaterialName ASC
     </select>
@@ -39,12 +53,12 @@
                  SELECT
                      u.foodMaterial_Id,
                      SUM(u.usedCount) * #{saleCount} AS requiredCount,
-                     f.foodMaterialCountAll
+                     f.totalWeight
                  FROM USED u
                           JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
                  WHERE u.menu_Id = #{menuId}
-                 GROUP BY u.foodMaterial_Id, f.foodMaterialCountAll
-                 HAVING f.foodMaterialCountAll &lt; requiredCount
+                 GROUP BY u.foodMaterial_Id, f.totalWeight
+                 HAVING f.totalWeight &lt; requiredCount
              ) lack
     </select>
 
@@ -58,9 +72,52 @@
             WHERE menu_Id = #{menuId}
             GROUP BY foodMaterial_Id
             ) u ON f.foodMaterial_Id = u.foodMaterial_Id
-            SET f.foodMaterialCountAll = f.foodMaterialCountAll - u.requiredCount
+            SET f.totalWeight = f.totalWeight - u.requiredCount
         WHERE f.bId = #{bId}
-          AND f.foodMaterialCountAll >= u.requiredCount
+          AND f.totalWeight >= u.requiredCount
     </update>
 
+    <select id="getZeroStockMaterialList" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT
+            f.foodMaterial_Id      AS foodMaterialId,
+            f.foodMaterialName     AS foodMaterialName,
+            f.totalWeight AS totalWeight
+        FROM USED u
+                 JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+        WHERE u.menu_Id = #{menuId}
+          AND f.bId = #{bId}
+          AND f.totalWeight &lt;= 0
+        GROUP BY f.foodMaterial_Id, f.foodMaterialName, f.totalWeight
+    </select>
+
+    <select id="getLowStockMaterialList" resultType="com.oopsw.kostaerpserver.vo.Menu">
+        SELECT
+            f.foodMaterial_Id      AS foodMaterialId,
+            f.foodMaterialName     AS foodMaterialName,
+            f.totalWeight AS totalWeight
+        FROM USED u
+                 JOIN FOODM f ON u.foodMaterial_Id = f.foodMaterial_Id
+        WHERE u.menu_Id = #{menuId}
+          AND f.bId = #{bId}
+          AND f.totalWeight &lt;= #{foodmLimit}
+        GROUP BY f.foodMaterial_Id, f.foodMaterialName, f.totalWeight
+    </select>
+
+    <delete id="deleteMenu">
+        DELETE FROM MENUS
+        WHERE menu_Id = #{menuId}
+    </delete>
+    <insert id="insertSaleRecord">
+        INSERT INTO SALES (menu_Id, saleMenuCount, revenue_Id)
+        VALUES (#{menuId}, #{saleCount}, #{revenueId})
+    </insert>
+
+    <insert id="insertRevenue">
+        INSERT INTO REVENUE (revenue_Id, bId, revenueDate, payment)
+        VALUES (#{revenueId}, #{bId}, NOW(), #{payment})
+    </insert>
+
+    <select id="getLastRevenueId" resultType="string">
+        SELECT revenue_Id FROM REVENUE ORDER BY revenue_Id DESC LIMIT 1;
+    </select>
 </mapper>

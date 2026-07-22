@@ -1,13 +1,16 @@
 package com.oopsw.kostaerpserver.vo;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class User {
     private String bId;
@@ -18,7 +21,7 @@ public class User {
     private String storeName;
     private String storeType;
     private String storeCategory;
-    private Date signDate;
-    private Date agreementDate;
-    private Date marketingDate;
+    private LocalDateTime signDate;
+    private LocalDateTime agreementDate;
+    private LocalDateTime marketingDate;
 }

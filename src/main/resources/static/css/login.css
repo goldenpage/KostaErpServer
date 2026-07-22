@@ -1,0 +1,83 @@
+/* 1. 바디 초기화 (회원가입과 동일하게 깔끔하게 유지) */
+body {
+  font-family: 'Malgun Gothic', dotum, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+/* 2. 로그인 폼 박스 (회원가입 박스와 같은 디자인) */
+.login-box {
+  max-width: 400px; /* 로그인 창은 입력칸이 적어서 회원가입(500px)보다 살짝 좁은 게 예쁩니다 */
+  margin: 100px auto; /* 화면 정중앙 배치 */
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.main-title {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+/* 3. 입력 구역 간격 및 제목 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+/* 4. 입력칸 (회원가입과 동일) */
+.inputbutton {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* 5. 로그인 버튼 (회원가입과 동일) */
+.submitbutton {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitbutton:hover {
+  background-color: #000000;
+}
+
+/* 6. 하단 링크 (회원가입 / 비밀번호 찾기) */
+.auth-links {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.auth-links a {
+  color: #666666;
+  text-decoration: none; /* 밑줄 제거 */
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.auth-links a:hover {
+  color: #333333;
+  text-decoration: underline; /* 마우스 올리면 밑줄 생성 */
+  font-weight: bold;
+}

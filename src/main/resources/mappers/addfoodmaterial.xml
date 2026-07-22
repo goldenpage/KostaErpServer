@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.oopsw.kostaerpserver.repository.AddFoodMaterialDAO">
+<mapper namespace="com.oopsw.kostaerpserver.repository.dao.AddFoodMaterialDAO">
 
     <select id="getFoodMaterialCount" parameterType="String" resultType="int">
         SELECT COUNT(*) FROM FOODM WHERE bId = #{bId}
     </select>
 
-    <insert id="addFoodMaterial" parameterType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+    <insert id="addFoodMaterial" parameterType="com.oopsw.kostaerpserver.vo.AddFoodMaterial">
         INSERT INTO FOODM(foodMaterialName, foodCategory_Id, foodMaterialCount,
-                          foodMaterialCountAll, foodMaterialPrice, foodMaterialType, vender,
+                          foodMaterialWeight, totalWeight, foodMaterialPrice, totalPrice, foodMaterialType, vender,
                           incomeDate, expirationDate, bId)
-        VALUES(#{foodMaterialName}, #{foodCategory}, #{foodMaterialCount},
-               #{foodMaterialCountAll}, #{foodMaterialPrice}, #{foodMaterialType},
+        VALUES(#{foodMaterialName}, #{foodCategory_Id}, #{foodMaterialCount},
+               #{foodMaterialWeight}, #{totalWeight}, #{foodMaterialPrice}, #{totalPrice}, #{foodMaterialType},
                #{vender}, #{incomeDate}, #{expirationDate}, #{bId})
     </insert>
 
@@ -34,7 +34,7 @@
         DELETE FROM FOODC WHERE foodCategory = #{foodCategory}
     </delete>
 
-    <select id="getFoodMaterialByName" parameterType="map" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
+    <select id="getFoodMaterialByName" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
         SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
                c.foodCategory, f.vender, f.foodMaterialType
         FROM FOODM f
@@ -45,7 +45,7 @@
 
     <select id="getFoodMaterialList" parameterType="map" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
         SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
-               c.foodCategory, f.foodMaterialCount, f.foodMaterialCountAll,
+               c.foodCategory, f.foodMaterialCount, f.foodMaterialWeight, f.totalWeight,
                f.foodMaterialPrice, f.vender, f.incomeDate, f.expirationDate, f.foodMaterialType
         FROM FOODM f
                  JOIN FOODC c ON f.foodCategory_Id = c.foodCategory_Id
@@ -56,7 +56,7 @@
 
     <select id="getFoodMaterialDetail" parameterType="String" resultType="com.oopsw.kostaerpserver.vo.FoodMaterial">
         SELECT f.foodMaterial_Id AS foodMaterialId, f.foodMaterialName,
-               c.foodCategory, f.foodMaterialCount, f.foodMaterialCountAll,
+               c.foodCategory, f.foodMaterialCount, f.foodMaterialWeight, f.totalWeight,
                f.foodMaterialPrice, f.foodMaterialType, f.vender,
                f.incomeDate, f.expirationDate, f.bId
         FROM FOODM f
@@ -79,7 +79,7 @@
     </delete>
 
     <select id="getFoodMaterialTotalAmount" parameterType="map" resultType="int">
-        SELECT IFNULL(SUM(foodMaterialPrice), 0)
+        SELECT IFNULL(SUM(totalPrice), 0)
         FROM FOODM
         WHERE bId = #{bId}
           AND incomeDate >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')

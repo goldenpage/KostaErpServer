@@ -1,14 +1,42 @@
 server:
   port: 15000
+  servlet:
+    session:
+      persistent: false
 
 spring:
   application:
     name: KostaErpServer
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
+      resolve-lazily: true
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        show_sql: false
+        format_sql: true
+        globally_quoted_identifiers: true
 
 kind: Application
 logging:
@@ -21,3 +49,22 @@ mybatis:
   mapper-locations: classpath:mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+external-api:
+  python-ocr-url: http://127.0.0.1:8000/api/v1/business-document-ocr
+  business-registration-url: http://127.0.0.1:3000/nts-businessman/v1/validate
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    persistAuthorization: true
+  packages-to-scan: com.oopsw.kostaerpserver
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-expiration: 30m
+  refresh-expiration: 14d

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>폐기 품목 확인</title>
+    <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+    <link rel="stylesheet" th:href="@{/css/userName.css}">
+    <link rel="stylesheet" th:href="@{/css/disposalItems.css}">
+</head>
+<body onload="loadDisposalData(1)">
+<div class="container">
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+    <div class="main">
+        <div th:replace="~{common/userName :: userName}"></div>
+        <h2>폐기 품목 확인</h2>
+        <div class="content_item">
+            <form class="category" onsubmit="event.preventDefault(); loadDisposalData(1);">
+                <input type="hidden" name="bId" th:value="${bId}">
+                <label for="category">카테고리</label>
+                <select id="category" name="category">
+                    <option value="">전체</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category}"
+                            th:text="${category}"
+                            th:selected="${category == selectedCategory}">
+                        채소
+                    </option>
+                </select>
+
+                <label for="reason">사유</label>
+                <select id="reason" name="reason">
+                    <option value="">전체</option>
+                    <option th:each="reason : ${reasons}"
+                            th:value="${reason}"
+                            th:text="${reason}"
+                            th:selected="${reason == selectedReason}">
+                        변질
+                    </option>
+                </select>
+
+                <button type="submit">조회</button>
+                <button type="button" onclick="resetFilter()">초기화</button>
+            </form>
+
+            <div id="disposalTableContainer">
+                <table class="list_container">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>식자재명</th>
+                        <th>카테고리</th>
+                        <th>유형</th>
+                        <th>총폐기용량(g)</th>
+                        <th>총폐기가격</th>
+                        <th>폐기일</th>
+                        <th>사유</th>
+                    </tr>
+                    </thead>
+                    <tbody id="disposalTableBody">
+
+                    </tbody>
+                </table>
+
+                <div class="page" id="paginationContainer">
+                </div>
+            </div>
+        </div> </div> </div> <script th:src="@{/js/disposalItems.js}"></script>
+</body>
+</html>
