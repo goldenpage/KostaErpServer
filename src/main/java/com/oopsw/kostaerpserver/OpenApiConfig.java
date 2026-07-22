@@ -69,3 +69,4 @@ public class OpenApiConfig {
         return new PathItem().post(loginOperation);
     }
 }
+
