@@ -44,7 +44,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             DecodedJWT decodedToken = jwtProvider.verify(token); //서명, 만료 검증(실패 시 예외)
             String username = decodedToken.getSubject();
-            String role = decodedToken.getClaim("role").toString();
+            String role = decodedToken.getClaim("role").asString();
             Account account = new  Account();
             account.setUsername(username);
             account.setRole(role);
