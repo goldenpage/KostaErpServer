@@ -47,15 +47,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                 result.message()
             );
 
-            case NEED_REVIEW -> savePendingRegistration(
+            // OCR 판독 불가 또는 외부 서버 장애는 관리자 심사로 전환
+            case NEED_REVIEW, RETRY -> savePendingRegistration(
                 request,
                 document,
                 result
-            );
-
-            case RETRY -> new RegistrationResponse(
-                "RETRY",
-                result.message()
             );
         };
     }
