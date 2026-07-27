@@ -1,0 +1,109 @@
+ul {
+    list-style: none;
+}
+
+.container {
+    display: flex;
+    gap: 30px;
+    height: 100vh;
+}
+
+.sideMenu {
+    height: 100vh;
+    width: 300px;
+}
+
+.main {
+    width: 100%;
+}
+
+.profile {
+    display: flex;
+    justify-content: end;
+}
+
+.content_item {
+    height: 100%;
+    align-items: center;
+}
+
+.category {
+    display: flex;
+    width: 75%;
+    gap: 16px;
+    align-items: center;
+}
+
+.list_container {
+    display: table;
+    width: 100%;
+    height: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    background-color: white;
+}
+
+.list_container th,
+.list_container td {
+    border: 1px solid #cbd5e1;
+    padding: 10px 8px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.list_container th {
+    background-color: #f1f5f9;
+    font-weight: bold;
+}
+
+.list_container tr.foodRow:hover {
+    background-color: #f8fafc;
+}
+
+.list_container .emptyRow td {
+    padding: 24px;
+    text-align: center;
+}
+
+table {
+    border-spacing: 24px;
+}
+
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.message {
+    color: blue;
+    font-weight: bold;
+}
+
+.errorMessage {
+    color: red;
+    font-weight: bold;
+}
+
+button {
+    cursor: pointer;
+}
+
+.warningCell {
+    box-shadow: 0 0 0 5px darkgoldenrod inset;
+}
+
+.dangerCell {
+    box-shadow: 0 0 0 5px darkred inset;
+}

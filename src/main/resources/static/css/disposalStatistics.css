@@ -1,0 +1,149 @@
+ul {
+  list-style: none;
+}
+
+.container {
+  display: flex;
+  gap: 30px;
+  height: 100vh;
+}
+
+.sideMenu {
+  height: 100vh;
+  width: 300px;
+}
+
+.main {
+  width: calc(100% - 330px);
+  min-width: 0;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.main table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 12px;
+  background-color: white;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.main table th, .main table td {
+  border: 1px solid #cbd5e1;
+  padding: 10px 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.main table th {
+  background-color: #f1f5f9;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.main table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.main table td[colspan] {
+  padding: 24px;
+  color: #64748b;
+}
+
+.top_area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+}
+
+.disposal_price .table_scroll {
+
+  overflow-x: auto;
+
+}
+
+.profile {
+  display: flex;
+  justify-content: end;
+}
+
+.content_item {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  align-items: flex-start;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.content_item>div {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  background-color: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.disposal_price ul {
+  display: flex;
+  gap: 8px;
+}
+
+.disposal_price>div:first-child, .disposal_ratio>div:first-child,
+.disposal_solid_liquid>div:first-child {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #999;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.chart_box {
+  width: 100%;
+  height: 300px;
+}
+
+canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+
+@media (max-width: 1200px) {
+  .content_item {
+    flex-direction: column;
+  }
+  .content_item > div {
+    width: 100%;
+  }
+
+}

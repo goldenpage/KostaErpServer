@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>비밀번호 변경</title>
+  <link rel="stylesheet" th:href="@{/css/pwUpdate.css}">
+</head>
+<script th:src="@{/js/pwUpdate.js}"></script>
+<body>
+
+<div class="change-box">
+  <h1 class="main-title">비밀번호 변경</h1>
+
+  <p class="description">
+    안전한 계정 사용을 위해 <br> 새로운 비밀번호를 설정해 주세요.
+  </p>
+  <div class="form-group">
+    <div class="section-title">아이디</div>
+    <input type="text" id="bId" name="bId" class="inputbutton"
+           placeholder="아이디를 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">이름</div>
+    <input type="text" id="name" name="name" class="inputbutton"
+           placeholder="이름을 입력해주세요" required>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">휴대폰 번호</div>
+    <div class="phone-auth-group">
+      <input type="text" id="phone" name="phone" class="phone-input"
+             placeholder="휴대폰 번호를 입력해주세요" maxlength="11" required>
+      <button id="sendPhoneBtn" class="auth-send-btn">인증발송</button>
+    </div>
+    <div id="phoneMessage" class="message"></div>
+  </div>
+
+  <div class="form-group">
+    <div class="phone-auth-group">
+      <input type="text" id="phoneCode" name="phoneCode" class="phone-input"
+             placeholder="인증번호 입력">
+      <button id="verifyBtn" class="auth-send-btn">확인</button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">새 비밀번호</div>
+    <input id="pw" name="pw" type="password" class="inputbutton"
+           placeholder="새 비밀번호를 입력하세요" required>
+    <div class="password-hint">※ 영문, 숫자, 특수문자 혼합 4~8자</div>
+  </div>
+
+  <div class="form-group">
+    <div class="section-title">새 비밀번호 확인</div>
+    <input id="pwConfirm" name="pwConfirm" type="password" class="inputbutton"
+           placeholder="새 비밀번호를 한 번 더 입력하세요" required>
+  </div>
+
+  <div class="error-message" th:text="${errorMessage}"></div>
+  <button id="pwUpdateBtn" class="submitbutton">비밀번호 변경 완료</button>
+
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

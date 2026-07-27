@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>식자재 조회</title>
+    <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+    <link rel="stylesheet" th:href="@{/css/userName.css}">
+    <link rel="stylesheet" th:href="@{/css/foodMaterials.css}">
+</head>
+
+<body>
+<div class="container"
+     id="foodMaterialPage"
+     th:data-b-id="${bId}"
+     th:data-sort="${sort}"
+     th:data-size="${size}"
+     th:data-current-page="${currentPage}"
+     th:data-total-page="${totalPage}">
+
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+
+    <div class="main">
+
+        <div th:replace="~{common/userName :: userName}"></div>
+
+        <h1>식자재 확인</h1>
+
+        <div class="content_item">
+
+            <ul class="category">
+                <li>
+                    <input type="text" id="searchKeyword" placeholder="검색">
+                    <button type="button" id="searchBtn">검색하기</button>
+                </li>
+
+                <li>
+                    <select id="categorySelect">
+                        <option value="">전체</option>
+                        <option value="채소">채소</option>
+                        <option value="정육">정육</option>
+                        <option value="유제품">유제품</option>
+                        <option value="가공식품">가공식품</option>
+                        <option value="음료/주류">음료/주류</option>
+                        <option value="양념">양념</option>
+                        <option value="곡류">곡류</option>
+                        <option value="해산물">해산물</option>
+                    </select>
+                </li>
+            </ul>
+
+            <table class="list_container">
+                <thead>
+                <tr class="list_item">
+                    <th>
+                        <button type="button" class="sortBtn" value="idAsc">번호 ▲</button>
+                        <button type="button" class="sortBtn" value="idDesc">번호 ▼</button>
+                    </th>
+                    <th>식자재명</th>
+                    <th>카테고리</th>
+                    <th>구매 수량</th>
+                    <th>총중량</th>
+                    <th>구입처</th>
+                    <th>매입날짜</th>
+                    <th>
+                        <button type="button" class="sortBtn" value="expAsc">유통기한 ▲</button>
+                        <button type="button" class="sortBtn" value="expDesc">유통기한 ▼</button>
+                    </th>
+                    <th>품목유형</th>
+                    <th>폐기수정</th>
+                    <th>
+                        <button type="button" id="selectAllBtn">전체선택</button>
+                    </th>
+                    <th>
+                        <button type="button" id="deleteSelectedBtn">선택삭제</button>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody id="foodTableBody">
+                <tr class="foodRow" th:each="food : ${foodList}">
+                    <td th:text="${food.foodMaterialId}">FM001</td>
+                    <td th:text="${food.foodMaterialName}">식자재명</td>
+                    <td th:text="${food.foodCategory}">카테고리</td>
+                    <td th:text="${food.foodMaterialCount}">전체수량</td>
+                    <td th:text="${food.totalWeight}">총중량</td>
+                    <td th:text="${food.vender}">구입처</td>
+                    <td th:text="${#dates.format(food.incomeDate, 'yyyy-MM-dd')}">매입날짜</td>
+                    <td th:text="${#dates.format(food.expirationDate, 'yyyy-MM-dd')}">유통기한</td>
+                    <td th:text="${food.foodMaterialType}">품목유형</td>
+                    <td>폐기수정</td>
+                    <td>
+                        <input type="checkbox"
+                               name="foodMaterialId"
+                               th:value="${food.foodMaterialId}">
+                    </td>
+                    <td>
+                        <button type="button"
+                                class="deleteBtn"
+                                th:value="${food.foodMaterialId}">
+                            삭제
+                        </button>
+                    </td>
+                </tr>
+
+                <tr class="emptyRow" th:if="${#lists.isEmpty(foodList)}">
+                    <td colspan="12">조회된 식자재가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <ul class="page">
+                <li>
+                    <button type="button" id="prevPageBtn">
+                        &lt;
+                    </button>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(1, totalPage)}">
+                    <button type="button"
+                            class="pageBtn"
+                            th:value="${i}"
+                            th:text="${i}">
+                        1
+                    </button>
+                </li>
+
+                <li>
+                    <button type="button" id="nextPageBtn">
+                        &gt;
+                    </button>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/foodMaterials.js}"></script>
+</body>
+</html>

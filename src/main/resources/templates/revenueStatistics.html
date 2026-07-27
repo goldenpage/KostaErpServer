@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>매출통계</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" th:href="@{/css/sideMenu.css}">
+  <link rel="stylesheet" th:href="@{/css/userName.css}">
+  <link rel="stylesheet" th:href="@{/css/revenueStatistics.css}">
+</head>
+
+<body>
+
+<div class="container">
+  <section>
+    <div th:replace="~{common/sideMenu :: sideMenu}"></div>
+  </section>
+
+  <div class="main">
+    <div th:replace="~{common/userName :: userName}"></div>
+
+    <div class="top_area">
+      <h1>매출통계</h1>
+
+      <form id="searchForm">
+        <input type="month" id="month" name="month">
+        <button >조회</button>
+      </form>
+    </div>
+
+    <div class="summary">
+      총 매출:
+      <span id="totalRevenuePrice">0</span>
+      원
+    </div>
+
+    <div class="chart_area">
+      <div class="chart_box">
+        <h3>메뉴별 매출 순위</h3>
+        <canvas id="rankChart"></canvas>
+      </div>
+
+      <div class="chart_box">
+        <h3>최근 6개월 매출</h3>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>순위</th>
+        <th>메뉴명</th>
+        <th>단가</th>
+        <th>판매수량</th>
+        <th>총매출</th>
+      </tr>
+      </thead>
+
+      <tbody id="rankTableBody">
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<script th:src="@{/js/revenueStatistics.js}"></script>
+</body>
+</html>

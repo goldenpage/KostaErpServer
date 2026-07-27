@@ -1,0 +1,49 @@
+package com.oopsw.kostaerpserver.repository.dao;
+
+import com.oopsw.kostaerpserver.vo.Menu;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+@Mapper
+public interface MenuDAO {
+
+    List<Menu> getMenuList(@Param("bId") String bId);
+
+    List<Menu> getMenuDetail(@Param("menuId") String menuId);
+
+    int getLackMaterialCount(
+            @Param("menuId") String menuId,
+            @Param("saleCount") int saleCount
+    );
+
+    int updateFoodMaterialAfterSale(
+            @Param("menuId") String menuId,
+            @Param("saleCount") int saleCount,
+            @Param("bId") String bId
+    );
+
+    int insertSaleRecord(
+            @Param("menuId") String menuId,
+            @Param("saleCount") int saleCount,
+            @Param("revenueId") String revenueId
+    );
+
+    int insertRevenue(
+            @Param("revenueId") String revenueId,
+            @Param("bId") String bId,
+            @Param("payment") String payment
+    );
+    String getLastRevenueId();
+
+    List<Menu> getLowStockMaterialList(
+            @Param("menuId") String menuId,
+            @Param("bId") String bId,
+            @Param("foodmLimit") int foodmLimit
+    );
+
+    int deleteMenu(
+            @Param("menuId") String menuId
+    );
+}
