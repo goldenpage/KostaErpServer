@@ -65,3 +65,9 @@ src/main/java/com/oopsw/kostaerpserver
 ├── service      # 비즈니스 로직
 └── vo           # 화면 및 데이터 전달 객체
 ```
+
+## 테스트 계정
+```
+id: 0000000000
+pw: 1234
+```
