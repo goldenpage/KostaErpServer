@@ -68,7 +68,12 @@ public class MenuServiceImpl implements MenuService {
             revenueId = String.format("RV%03d", num); // 3자리 숫자로 포맷팅
         }
         int revenueResult = menuDAO.insertRevenue(revenueId, bId, payment);
-        int insertSaleRecord = menuDAO.insertSaleRecord(menuId, saleCount, revenueId);
+        if (revenueResult != 1) {
+            throw new RuntimeException("매출 저장에 실패했습니다.");
+        }
+
+        String saleId = menuDAO.getNextSaleId();
+        int insertSaleRecord = menuDAO.insertSaleRecord(saleId, menuId, saleCount, revenueId);
         System.out.println("SALES 저장 결과: " + insertSaleRecord);
         if (insertSaleRecord == 0) {
             throw new RuntimeException("판매 기록 저장에 실패했습니다.");

@@ -24,10 +24,13 @@ public interface MenuDAO {
             @Param("bId") String bId
     );
 
+    String getNextSaleId();
+
     int insertSaleRecord(
-            @Param("menuId") String menuId,
-            @Param("saleCount") int saleCount,
-            @Param("revenueId") String revenueId
+        @Param("saleId") String saleId,
+        @Param("menuId") String menuId,
+        @Param("saleCount") int saleCount,
+        @Param("revenueId") String revenueId
     );
 
     int insertRevenue(

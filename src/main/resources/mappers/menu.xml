@@ -107,9 +107,17 @@
         DELETE FROM MENUS
         WHERE menu_Id = #{menuId}
     </delete>
+    <select id="getNextSaleId" resultType="string">
+        SELECT CONCAT(
+                 'S',
+                 LPAD(COALESCE(MAX(CAST(SUBSTRING(sale_Id, 2) AS UNSIGNED)), 0) + 1, 3, '0')
+               )
+        FROM SALES
+    </select>
+
     <insert id="insertSaleRecord">
-        INSERT INTO SALES (menu_Id, saleMenuCount, revenue_Id)
-        VALUES (#{menuId}, #{saleCount}, #{revenueId})
+        INSERT INTO SALES (sale_Id, menu_Id, saleMenuCount, revenue_Id)
+        VALUES (#{saleId}, #{menuId}, #{saleCount}, #{revenueId})
     </insert>
 
     <insert id="insertRevenue">
