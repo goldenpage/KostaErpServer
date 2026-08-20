@@ -1,8 +1,5 @@
 # Kosta ERP Server
 
-<p align="center">
-  <img src="src/main/resources/static/asset/image.png" width="180" alt="Kosta ERP 로고">
-</p>
 
 소규모 음식점의 식자재 재고, 메뉴, 매출, 발주, 폐기 및 알림을 하나의 흐름으로 관리하는 ERP 서비스의 백엔드 애플리케이션입니다. Spring Boot REST API를 제공하며, React 프런트엔드와 연동합니다. JWT 인증과 사업자등록증 OCR 기반 회원가입 심사를 지원합니다.
 
